@@ -5,11 +5,12 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
-	output: 'server',
-	adapter: node({
-		mode: 'standalone',
-	}),
-	vite: {
-		plugins: [tailwindcss()],
-	},
+  site: 'https://mausam-t58d.onrender.com',
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
