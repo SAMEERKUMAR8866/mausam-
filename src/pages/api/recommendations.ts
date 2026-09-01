@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { fetchWeatherData } from '../../services/weather.service';
 import { generateRecommendation } from '../../services/ai.service';
 
+export const prerender = true;
+
 export const GET: APIRoute = async ({ url }) => {
   const queryCity = url.searchParams.get('city')?.toLowerCase() || 'mumbai';
   const queryPersona = url.searchParams.get('persona')?.toLowerCase() || 'health';
