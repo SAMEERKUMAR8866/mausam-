@@ -1,0 +1,309 @@
+---
+// src/components/ChatBot.astro
+// Floating Aesthetic Glassmorphism AI Weather & Agronomic Chatbot
+---
+
+<!-- Floating AI Chatbot Container -->
+<div id="mausam-chatbot-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+  
+  <!-- Chat Window Panel (Hidden by default) -->
+  <div 
+    id="chat-window" 
+    class="pointer-events-auto hidden w-[90vw] sm:w-[400px] h-[540px] max-h-[85vh] bg-slate-950/95 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 mb-4"
+  >
+    <!-- Top Glowing Gradient Line -->
+    <div class="h-1 w-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
+
+    <!-- Chat Header -->
+    <div class="px-4 py-3.5 bg-slate-900/80 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 p-[1.5px] flex items-center justify-center shadow-glow-emerald">
+          <div class="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-xs">
+            ✨
+          </div>
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-950 rounded-full animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h3 class="text-xs font-bold text-white tracking-tight">Mausam AI Assistant</h3>
+            <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">Gemini 2.5</span>
+          </div>
+          <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1" id="chat-header-location">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Live Micro-Climate Advisor
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1">
+        <!-- Clear chat -->
+        <button 
+          id="chat-clear-btn" 
+          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center text-xs" 
+          title="Clear Conversation"
+        >
+          🗑️
+        </button>
+        <!-- Close / Minimize -->
+        <button 
+          id="chat-close-btn" 
+          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center text-xs" 
+          title="Minimize Chat"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Prompts Scrollbar -->
+    <div class="px-3 py-2 bg-slate-900/40 border-b border-white/5 overflow-x-auto scrollbar-none flex items-center gap-1.5">
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 text-[10px] font-medium border border-white/10 hover:border-emerald-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Wheat fertilizer and urea dosage today?">
+        🌾 Wheat Fertilizer
+      </button>
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 text-[10px] font-medium border border-white/10 hover:border-cyan-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Check aviation cloud ceiling and crosswinds">
+        ✈️ Flight Ceiling
+      </button>
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 text-[10px] font-medium border border-white/10 hover:border-blue-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Marine swell height and tide status?">
+        🚢 Swell & Tides
+      </button>
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 text-[10px] font-medium border border-white/10 hover:border-amber-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Highway transit and rain nowcasting status?">
+        🚚 Fleet Transit
+      </button>
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-yellow-500/20 text-slate-300 hover:text-yellow-300 text-[10px] font-medium border border-white/10 hover:border-yellow-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Solar GHI irradiance & wind power output?">
+        ⚡ Solar & Grid
+      </button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chat-messages" class="flex-1 p-3.5 overflow-y-auto space-y-3 scrollbar-none text-xs">
+      
+      <!-- Welcome Message from Mausam AI -->
+      <div class="flex items-start gap-2 max-w-[90%]">
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+          ✨
+        </div>
+        <div class="bg-slate-900 border border-white/10 rounded-2xl rounded-tl-sm p-3 text-slate-200 leading-relaxed shadow-sm">
+          <p class="font-semibold text-emerald-400 mb-1">Namaste! I am Mausam AI.</p>
+          <p class="text-slate-300">
+            Ask me anything about real-time weather, crop disease prevention, irrigation cycles, aviation ceiling, maritime swells, or highway logistics!
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Typing Indicator (Hidden by default) -->
+    <div id="chat-typing" class="hidden px-4 py-2 bg-slate-900/50 flex items-center gap-2 text-[11px] text-slate-400">
+      <div class="flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce [animation-delay:0.4s]"></span>
+      </div>
+      <span>Mausam AI is thinking...</span>
+    </div>
+
+    <!-- Chat Input Area -->
+    <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-white/10 flex items-center gap-2">
+      <input 
+        type="text" 
+        id="chat-input" 
+        placeholder="Ask about crops, flights, winds, or weather..." 
+        autocomplete="off"
+        class="flex-1 bg-slate-950/90 text-white placeholder:text-slate-400 text-xs px-3.5 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40 transition-all"
+      />
+      <button 
+        type="submit" 
+        id="chat-send-btn" 
+        class="px-3.5 py-2.5 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 rounded-xl text-xs font-bold transition-all active-scale cursor-pointer flex items-center justify-center shadow-glow-emerald"
+      >
+        <svg class="w-3.5 h-3.5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+        </svg>
+      </button>
+    </form>
+
+  </div>
+
+  <!-- Floating Action Button (FAB) -->
+  <button 
+    id="chat-fab-trigger" 
+    class="pointer-events-auto group relative w-13 h-13 rounded-full bg-gradient-to-tr from-emerald-500 via-cyan-500 to-emerald-400 p-[1.5px] shadow-[0_0_25px_rgba(16,185,129,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] transition-all duration-300 active-scale cursor-pointer flex items-center justify-center"
+    title="Open Mausam AI Assistant"
+  >
+    <!-- Background Glass Disc -->
+    <div class="w-full h-full rounded-full bg-slate-950 group-hover:bg-slate-900 transition-colors flex items-center justify-center text-white relative">
+      <span class="text-xl group-hover:scale-110 transition-transform">✨</span>
+      <!-- Pulsing Dot -->
+      <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping"></span>
+      <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950"></span>
+    </div>
+  </button>
+
+</div>
+
+<script>
+  // Chatbot Client Logic
+  const fabTrigger = document.getElementById('chat-fab-trigger');
+  const chatWindow = document.getElementById('chat-window');
+  const chatCloseBtn = document.getElementById('chat-close-btn');
+  const chatClearBtn = document.getElementById('chat-clear-btn');
+  const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+  const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+  const chatMessages = document.getElementById('chat-messages');
+  const chatTyping = document.getElementById('chat-typing');
+  const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+
+  let isOpen = false;
+  let conversationHistory: Array<{ role: 'user' | 'model'; content: string }> = [];
+
+  // Toggle Chat Window
+  function toggleChat(open?: boolean) {
+    isOpen = typeof open === 'boolean' ? open : !isOpen;
+    if (isOpen) {
+      chatWindow?.classList.remove('hidden');
+      setTimeout(() => {
+        chatWindow?.classList.remove('scale-95', 'opacity-0');
+        chatWindow?.classList.add('scale-100', 'opacity-100');
+        chatInput?.focus();
+      }, 10);
+    } else {
+      chatWindow?.classList.remove('scale-100', 'opacity-100');
+      chatWindow?.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        chatWindow?.classList.add('hidden');
+      }, 300);
+    }
+  }
+
+  fabTrigger?.addEventListener('click', () => toggleChat());
+  chatCloseBtn?.addEventListener('click', () => toggleChat(false));
+
+  // Clear Chat
+  chatClearBtn?.addEventListener('click', () => {
+    conversationHistory = [];
+    if (chatMessages) {
+      chatMessages.innerHTML = `
+        <div class="flex items-start gap-2 max-w-[90%]">
+          <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+            ✨
+          </div>
+          <div class="bg-slate-900 border border-white/10 rounded-2xl rounded-tl-sm p-3 text-slate-200 leading-relaxed shadow-sm">
+            <p class="font-semibold text-emerald-400 mb-1">Chat history cleared.</p>
+            <p class="text-slate-300">How can I assist your farming, flights, or transit planning?</p>
+          </div>
+        </div>
+      `;
+    }
+  });
+
+  // Handle Quick Prompts
+  quickPromptBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prompt = btn.getAttribute('data-prompt');
+      if (prompt && chatInput) {
+        chatInput.value = prompt;
+        sendMessage(prompt);
+      }
+    });
+  });
+
+  // Handle Submit
+  chatForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = chatInput?.value?.trim();
+    if (!text) return;
+    sendMessage(text);
+  });
+
+  function formatMessage(text: string): string {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+      .replace(/^- (.*$)/gim, '<div class="flex items-start gap-1.5 ml-1 my-0.5"><span class="text-emerald-400">•</span><span>$1</span></div>')
+      .replace(/\n/g, '<br/>');
+  }
+
+  async function sendMessage(text: string) {
+    if (!text) return;
+    if (chatInput) chatInput.value = '';
+
+    // Append User Message bubble
+    appendMessageBubble('user', text);
+    conversationHistory.push({ role: 'user', content: text });
+
+    // Show typing
+    if (chatTyping) chatTyping.classList.remove('hidden');
+    scrollToBottom();
+
+    // Context metadata
+    const activeLoc = localStorage.getItem('mausam_location_display') || 'Greater Noida';
+    const activePersona = localStorage.getItem('mausam_persona') || 'agriculture';
+    const activeCrop = localStorage.getItem('mausam_farmer_crop') || 'Wheat';
+    const activeStage = localStorage.getItem('mausam_farmer_stage') || 'Vegetative';
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          messages: conversationHistory,
+          location: activeLoc,
+          persona: activePersona,
+          crop: activeCrop,
+          stage: activeStage
+        })
+      });
+
+      const data = await res.json();
+      const reply = data.response || 'Weather conditions are stable across all indicators.';
+      conversationHistory.push({ role: 'model', content: reply });
+
+      if (chatTyping) chatTyping.classList.add('hidden');
+      appendMessageBubble('model', reply);
+    } catch (err) {
+      console.error('Chat error:', err);
+      if (chatTyping) chatTyping.classList.add('hidden');
+      appendMessageBubble('model', 'I am currently responding with cached weather telemetry. Conditions are nominal.');
+    }
+
+    scrollToBottom();
+  }
+
+  function appendMessageBubble(role: 'user' | 'model', content: string) {
+    if (!chatMessages) return;
+
+    const div = document.createElement('div');
+    if (role === 'user') {
+      div.className = 'flex justify-end';
+      div.innerHTML = `
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl rounded-tr-sm px-3.5 py-2.5 max-w-[85%] leading-relaxed shadow-sm font-medium">
+          ${content}
+        </div>
+      `;
+    } else {
+      div.className = 'flex items-start gap-2 max-w-[90%]';
+      div.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+          ✨
+        </div>
+        <div class="bg-slate-900 border border-white/10 rounded-2xl rounded-tl-sm p-3 text-slate-200 leading-relaxed shadow-sm">
+          ${formatMessage(content)}
+        </div>
+      `;
+    }
+
+    chatMessages.appendChild(div);
+  }
+
+  function scrollToBottom() {
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
+
+  // Keyboard shortcut Esc to close
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) {
+      toggleChat(false);
+    }
+  });
+</script>

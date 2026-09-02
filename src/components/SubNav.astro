@@ -1,20 +1,25 @@
 ---
 // src/components/SubNav.astro
+// Aesthetic Glassmorphism Sub-Navigation Bar
 ---
-<div class="sticky top-11 z-40 h-13 w-full bg-canvas-parchment/80 backdrop-blur-md flex items-center justify-between px-6 border-b border-hairline" id="sub-nav-frosted">
+<div class="sticky top-11 z-40 h-13 w-full bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-6 border-b border-white/10 shadow-glass" id="sub-nav-frosted">
   <!-- Left Side: Section Category & Selected City -->
   <div class="flex items-center gap-3">
-    <span class="text-[21px] font-semibold tracking-apple-tight text-ink">Dashboard</span>
-    <span class="h-4 w-[1px] bg-hairline hidden sm:block"></span>
-    <span class="text-sm font-normal text-ink-muted-48 hidden sm:block" id="sub-nav-city-display">Mumbai, India</span>
+    <span class="text-[20px] font-bold tracking-apple-tight text-white flex items-center gap-2">
+      <span class="text-emerald-400 text-lg">✦</span> Dashboard
+    </span>
+    <span class="h-4 w-[1px] bg-white/15 hidden sm:block"></span>
+    <span class="text-sm font-medium text-slate-300 hidden sm:block flex items-center gap-1.5" id="sub-nav-city-display">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> Mumbai, India
+    </span>
   </div>
 
-  <!-- Right Side: Location Selector Styled as a Search Pill -->
-  <div class="flex items-center gap-4">
+  <!-- Right Side: Location Selector Styled as a Glowing Search Pill -->
+  <div class="flex items-center gap-3">
     <!-- Location Search Pill -->
     <div class="relative" id="location-search-container" style="overflow: visible;">
-      <div class="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted-48 pointer-events-none">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none text-xs">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
           <circle cx="12" cy="10" r="3"></circle>
         </svg>
@@ -24,15 +29,15 @@
         id="location-search-input"
         placeholder="Search location..."
         autocomplete="off"
-        class="h-9 pl-10 pr-4 bg-canvas text-ink text-sm font-normal border border-black/[0.08] rounded-pill focus:outline-none focus:ring-2 focus:ring-primary-focus tracking-apple-tight w-[200px] transition-all duration-200"
+        class="h-9 pl-9 pr-4 glass-input rounded-full text-xs font-medium tracking-apple-tight w-[180px] sm:w-[220px] transition-all duration-200"
       />
       <!-- Search Results Dropdown -->
-      <div id="location-search-results" class="absolute left-0 top-full mt-1 bg-canvas border border-hairline rounded-lg shadow-lg hidden max-h-[320px] overflow-y-auto z-[9999]" style="min-width: 280px;"></div>
+      <div id="location-search-results" class="absolute left-0 top-full mt-2 glass-panel rounded-xl shadow-2xl hidden max-h-[320px] overflow-y-auto z-[9999] border border-white/10" style="min-width: 280px;"></div>
     </div>
 
     <!-- Use My Current Location Button -->
-    <button id="use-my-location-btn" class="px-4 py-1.5 bg-canvas text-ink text-xs font-normal border border-black/[0.08] rounded-pill hover:border-primary/50 hover:bg-surface-pearl transition-colors active-scale cursor-pointer flex items-center gap-1.5" title="Use my current location">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <button id="use-my-location-btn" class="px-3.5 py-1.5 bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-emerald-300 text-xs font-medium border border-white/10 rounded-full transition-all active-scale cursor-pointer flex items-center gap-1.5 shadow-sm" title="Use my current location">
+      <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"></circle>
         <path d="M12 2v4m0 12v4M2 12h4m12 0h4"></path>
       </svg>
@@ -40,7 +45,7 @@
     </button>
 
     <!-- Right Side CTA: Live Radar Pill Button -->
-    <button class="hidden xs:block px-4 py-1.5 bg-primary text-white text-xs font-normal rounded-pill hover:bg-primary-focus transition-colors active-scale cursor-pointer">
+    <button class="hidden md:flex px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 text-xs font-bold rounded-full transition-all active-scale cursor-pointer shadow-glow-emerald">
       Live Radar
     </button>
   </div>

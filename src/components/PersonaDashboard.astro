@@ -1,38 +1,227 @@
 ---
 // src/components/PersonaDashboard.astro
+// Aesthetic Glassmorphism Multi-Industry & Professional Persona Hub
 import WeatherCard from './WeatherCard.astro';
+import FarmerDashboard from './FarmerDashboard.astro';
 ---
 
-<div id="persona-dashboard" class="w-full max-w-[1440px] mx-auto px-6 py-10 transition-opacity duration-300">
+<div id="persona-dashboard" class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-8 transition-opacity duration-300">
   
-  <!-- Dynamic AI Recommendation Panel (Apple-style Atmosphere Edit) -->
-  <div class="mb-10 bg-surface-tile-1 border border-white/[0.08] text-white rounded-lg p-8 relative overflow-hidden active-scale shadow-product" id="ai-recommendation-panel">
-    <div class="relative z-10 max-w-[980px]">
+  <!-- Dynamic AI Recommendation Panel (Aesthetic Violet/Emerald Glass) -->
+  <div class="mb-10 bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-950/90 border border-white/15 text-white rounded-2xl p-6 sm:p-8 relative overflow-hidden active-scale shadow-product" id="ai-recommendation-panel">
+    <!-- Top accent border line -->
+    <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-400 to-violet-500"></div>
+
+    <div class="relative z-10 max-w-[1000px]">
       <div class="flex items-center gap-2.5 mb-3">
-        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary-on-dark/20 text-primary-on-dark">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs shadow-glow-violet">
+          ✨
         </span>
-        <h4 class="text-xs font-semibold text-primary-on-dark uppercase tracking-wider">Mausam AI Insights</h4>
+        <h4 class="text-xs font-bold text-violet-300 uppercase tracking-wider">Mausam AI Dynamic Insights</h4>
       </div>
-      <p id="ai-rec-text" class="text-lg md:text-xl font-normal leading-relaxed text-body-muted tracking-apple-tight">
-        Select a profile to load personalized insights...
+      <p id="ai-rec-text" class="text-base sm:text-xl font-normal leading-relaxed text-slate-100 tracking-apple-tight">
+        Select a profile above to load personalized meteorological insights...
       </p>
     </div>
     <!-- Subtle gradient reflection on dark surface -->
-    <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-linear-to-r from-transparent to-white/[0.02] pointer-events-none"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-linear-to-r from-transparent to-white/[0.03] pointer-events-none"></div>
   </div>
 
-  <!-- Persona Grids Grid Container -->
+  <!-- Persona Grids Container -->
   <div class="space-y-12">
     
+    <!-- Agriculture & Farmer Persona Section -->
+    <div data-persona="agriculture" class="persona-section hidden">
+      <FarmerDashboard />
+    </div>
+
+    <!-- Aviation & Aerospace Persona Grid -->
+    <div data-persona="aviation" class="persona-section hidden">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>✈️</span> Aerospace & Aviation Operations Suite
+        </h2>
+        <span class="text-xs text-sky-400 font-semibold px-2.5 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/30">METAR / TAF Live</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <WeatherCard 
+          title="Cloud Ceiling (AGL)" 
+          value="--" 
+          desc="Loading ceiling altitude..." 
+          id="aviation-ceiling-card"
+        />
+        <WeatherCard 
+          title="Flight Visibility & METAR" 
+          value="--" 
+          desc="Loading METAR observations..." 
+          id="aviation-vis-card"
+        />
+        <WeatherCard 
+          title="Density Altitude & Freezing Level" 
+          value="--" 
+          desc="Loading atmospheric density..." 
+          id="aviation-freezing-card"
+        />
+        <WeatherCard 
+          title="Wind Shear & Crosswinds" 
+          value="--" 
+          desc="Checking runway shear vectors..." 
+          id="aviation-shear-card"
+        />
+      </div>
+    </div>
+
+    <!-- Smart Maritime & Ocean Persona Grid -->
+    <div data-persona="maritime" class="persona-section hidden">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>🚢</span> Smart Maritime & Coastal Fleet Intel
+        </h2>
+        <span class="text-xs text-cyan-400 font-semibold px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/30">Ocean Swell Telemetry</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <WeatherCard 
+          title="Swell Height & Period" 
+          value="--" 
+          desc="Loading offshore swell wave data..." 
+          id="marine-sea-card"
+        />
+        <WeatherCard 
+          title="Current Velocity & Direction" 
+          value="--" 
+          desc="Loading sea current vectors..." 
+          id="marine-wave-card"
+        />
+        <WeatherCard 
+          title="Sea Surface Temperature (SST)" 
+          value="--" 
+          desc="Loading coastal SST..." 
+          id="marine-temp-card"
+        />
+        <WeatherCard 
+          title="Tide Cycles & Squall Alerts" 
+          value="--" 
+          desc="Loading tide tables and squall warnings..." 
+          id="marine-tide-card"
+        />
+      </div>
+    </div>
+
+    <!-- Logistics & Fleet Transport Persona Grid -->
+    <div data-persona="logistics" class="persona-section hidden">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>🚚</span> Logistics & Highway Fleet Transport
+        </h2>
+        <span class="text-xs text-amber-400 font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/30">Nowcast Radar Active</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <WeatherCard 
+          title="Road Surface Temp & Ice Alert" 
+          value="--" 
+          desc="Loading highway asphalt thermal..." 
+          id="logistics-road-card"
+        />
+        <WeatherCard 
+          title="Highway Crosswind Safety" 
+          value="--" 
+          desc="Checking vehicle stability..." 
+          id="logistics-wind-card"
+        />
+        <WeatherCard 
+          title="Precipitation Nowcast (60m)" 
+          value="--" 
+          desc="Loading minute-by-minute rain radar..." 
+          id="logistics-rain-card"
+        />
+        <WeatherCard 
+          title="Route Delay Hazard Index" 
+          value="--" 
+          desc="Calculating transit delay risk..." 
+          id="logistics-delay-card"
+        />
+      </div>
+    </div>
+
+    <!-- Construction & Infrastructure Persona Grid -->
+    <div data-persona="construction" class="persona-section hidden">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>🏗️</span> Construction & Heavy Civil Infrastructure
+        </h2>
+        <span class="text-xs text-orange-400 font-semibold px-2.5 py-0.5 rounded-full bg-orange-500/20 border border-orange-400/30">OSHA Wind Limits</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <WeatherCard 
+          title="Tower Crane Gust Threshold" 
+          value="--" 
+          desc="Checking crane wind safety limits..." 
+          id="construction-crane-card"
+        />
+        <WeatherCard 
+          title="Concrete Pour Suitability" 
+          value="--" 
+          desc="Checking rain washout and curing risk..." 
+          id="construction-pour-card"
+        />
+        <WeatherCard 
+          title="Heat Stress Index (WBGT)" 
+          value="--" 
+          desc="Monitoring worker hydration protocol..." 
+          id="construction-heat-card"
+        />
+        <WeatherCard 
+          title="Ground & Soil Saturation" 
+          value="--" 
+          desc="Assessing earthmoving heavy equipment..." 
+          id="construction-soil-card"
+        />
+      </div>
+    </div>
+
+    <!-- Energy & Utilities Persona Grid -->
+    <div data-persona="energy" class="persona-section hidden">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>⚡</span> Renewable Energy & Grid Utilities
+        </h2>
+        <span class="text-xs text-yellow-400 font-semibold px-2.5 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-400/30">Solar & Wind Dispatch</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <WeatherCard 
+          title="Solar Irradiance (GHI/DNI)" 
+          value="--" 
+          desc="Loading Global Horizontal Irradiance..." 
+          id="energy-solar-card"
+        />
+        <WeatherCard 
+          title="Wind Speed @ 100m Hub Height" 
+          value="--" 
+          desc="Loading wind turbine generation capacity..." 
+          id="energy-wind-card"
+        />
+        <WeatherCard 
+          title="Heating & Cooling Degree Days" 
+          value="--" 
+          desc="Calculating grid cooling demand..." 
+          id="energy-degreedays-card"
+        />
+        <WeatherCard 
+          title="Lightning Tracking Radius" 
+          value="--" 
+          desc="Scanning electrostatic proximity..." 
+          id="energy-lightning-card"
+        />
+      </div>
+    </div>
+
     <!-- Health-Conscious Persona Grid -->
     <div data-persona="health" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>🌿</span> Health-Conscious Outlook
         </h2>
+        <span class="text-xs text-emerald-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <WeatherCard 
@@ -64,10 +253,11 @@ import WeatherCard from './WeatherCard.astro';
 
     <!-- Outdoor Fitness Persona Grid -->
     <div data-persona="fitness" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>🏃‍♂️</span> Outdoor Fitness Planner
         </h2>
+        <span class="text-xs text-cyan-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <WeatherCard 
@@ -97,47 +287,13 @@ import WeatherCard from './WeatherCard.astro';
       </div>
     </div>
 
-    <!-- Beachgoers & Surfers Persona Grid -->
-    <div data-persona="marine" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
-          <span>🏄</span> Beachgoers & Surfers Portal
-        </h2>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <WeatherCard 
-          title="Sea Conditions" 
-          value="--" 
-          desc="Loading offshore conditions..." 
-          id="marine-sea-card"
-        />
-        <WeatherCard 
-          title="Wave Heights" 
-          value="--" 
-          desc="Loading wave heights..." 
-          id="marine-wave-card"
-        />
-        <WeatherCard 
-          title="Water Temperature" 
-          value="--" 
-          desc="Loading sea surface temperature..." 
-          id="marine-temp-card"
-        />
-        <WeatherCard 
-          title="Tide Timings" 
-          value="--" 
-          desc="Loading high/low tides schedule..." 
-          id="marine-tide-card"
-        />
-      </div>
-    </div>
-
     <!-- Travelers Persona Grid -->
     <div data-persona="travel" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>✈️</span> Travelers Navigator
         </h2>
+        <span class="text-xs text-amber-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <WeatherCard 
@@ -163,10 +319,11 @@ import WeatherCard from './WeatherCard.astro';
 
     <!-- Parents & Families Persona Grid -->
     <div data-persona="family" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>🎒</span> Parents & Families Planner
         </h2>
+        <span class="text-xs text-violet-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <WeatherCard 
@@ -190,47 +347,13 @@ import WeatherCard from './WeatherCard.astro';
       </div>
     </div>
 
-    <!-- Agriculture & Gardeners Persona Grid -->
-    <div data-persona="agriculture" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
-          <span>👩‍🌾</span> Agriculture & Gardening Hub
-        </h2>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <WeatherCard 
-          title="Soil Moisture" 
-          value="--" 
-          desc="Loading moisture percentages..." 
-          id="agri-moisture-card"
-        />
-        <WeatherCard 
-          title="Rainfall Forecast" 
-          value="--" 
-          desc="Loading precipitation levels..." 
-          id="agri-rain-card"
-        />
-        <WeatherCard 
-          title="Frost Danger Index" 
-          value="--" 
-          desc="Checking temperature hazards..." 
-          id="agri-frost-card"
-        />
-        <WeatherCard 
-          title="Planting Guidance" 
-          value="--" 
-          desc="Loading seasonal sowing guide..." 
-          id="agri-planting-card"
-        />
-      </div>
-    </div>
-
     <!-- Commuters Persona Grid -->
     <div data-persona="commute" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>🚗</span> Commuter Transit Guide
         </h2>
+        <span class="text-xs text-amber-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <WeatherCard 
@@ -256,10 +379,11 @@ import WeatherCard from './WeatherCard.astro';
 
     <!-- Event Planners Persona Grid -->
     <div data-persona="event_planner" class="persona-section hidden">
-      <div class="border-b border-hairline pb-3 mb-6">
-        <h2 class="text-xl font-semibold text-ink tracking-apple-tight flex items-center gap-2">
+      <div class="border-b border-white/10 pb-3 mb-6 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight flex items-center gap-2">
           <span>📅</span> Event Planners Console
         </h2>
+        <span class="text-xs text-pink-400 font-semibold">Active Profile</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <WeatherCard 

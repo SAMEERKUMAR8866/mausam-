@@ -7,23 +7,40 @@
   --color-ink: #1d1d1f;
   --color-canvas-parchment: #f5f5f7;
   --color-surface-pearl: #fafafc;
-  --color-surface-tile-1: #272729;
-  --color-surface-tile-2: #2a2a2c;
-  --color-surface-tile-3: #252527;
-  --color-surface-black: #000000;
+  --color-surface-tile-1: #161b26;
+  --color-surface-tile-2: #1e2638;
+  --color-surface-tile-3: #111622;
+  --color-surface-black: #080c14;
   --color-surface-chip-translucent: rgba(210, 210, 215, 0.64);
   --color-ink-muted-80: #333333;
   --color-ink-muted-48: #7a7a7a;
-  --color-hairline: #e0e0e0;
-  --color-divider-soft: #f0f0f0;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-divider-soft: rgba(255, 255, 255, 0.05);
+
+  /* Aesthetic Modern Colors */
+  --color-obsidian-950: #060911;
+  --color-obsidian-900: #0a0f1d;
+  --color-obsidian-850: #0e1528;
+  --color-obsidian-800: #141e36;
+  --color-obsidian-700: #1d2b4d;
+  
+  --color-emerald-glow: #10b981;
+  --color-emerald-bright: #34d399;
+  --color-cyan-glow: #06b6d4;
+  --color-cyan-bright: #38bdf8;
+  --color-amber-glow: #f59e0b;
+  --color-amber-bright: #fbbf24;
+  --color-ai-violet: #8b5cf6;
+  --color-ai-pink: #ec4899;
   
   --font-display: "SF Pro Display", "Inter", system-ui, -apple-system, sans-serif;
   --font-body: "SF Pro Text", "Inter", system-ui, -apple-system, sans-serif;
   
-  --radius-xs: 5px;
-  --radius-sm: 8px;
-  --radius-md: 11px;
-  --radius-lg: 18px;
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
   --radius-pill: 9999px;
   
   --spacing-xxs: 4px;
@@ -37,13 +54,33 @@
 }
 
 @utility shadow-product {
-  box-shadow: 3px 5px 30px 0px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(16, 185, 129, 0.08);
+}
+
+@utility shadow-glass {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+@utility shadow-glow-emerald {
+  box-shadow: 0 0 25px -3px rgba(16, 185, 129, 0.35);
+}
+
+@utility shadow-glow-cyan {
+  box-shadow: 0 0 25px -3px rgba(6, 182, 212, 0.35);
+}
+
+@utility shadow-glow-amber {
+  box-shadow: 0 0 25px -3px rgba(245, 158, 11, 0.35);
+}
+
+@utility shadow-glow-violet {
+  box-shadow: 0 0 25px -3px rgba(139, 92, 246, 0.35);
 }
 
 @utility active-scale {
-  transition: transform 0.1s ease;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
   }
 }
 
@@ -52,21 +89,71 @@
 }
 
 @utility tracking-apple-hero {
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 
-/* Custom Scrollbar for premium feel */
+/* Glassmorphism Panel Utility */
+@utility glass-panel {
+  background: rgba(14, 21, 40, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+@utility glass-card-interactive {
+  background: linear-gradient(135deg, rgba(20, 30, 54, 0.7) 0%, rgba(10, 16, 30, 0.75) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    border-color: rgba(52, 211, 153, 0.4);
+    box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.6), 0 0 20px 2px rgba(16, 185, 129, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+@utility glass-input {
+  background: rgba(16, 25, 46, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  &:focus {
+    outline: none;
+    border-color: #34d399;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+}
+
+/* Custom Scrollbar for Aesthetic Dark / Glass Theme */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-canvas-parchment);
+  background: #080c14;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-chip-translucent);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink-muted-48);
+  background: rgba(52, 211, 153, 0.4);
+}
+
+/* Animated gradient aurora background */
+@keyframes aurora {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(30px, -20px) rotate(5deg);
+  }
+}
+
+.aurora-glow-1 {
+  animation: aurora 14s ease-in-out infinite alternate;
+}
+.aurora-glow-2 {
+  animation: aurora 18s ease-in-out infinite alternate-reverse;
 }
