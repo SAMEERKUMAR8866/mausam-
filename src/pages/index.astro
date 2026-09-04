@@ -12,49 +12,63 @@ import PersonaDashboard from '../components/PersonaDashboard.astro';
 
   <main class="flex-1 bg-[#070b14]">
     
-    <!-- Persona Selection Scroll Bar (Aesthetic Obsidian Glass Chips) -->
-    <section class="w-full bg-slate-950/80 backdrop-blur-md border-b border-white/10 py-3.5 overflow-x-auto scrollbar-none" id="persona-selector-section">
-      <div class="max-w-[1440px] mx-auto px-6 flex items-center gap-2.5 w-max">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2 flex items-center gap-1.5">
-          <span>⚡</span> Profiles:
-        </span>
+    <!-- Persona Selection (Exact 2-Column Order Matching Reference) -->
+    <section class="w-full bg-slate-950/80 backdrop-blur-md border-b border-white/10 py-4 px-4 sm:px-6" id="persona-selector-section">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚡</span> PERSONALIZE HOME:
+          </span>
+          <span class="text-[11px] text-slate-500 font-medium hidden sm:inline">12 Specialized Profiles</span>
+        </div>
         
-        <button data-select-persona="agriculture" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>👩‍🌾</span> Agriculture & Farmer
-        </button>
-        <button data-select-persona="aviation" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-sky-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>✈️</span> Aerospace & Aviation
-        </button>
-        <button data-select-persona="maritime" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-cyan-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🚢</span> Smart Maritime
-        </button>
-        <button data-select-persona="logistics" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-amber-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🚚</span> Logistics & Transport
-        </button>
-        <button data-select-persona="construction" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-orange-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🏗️</span> Construction & Infra
-        </button>
-        <button data-select-persona="energy" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-yellow-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>⚡</span> Energy & Grid
-        </button>
-        <button data-select-persona="health" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🌿</span> Health-Conscious
-        </button>
-        <button data-select-persona="fitness" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🏃‍♂️</span> Outdoor Fitness
-        </button>
-        <button data-select-persona="travel" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>✈️</span> Travelers
-        </button>
-        <button data-select-persona="family" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🎒</span> Parents & Families
-        </button>
-        <button data-select-persona="commute" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>🚗</span> Commuters
-        </button>
-        <button data-select-persona="event_planner" class="persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale">
-          <span>📅</span> Event Planners
-        </button>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+          <!-- Row 1: Health-Conscious & Outdoor Fitness -->
+          <button data-select-persona="health" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🌿</span> <span class="truncate">Health-Conscious</span>
+          </button>
+          <button data-select-persona="fitness" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🏃</span> <span class="truncate">Outdoor Fitness</span>
+          </button>
+
+          <!-- Row 2: Beach & Surf & Travelers -->
+          <button data-select-persona="maritime" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🏄</span> <span class="truncate">Beach & Surf</span>
+          </button>
+          <button data-select-persona="travel" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">✈️</span> <span class="truncate">Travelers</span>
+          </button>
+
+          <!-- Row 3: Parents & Families & Agriculture -->
+          <button data-select-persona="family" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🧳</span> <span class="truncate">Parents & Families</span>
+          </button>
+          <button data-select-persona="agriculture" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🌾</span> <span class="truncate">Agriculture</span>
+          </button>
+
+          <!-- Row 4: Commuters & Event Planning -->
+          <button data-select-persona="commute" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🚗</span> <span class="truncate">Commuters</span>
+          </button>
+          <button data-select-persona="event_planner" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">📅</span> <span class="truncate">Event Planning</span>
+          </button>
+
+          <!-- Specialized Industry Profiles -->
+          <button data-select-persona="aviation" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">✈️</span> <span class="truncate">Aerospace & Aviation</span>
+          </button>
+          <button data-select-persona="logistics" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🚚</span> <span class="truncate">Logistics & Transport</span>
+          </button>
+          <button data-select-persona="construction" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">🏗️</span> <span class="truncate">Construction & Infra</span>
+          </button>
+          <button data-select-persona="energy" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
+            <span class="text-base sm:text-lg">⚡</span> <span class="truncate">Energy & Grid</span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -528,9 +542,9 @@ import PersonaDashboard from '../components/PersonaDashboard.astro';
     chips.forEach(chip => {
       const pName = chip.getAttribute('data-select-persona');
       if (pName === selectedPersona) {
-        chip.className = 'persona-chip px-4 py-2 bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-400 rounded-full transition-all cursor-pointer flex items-center gap-1.5 active-scale shadow-glow-emerald ring-1 ring-emerald-400/40';
+        chip.className = 'persona-chip w-full px-3.5 py-3 bg-slate-900/90 text-white text-xs sm:text-sm font-semibold border-2 border-emerald-400 rounded-xl transition-all cursor-pointer flex items-center gap-2.5 active-scale shadow-glow-emerald ring-1 ring-emerald-400/40 text-left';
       } else {
-        chip.className = 'persona-chip px-4 py-2 bg-slate-900/60 text-slate-300 text-xs font-semibold border border-white/10 rounded-full hover:border-emerald-400 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 active-scale';
+        chip.className = 'persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left';
       }
     });
   }
