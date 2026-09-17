@@ -1,0 +1,111 @@
+// src/services/survival-guides.service.ts
+// Offline disaster survival manuals & checklists (NDMA / IMD / WHO guidelines)
+
+export interface SurvivalGuide {
+  id: string;
+  title: string;
+  hazardType: string;
+  icon: string;
+  urgency: 'critical' | 'high' | 'moderate';
+  dos: string[];
+  donts: string[];
+  goBagItems: string[];
+}
+
+export const SURVIVAL_GUIDES: SurvivalGuide[] = [
+  {
+    id: 'cyclone',
+    title: 'Cyclone & High Gale Storm Survival Protocol',
+    hazardType: 'Cyclone',
+    icon: '🌀',
+    urgency: 'critical',
+    dos: [
+      'Board up or secure glass windows and doors with plywood or tape.',
+      'Turn off gas valves and main electrical circuit breakers before winds peak.',
+      'Stay in the safest central room of the building away from external glass.',
+      'Keep emergency water reserves in clean covered containers (min 3L/person/day).'
+    ],
+    donts: [
+      'Do not venture outside during the eye of the storm when winds momentarily calm.',
+      'Do not touch fallen electric power lines or standing puddles near poles.',
+      'Do not spread unverified rumors; rely only on battery-operated radio / Mausam alerts.'
+    ],
+    goBagItems: ['Waterproof Flashlight', 'Battery Radio', 'First Aid Kit with Antiseptic', 'Emergency Water Rations', 'Important Documents in Sealed Plastic']
+  },
+  {
+    id: 'flood',
+    title: 'Flash Flood & Inundation Survival Protocol',
+    hazardType: 'Flash Flood',
+    icon: '🌊',
+    urgency: 'critical',
+    dos: [
+      'Move immediately to higher ground or upper storeys of reinforced concrete buildings.',
+      'Boil or chemically treat all drinking water to prevent waterborne contamination.',
+      'Disconnect all electrical appliances plugged into low-lying floor sockets.'
+    ],
+    donts: [
+      'Never drive or walk through moving floodwater (6 inches can sweep you off feet).',
+      'Do not eat food that has come into direct contact with floodwaters.'
+    ],
+    goBagItems: ['Water Purification Tablets', 'Waterproof Whistle', 'Thermal Emergency Blanket', 'Emergency High-Calorie Biscuits']
+  },
+  {
+    id: 'lightning',
+    title: 'Severe Lightning & Thunderstorm Protocol (30-30 Rule)',
+    hazardType: 'Severe Lightning',
+    icon: '⚡',
+    urgency: 'high',
+    dos: [
+      'Seek shelter inside a substantial enclosed building or hardtop metal vehicle.',
+      'If caught in open fields, crouch low on balls of feet with hands over ears (minimize contact).'
+    ],
+    donts: [
+      'Never shelter under isolated tall trees or open metal sheds.',
+      'Avoid plumbing fixtures, corded phones, and metal fences during electrostatic strikes.'
+    ],
+    goBagItems: ['Insulated Shoes', 'Battery Backup Powerbank']
+  },
+  {
+    id: 'heatwave',
+    title: 'Extreme Heatwave & WBGT Thermal Stress Protocol',
+    hazardType: 'Extreme Heatwave',
+    icon: '🔥',
+    urgency: 'high',
+    dos: [
+      'Consume Oral Rehydration Salts (ORS), coconut water, or buttermilk frequently.',
+      'Keep indoor rooms shaded during peak sun hours (11 AM - 4 PM).'
+    ],
+    donts: [
+      'Do not leave children, seniors, or pets in parked vehicles even for a few minutes.',
+      'Avoid high-protein or heavy fried foods during peak daytime thermal stress.'
+    ],
+    goBagItems: ['ORS Packets', 'Cooling Towel', 'Broad-Brim Hat', 'Sunscreen SPF 50']
+  },
+  {
+    id: 'smog',
+    title: 'Hazardous Toxic Smog & Particulate Pollution Protocol',
+    hazardType: 'Severe AQI Hazard',
+    icon: '🌫️',
+    urgency: 'high',
+    dos: [
+      'Wear certified N95 / N99 particulate respirators when stepping outdoors.',
+      'Use HEPA air purifiers in sealed indoor rooms and keep windows closed.'
+    ],
+    donts: [
+      'Do not perform vigorous aerobic exercises outdoors during heavy smog peaks.',
+      'Do not burn dry leaves, trash, or wood waste in open areas.'
+    ],
+    goBagItems: ['N95 Respirator Masks', 'Inhaler / Respiratory Meds', 'Saline Nasal Drops']
+  }
+];
+
+export class SurvivalGuidesService {
+  static getAllGuides(): SurvivalGuide[] {
+    return SURVIVAL_GUIDES;
+  }
+
+  static getGuideForHazard(hazard: string): SurvivalGuide {
+    const match = SURVIVAL_GUIDES.find(g => g.hazardType.toLowerCase() === hazard.toLowerCase());
+    return match || SURVIVAL_GUIDES[0];
+  }
+}

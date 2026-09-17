@@ -1,223 +1,206 @@
 ---
+// src/pages/index.astro
+// Mausam - Personalized Precision Weather & Agri-Intelligence Homepage
 import Layout from '../layouts/Layout.astro';
 import GlobalNav from '../components/GlobalNav.astro';
 import SubNav from '../components/SubNav.astro';
+import OfflineBanner from '../components/OfflineBanner.astro';
+import DisasterOfflineView from '../components/DisasterOfflineView.astro';
+import ForecastCarousel7Day from '../components/dashboard/ForecastCarousel7Day.astro';
+import HourlyOverviewGraph from '../components/dashboard/HourlyOverviewGraph.astro';
+import WeatherDetailsGrid from '../components/dashboard/WeatherDetailsGrid.astro';
 import PersonaDashboard from '../components/PersonaDashboard.astro';
+import BottomNav from '../components/BottomNav.astro';
+import SavedLocationsDrawer from '../components/SavedLocationsDrawer.astro';
+import RadarModal from '../components/RadarModal.astro';
+import SOSHubModal from '../components/SOSHubModal.astro';
+import ProfileSettingsModal from '../components/ProfileSettingsModal.astro';
+import InstallPrompt from '../components/InstallPrompt.astro';
 ---
 
-<Layout title="Mausam - Personalized Weather Homepage" description="Personalized weather homepage dashboard built for specific user persona weather insights (health, fitness, surfing, travel, family, farming, commute, events).">
-  <!-- Nav header -->
+<Layout
+  title="Mausam - Personalized Weather Dashboard & Kisan Intel"
+  description="Next-generation personalized meteorological intelligence with 7-day forecast horizon, 24h temperature spline curve, and AI agro-advisories."
+>
+  <!-- Global Navigation Header -->
   <GlobalNav />
   <SubNav />
+  <OfflineBanner />
 
-  <main class="flex-1 bg-[#070b14]">
+  <main class="flex-1 bg-[#070b14] relative w-full max-w-[100vw] overflow-x-hidden pb-16 md:pb-0">
     
-    <!-- Persona Selection (Exact 2-Column Order Matching Reference) -->
-    <section class="w-full bg-slate-950/80 backdrop-blur-md border-b border-white/10 py-4 px-4 sm:px-6" id="persona-selector-section">
-      <div class="max-w-[1440px] mx-auto">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <span>⚡</span> PERSONALIZE HOME:
-          </span>
-          <span class="text-[11px] text-slate-500 font-medium hidden sm:inline">12 Specialized Profiles</span>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-          <!-- Row 1: Health-Conscious & Outdoor Fitness -->
-          <button data-select-persona="health" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🌿</span> <span class="truncate">Health-Conscious</span>
-          </button>
-          <button data-select-persona="fitness" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🏃</span> <span class="truncate">Outdoor Fitness</span>
-          </button>
+    <!-- Critical Disaster Banner & Overlay (Triggered on Extreme Hazards) -->
+    <DisasterOfflineView />
 
-          <!-- Row 2: Beach & Surf & Travelers -->
-          <button data-select-persona="maritime" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🏄</span> <span class="truncate">Beach & Surf</span>
-          </button>
-          <button data-select-persona="travel" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">✈️</span> <span class="truncate">Travelers</span>
-          </button>
-
-          <!-- Row 3: Parents & Families & Agriculture -->
-          <button data-select-persona="family" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🧳</span> <span class="truncate">Parents & Families</span>
-          </button>
-          <button data-select-persona="agriculture" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🌾</span> <span class="truncate">Agriculture</span>
-          </button>
-
-          <!-- Row 4: Commuters & Event Planning -->
-          <button data-select-persona="commute" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🚗</span> <span class="truncate">Commuters</span>
-          </button>
-          <button data-select-persona="event_planner" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">📅</span> <span class="truncate">Event Planning</span>
-          </button>
-
-          <!-- Specialized Industry Profiles -->
-          <button data-select-persona="aviation" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">✈️</span> <span class="truncate">Aerospace & Aviation</span>
-          </button>
-          <button data-select-persona="logistics" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🚚</span> <span class="truncate">Logistics & Transport</span>
-          </button>
-          <button data-select-persona="construction" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">🏗️</span> <span class="truncate">Construction & Infra</span>
-          </button>
-          <button data-select-persona="energy" class="persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left">
-            <span class="text-base sm:text-lg">⚡</span> <span class="truncate">Energy & Grid</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Photography-First Weather Hero Section (product-tile-dark) -->
-    <section class="relative w-full h-[400px] md:h-[480px] bg-surface-black overflow-hidden flex items-end">
-      <!-- Background Photo Grid (Dynamic photo based on location) -->
-      <div id="hero-photo" class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out scale-102" style="background-image: url('https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1200&auto=format&fit=crop'); background-color: #1a1a2e;">
-      </div>
-      <!-- Soft dark visual gradient overlays -->
-      <div class="absolute inset-0 bg-gradient-to-t from-surface-black via-surface-black/50 to-transparent"></div>
-      <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-surface-black/60 to-transparent"></div>
-      
-      <!-- Hero Content Stack (SF Pro Display, tight letter spacing) -->
-      <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 pb-12 text-white">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+    <!-- Severe Disaster Alert Banner -->
+    <div id="severe-disaster-alert-banner" class="hidden w-full bg-gradient-to-r from-red-950 via-red-900 to-rose-950 border-b border-red-500/50 px-4 sm:px-6 py-3.5 shadow-2xl">
+      <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl animate-bounce">🚨</span>
           <div>
-            <!-- Location (SF Pro Display 21px / 600) -->
-            <p id="hero-location" class="text-lg md:text-xl font-semibold tracking-apple-tight text-primary-on-dark mb-1">Mumbai, India</p>
-            
-            <!-- Temperature (SF Pro Display 56px / 600, tight tracking) -->
-            <h1 id="hero-temp" class="text-5xl md:text-7xl font-semibold tracking-apple-hero leading-none mb-2">29.5°C</h1>
-            
-            <!-- Condition Tagline (SF Pro Display 28px / 400) -->
-            <p id="hero-condition" class="text-xl md:text-2xl font-light text-body-muted tracking-apple-tight">Passing Showers</p>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-red-200 bg-red-500/30 px-2 py-0.5 rounded border border-red-400/40 animate-pulse">
+                CRITICAL WEATHER DISASTER ALERT
+              </span>
+              <span id="hero-disaster-title" class="text-xs text-white font-bold">Severe Cyclone Warning</span>
+            </div>
+            <p id="hero-disaster-desc" class="text-xs text-red-200 mt-0.5">
+              Rapid atmospheric depression detected. Move away from coastal and weak structures immediately.
+            </p>
           </div>
-          
-          <!-- Key Horizontal Weather Strips (SF Pro Text 14px) -->
-          <div class="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-body-muted border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-8">
-            <div class="flex flex-col">
-              <span class="text-xs uppercase text-ink-muted-48">Humidity</span>
-              <span id="hero-humidity" class="text-base font-semibold text-white">88%</span>
+        </div>
+        <button id="btn-hero-open-sos" type="button" class="px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg transition-all active-scale cursor-pointer flex items-center gap-1.5 shrink-0">
+          <span>🛡️</span> <span>Open Disaster Response Hub</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Live Weather View -->
+    <div id="main-weather-content" class="w-full max-w-full overflow-x-hidden transition-opacity duration-300">
+      
+      <!-- Photography-First Hero Section (India Gate / City Scenic) -->
+      <section class="relative w-full min-h-[380px] md:min-h-[440px] h-auto bg-[#080c14] overflow-hidden flex items-end pt-12 pb-8 sm:pb-12">
+        <!-- Background Scenic Photo -->
+        <div
+          id="hero-photo"
+          class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out scale-102"
+          style="background-image: url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop'); background-color: #1a1a2e;"
+        >
+        </div>
+        <!-- Soft gradient overlays -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#070b14] via-[#070b14]/60 to-transparent"></div>
+        <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#070b14]/70 to-transparent"></div>
+
+        <!-- Hero Content Stack -->
+        <div class="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 text-white">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 sm:gap-6">
+            <div class="min-w-0">
+              <!-- Location Display & Offline Badge -->
+              <div class="flex items-center gap-2 mb-1">
+                <p id="hero-location" class="text-base sm:text-xl font-semibold tracking-apple-tight text-cyan-300 truncate">
+                  New Delhi, Delhi, India
+                </p>
+                <span id="hero-offline-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 hidden">
+                  Offline (Cached)
+                </span>
+              </div>
+
+              <!-- Temperature -->
+              <h1 id="hero-temp" class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-apple-hero leading-tight sm:leading-none mb-1.5 sm:mb-2">
+                29.6°C
+              </h1>
+
+              <!-- Condition Tagline -->
+              <p id="hero-condition" class="text-base sm:text-xl md:text-2xl font-normal text-slate-200 tracking-apple-tight">
+                Partly Cloudy
+              </p>
             </div>
-            <div class="flex flex-col">
-              <span class="text-xs uppercase text-ink-muted-48">Wind Speed</span>
-              <span id="hero-wind" class="text-base font-semibold text-white">24.5 kph WSW</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="text-xs uppercase text-ink-muted-48">UV Index</span>
-              <span id="hero-uv" class="text-base font-semibold text-white">6.0 (Mod)</span>
+
+            <!-- Key Horizontal Weather Strips -->
+            <div class="flex flex-wrap items-center gap-x-5 sm:gap-x-8 gap-y-2.5 text-sm text-slate-300 border-t md:border-t-0 md:border-l border-white/20 pt-3 md:pt-0 md:pl-8">
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Humidity</span>
+                <span id="hero-humidity" class="text-sm sm:text-base font-semibold text-white">65%</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Wind Speed</span>
+                <span id="hero-wind" class="text-sm sm:text-base font-semibold text-white">2.6 kph ESE</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">UV Index</span>
+                <span id="hero-uv" class="text-sm sm:text-base font-semibold text-white">0 (Moderate)</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Dynamic Dashboard Container -->
-    <PersonaDashboard />
+      <!-- Comprehensive Meteorological Dashboard Horizon Container -->
+      <section class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 pt-6 overflow-x-hidden">
+        
+        <!-- 1. 7-Day Interactive Forecast Horizon -->
+        <ForecastCarousel7Day />
+
+        <!-- 2. 24-Hour Meteorological Spline Curve Graph -->
+        <HourlyOverviewGraph />
+
+        <!-- 3. 8-Card Comprehensive Meteorological Diagnostics Grid -->
+        <WeatherDetailsGrid />
+
+      </section>
+
+      <!-- Dynamic Persona Dashboard Container (Profile Selector + 4 KPI Cards + AI Advisory + Checklist) -->
+      <PersonaDashboard />
+
+    </div>
 
   </main>
 
-  <!-- Apple-inspired Dark Glass Footer -->
-  <footer class="bg-slate-950 border-t border-white/10 text-slate-400 text-xs py-14 px-6" id="footer-section">
+  <!-- Dark Glass Footer -->
+  <footer class="w-full bg-slate-950 border-t border-white/10 text-slate-400 text-xs py-12 px-6">
     <div class="max-w-[980px] mx-auto">
-      
-      <!-- Four-Column link architecture -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 border-b border-white/10 pb-10">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8 border-b border-white/10 pb-8">
         <div>
-          <h4 class="font-bold text-white uppercase tracking-wider mb-3">Mausam Profiles</h4>
-          <ul class="space-y-1.5 text-slate-400">
-            <li><a href="#" class="hover:text-emerald-400 transition-colors">Health-Conscious</a></li>
-            <li><a href="#" class="hover:text-cyan-400 transition-colors">Outdoor Fitness</a></li>
-            <li><a href="#" class="hover:text-cyan-400 transition-colors">Surfers & Beach</a></li>
-            <li><a href="#" class="hover:text-amber-400 transition-colors">Travel Navigator</a></li>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Mausam Intel</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="/farmer" class="hover:text-emerald-400">Agriculture Hub</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Outdoor Fitness</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Coastal Maritime</a></li>
+            <li><a href="#" class="hover:text-amber-400">Aviation Flight Ops</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-white uppercase tracking-wider mb-3">Sectors</h4>
-          <ul class="space-y-1.5 text-slate-400">
-            <li><a href="/farmer" class="text-emerald-400 hover:text-emerald-300 font-semibold transition-colors">🌾 Agriculture Hub (Farmer)</a></li>
-            <li><a href="#" class="hover:text-amber-400 transition-colors">Commuter Transit</a></li>
-            <li><a href="#" class="hover:text-pink-400 transition-colors">Event Planning</a></li>
-            <li><a href="#" class="hover:text-violet-400 transition-colors">Family Routines</a></li>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Safety & SOS</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="#" class="sos-hub-trigger hover:text-red-400">Emergency SOS Hub</a></li>
+            <li><a href="#" class="hover:text-emerald-400">Offline BLE Mesh</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Disaster Shelters</a></li>
+            <li><a href="#" class="hover:text-white">Survival Manuals</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-white uppercase tracking-wider mb-3">Weather Science</h4>
-          <ul class="space-y-1.5 text-slate-400">
-            <li><a href="#" class="hover:text-white transition-colors">Air Quality Index</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">UV Hazards index</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Marine Wave Tides</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Radar Mapping</a></li>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Weather Science</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="#" class="hover:text-white">Air Quality Index</a></li>
+            <li><a href="#" class="hover:text-white">UV Hazard Index</a></li>
+            <li><a href="#" class="hover:text-white">Barometric Tracking</a></li>
+            <li><a href="#" class="hover:text-white">Doppler Rain Radar</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-white uppercase tracking-wider mb-3">Account</h4>
-          <ul class="space-y-1.5 text-slate-400">
-            <li><a href="#" class="hover:text-white transition-colors">Saved Locations</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Flight Trackers</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Developer Portal</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Feedback & Support</a></li>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">System</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><span class="text-emerald-400 font-semibold">SIH26076</span></li>
+            <li><span class="text-slate-400">Static PWA / Capacitor</span></li>
+            <li><span class="text-slate-400">Open-Meteo & Gemini AI</span></li>
           </ul>
         </div>
       </div>
-
-      <!-- Legal Rows -->
-      <div class="text-slate-400 space-y-4 text-xs">
-        <p class="leading-relaxed">
-          Disclaimer: Weather forecasts, AI suggestions, air quality indices, and marine safety alerts provided on Mausam are for informational purposes only. Do not make critical navigation, flight, farming, or health decisions solely based on Mausam data.
-        </p>
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-white/10 pt-4 gap-4 text-slate-400 font-normal">
-          <div>
-            Copyright © 2026 Mausam Inc. All rights reserved. • <span class="font-semibold text-white ml-1">SIH26076</span>
-          </div>
-          <div class="flex items-center gap-4">
-            <a href="#" class="hover:underline hover:text-emerald-400">Privacy Policy</a>
-            <span class="w-[1px] h-3 bg-white/15"></span>
-            <a href="#" class="hover:underline hover:text-emerald-400">Terms of Use</a>
-            <span class="w-[1px] h-3 bg-white/15"></span>
-            <a href="#" class="hover:underline hover:text-emerald-400">Legal Notices</a>
-          </div>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-slate-500">
+        <div>Copyright © 2026 Mausam Precision Weather Systems. All rights reserved.</div>
+        <div class="flex items-center gap-3">
+          <a href="#" class="hover:underline hover:text-emerald-400">Privacy Policy</a>
+          <span>•</span>
+          <a href="#" class="hover:underline hover:text-emerald-400">Terms of Use</a>
         </div>
       </div>
-
     </div>
   </footer>
+
+  <!-- Modals and Drawers -->
+  <SavedLocationsDrawer />
+  <RadarModal />
+  <SOSHubModal />
+  <ProfileSettingsModal />
+  <InstallPrompt />
+  <BottomNav />
 </Layout>
 
-<!-- Client-side script handling location changes and persona toggles -->
 <script>
-  let activeCity = localStorage.getItem('mausam_city') || 'mumbai';
-  let activePersona = localStorage.getItem('mausam_persona') || 'health';
+  import '../scripts/client-api-bridge';
+  import { StorageService } from '../services/storage.service';
+  import { fetchWeatherData } from '../services/weather.service';
 
-  // Race condition guard: only the latest request should update the UI
-  let weatherRequestId = 0;
-  let aiRequestId = 0;
-
-  // Flag to suppress input event when we programmatically set the search input value
-  let suppressInputEvent = false;
-
-  const CITY_PHOTOS: Record<string, string> = {
-    mumbai: 'https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1200&auto=format&fit=crop',
-    new_delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop',
-    london: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop',
-    sydney: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=1200&auto=format&fit=crop',
-    new_york: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop'
-  };
-
-  const WEATHER_FALLBACK_PHOTOS: Record<string, string> = {
-    sunny: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=1200&auto=format&fit=crop',
-    rainy: 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1200&auto=format&fit=crop',
-    cloudy: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?q=80&w=1200&auto=format&fit=crop',
-    stormy: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?q=80&w=1200&auto=format&fit=crop',
-    foggy: 'https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?q=80&w=1200&auto=format&fit=crop',
-    default: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=1200&auto=format&fit=crop'
-  };
-
-  const locationSearchInput = document.getElementById('location-search-input') as HTMLInputElement | null;
-  const locationSearchResults = document.getElementById('location-search-results');
-  const subNavCityDisplay = document.getElementById('sub-nav-city-display');
   const heroLocation = document.getElementById('hero-location');
   const heroTemp = document.getElementById('hero-temp');
   const heroCondition = document.getElementById('hero-condition');
@@ -225,484 +208,84 @@ import PersonaDashboard from '../components/PersonaDashboard.astro';
   const heroWind = document.getElementById('hero-wind');
   const heroUv = document.getElementById('hero-uv');
   const heroPhoto = document.getElementById('hero-photo');
-  const aiRecText = document.getElementById('ai-rec-text');
+  const heroOfflineBadge = document.getElementById('hero-offline-badge');
+  const disasterBanner = document.getElementById('severe-disaster-alert-banner');
+  const heroDisasterTitle = document.getElementById('hero-disaster-title');
+  const heroDisasterDesc = document.getElementById('hero-disaster-desc');
+  const btnHeroSos = document.getElementById('btn-hero-open-sos');
 
-  let searchTimeout: ReturnType<typeof setTimeout> | null = null;
-  let selectedLocation: { key: string; display: string } | null = null;
+  const SCENIC_PHOTOS: Record<string, string> = {
+    new_delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop', // India Gate
+    mumbai: 'https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1200&auto=format&fit=crop',
+    london: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop',
+    new_york: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop'
+  };
 
-  function renderSearchResults(results: any[]) {
-    if (!locationSearchResults) return;
-    if (results.length === 0) {
-      locationSearchResults.innerHTML = '<div class="px-4 py-3 text-sm text-ink-muted-48">No locations found</div>';
-      positionDropdown();
-      locationSearchResults.classList.remove('hidden');
-      return;
-    }
-    locationSearchResults.innerHTML = results.map(loc => `
-      <div class="location-result-item px-4 py-3 text-sm cursor-pointer hover:bg-surface-pearl transition-colors border-b border-hairline last:border-b-0"
-           data-city-key="${loc.key}"
-           data-display="${loc.display}"
-           data-lat="${loc.lat}"
-           data-lon="${loc.lon}">
-        <div class="font-semibold text-ink">${loc.name}</div>
-        <div class="text-xs text-ink-muted-48">${loc.region}, ${loc.country}</div>
-      </div>
-    `).join('');
-    positionDropdown();
-    locationSearchResults.classList.remove('hidden');
-
-    locationSearchResults.querySelectorAll('.location-result-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const key = item.getAttribute('data-city-key') || 'mumbai';
-        const display = item.getAttribute('data-display') || '';
-        selectLocation(key, display);
-      });
-    });
-  }
-
-  function positionDropdown() {
-    // No-op: dropdown uses CSS absolute positioning relative to container
-  }
-
-  function selectLocation(key: string, display: string) {
-    activeCity = key;
-    selectedLocation = { key, display };
-    localStorage.setItem('mausam_city', key);
-    if (display) localStorage.setItem('mausam_location_display', display);
-
-    // Hide dropdown immediately
-    if (locationSearchResults) locationSearchResults.classList.add('hidden');
-
-    // Show loading state on hero
-    if (heroLocation) heroLocation.textContent = display || key;
-    if (heroTemp) heroTemp.textContent = '...';
-    if (heroCondition) heroCondition.textContent = 'Loading weather data...';
-
-    // Set input value WITHOUT triggering the input event search
-    suppressInputEvent = true;
-    if (locationSearchInput) locationSearchInput.value = display || key;
-    suppressInputEvent = false;
-
-    // Fetch fresh data for the new location
-    loadWeatherData(activeCity, display);
-    loadAISuggestions(activeCity, activePersona, display);
-  }
-
-  if (locationSearchInput) {
-    locationSearchInput.addEventListener('input', () => {
-      if (suppressInputEvent) return;
-
-      const query = locationSearchInput.value.trim();
-      if (searchTimeout) clearTimeout(searchTimeout);
-      if (query.length < 2) {
-        if (locationSearchResults) locationSearchResults.classList.add('hidden');
-        return;
-      }
-      searchTimeout = setTimeout(async () => {
-        try {
-          const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-          if (!response.ok) throw new Error('Search failed');
-          const data = await response.json();
-          const results = Array.isArray(data) ? data : (data.value || []);
-          renderSearchResults(results.map((loc: any) => ({
-            ...loc,
-            key: loc.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')
-          })));
-        } catch (error) {
-          console.error('Location search error:', error);
-          if (locationSearchResults) locationSearchResults.classList.add('hidden');
-        }
-      }, 300);
-    });
-
-    locationSearchInput.addEventListener('focus', () => {
-      if (suppressInputEvent) return;
-      const query = locationSearchInput.value.trim();
-      if (query.length >= 2) {
-        locationSearchInput.dispatchEvent(new Event('input'));
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      const container = document.getElementById('location-search-container');
-      const dropdown = document.getElementById('location-search-results');
-      const clickedOnDropdown = dropdown && dropdown.contains(e.target as Node);
-      const clickedOnInput = container && container.contains(e.target as Node);
-      if (!clickedOnInput && !clickedOnDropdown) {
-        if (locationSearchResults) locationSearchResults.classList.add('hidden');
-      }
-    });
-  }
-
-  async function loadWeatherData(city: string, locationQuery?: string) {
-    const requestId = ++weatherRequestId;
-    
-    // Immediately show loading/skeleton state for main elements
-    if (heroLocation) heroLocation.textContent = locationQuery || city;
-    if (heroTemp) heroTemp.textContent = '--°C';
-    if (heroCondition) heroCondition.textContent = 'Loading weather...';
-    if (heroHumidity) heroHumidity.textContent = '--%';
-    if (heroWind) heroWind.textContent = '-- kph --';
-    if (heroUv) heroUv.textContent = '--';
-    if (subNavCityDisplay) subNavCityDisplay.textContent = locationQuery || city;
-
-    // Reset all cards across all personas to loading state
-    const cardIds = [
-      'health-aqi-card', 'health-pollen-card', 'health-uv-card', 'health-humidity-card',
-      'fitness-hours-card', 'fitness-sun-card', 'fitness-wind-card', 'fitness-heat-card',
-      'marine-sea-card', 'marine-wave-card', 'marine-temp-card', 'marine-tide-card',
-      'aviation-ceiling-card', 'aviation-vis-card', 'aviation-freezing-card', 'aviation-shear-card',
-      'logistics-road-card', 'logistics-wind-card', 'logistics-rain-card', 'logistics-delay-card',
-      'construction-crane-card', 'construction-pour-card', 'construction-heat-card', 'construction-soil-card',
-      'energy-solar-card', 'energy-wind-card', 'energy-degreedays-card', 'energy-lightning-card',
-      'travel-saved-card', 'travel-flight-card', 'travel-packing-card',
-      'family-commute-card', 'family-rain-card', 'family-warning-card',
-      'commute-traffic-card', 'commute-visibility-card', 'commute-storm-card',
-      'events-comfort-card', 'events-rain-card', 'events-suitability-card'
-    ];
-    cardIds.forEach(id => {
-      updateCardText(id, '--', 'Loading weather context...');
-    });
-
-    try {
-      const qParam = locationQuery ? `&q=${encodeURIComponent(locationQuery)}` : '';
-      const url = `/api/weather?city=${city}${qParam}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Weather fetch failed');
-      const data = await response.json();
-
-      // Guard: if another request was started after this one, discard this response
-      if (requestId !== weatherRequestId) return;
-
-      if (heroLocation) heroLocation.textContent = `${data.location.name}, ${data.location.country}`;
-      if (heroTemp) heroTemp.textContent = `${data.current.temp_c}°C`;
-      if (heroCondition) heroCondition.textContent = data.current.condition.text;
-      if (heroHumidity) heroHumidity.textContent = `${data.current.humidity}%`;
-      if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${data.current.wind_dir}`;
-
-      const uvLabel = data.current.uv >= 8 ? 'Very High' : data.current.uv >= 6 ? 'High' : 'Moderate';
-      if (heroUv) heroUv.textContent = `${data.current.uv} (${uvLabel})`;
-
-      if (heroPhoto) {
-        if (CITY_PHOTOS[city]) {
-          const img = new Image();
-          img.onload = () => {
-            if (requestId === weatherRequestId) heroPhoto.style.backgroundImage = `url('${CITY_PHOTOS[city]}')`;
-          };
-          img.onerror = () => {
-            const conditionKey = data.current.condition.icon || 'default';
-            const fallbackUrl = WEATHER_FALLBACK_PHOTOS[conditionKey] || WEATHER_FALLBACK_PHOTOS['default'];
-            if (requestId === weatherRequestId) heroPhoto.style.backgroundImage = `url('${fallbackUrl}')`;
-          };
-          img.src = CITY_PHOTOS[city];
-        } else {
-          const conditionKey = data.current.condition.icon || 'default';
-          const fallbackUrl = WEATHER_FALLBACK_PHOTOS[conditionKey] || WEATHER_FALLBACK_PHOTOS['default'];
-          heroPhoto.style.backgroundImage = `url('${fallbackUrl}')`;
-        }
-      }
-      if (subNavCityDisplay) {
-        subNavCityDisplay.textContent = `${data.location.name}, ${data.location.country}`;
-      }
-
-      // 1. Health Cards
-      updateCardText('health-aqi-card', `${data.aqi.index} (${data.aqi.label})`, `PM2.5: ${data.aqi.pm25} µg/m³ | PM10: ${data.aqi.pm10} µg/m³`);
-      updateCardText('health-pollen-card', `Grass: ${data.pollen.grass}`, `Tree: ${data.pollen.tree} | Weed: ${data.pollen.weed}`);
-      updateCardText('health-uv-card', `UV Index: ${data.current.uv}`, data.current.uv >= 8 ? "Critical sun hazards. Wear sunscreen!" : "Moderate risk. Standard sunscreen advised.");
-      updateCardText('health-humidity-card', `${data.current.humidity}%`, data.current.humidity > 80 ? "Damp atmosphere, can trigger joint pain." : "Comfortable ambient humidity.");
-
-      // 2. Fitness Cards
-      updateCardText('fitness-hours-card', data.fitness.best_running_hours.join(' & '), "Optimal thermal periods today.");
-      updateCardText('fitness-sun-card', `Rise: ${data.fitness.sunrise}`, `Set: ${data.fitness.sunset}`);
-      updateCardText('fitness-wind-card', `${data.current.wind_kph} kph`, `Gusts from ${data.current.wind_dir}`);
-      updateCardText('fitness-heat-card', data.fitness.heat_alert ? "Caution Active" : "No Alerts", data.fitness.heat_alert ? "High risk of heat exhaustion." : "Temperature is safe for outdoor sprints.");
-
-      // 3. Aviation Cards
-      if (data.aviation) {
-        updateCardText('aviation-ceiling-card', `${data.aviation.cloud_ceiling_ft} ft AGL`, "Cloud base above ground level (VFR/IFR).");
-        updateCardText('aviation-vis-card', `${data.aviation.flight_visibility_sm} SM`, data.aviation.metar_summary || "METAR observation nominal.");
-        updateCardText('aviation-freezing-card', `FL ${Math.round(data.aviation.freezing_level_ft / 100)}`, `Density Altitude: ${data.aviation.density_altitude_ft} ft MSL`);
-        updateCardText('aviation-shear-card', `${data.aviation.crosswind_component_kt} kt X-Wind`, data.aviation.wind_shear_alert);
-      }
-
-      // 4. Smart Maritime Cards
-      if (data.maritime) {
-        updateCardText('marine-sea-card', `${data.maritime.swell_height_m}m Swell`, `Period: ${data.maritime.swell_period_s}s from ${data.maritime.swell_direction}`);
-        updateCardText('marine-wave-card', `${data.maritime.current_velocity_kts} kts`, "Coastal surface current velocity.");
-        updateCardText('marine-temp-card', `${data.maritime.sea_surface_temp_c}°C`, "Sea Surface Temperature (SST).");
-        updateCardText('marine-tide-card', data.maritime.tide_status, data.maritime.squall_alert);
-      }
-
-      // 5. Logistics & Fleet Cards
-      if (data.logistics) {
-        updateCardText('logistics-road-card', `${data.logistics.road_surface_temp_c}°C`, data.logistics.ice_hazard_status);
-        updateCardText('logistics-wind-card', `${data.logistics.highway_crosswind_kph} kph`, "Highway vehicle lateral stability index.");
-        updateCardText('logistics-rain-card', data.logistics.precip_nowcast_min, "Minute-by-minute precipitation radar.");
-        updateCardText('logistics-delay-card', data.logistics.transit_delay_risk, `Visibility: ${data.logistics.visibility_distance_km} km`);
-      }
-
-      // 6. Construction & Heavy Infrastructure Cards
-      if (data.construction) {
-        updateCardText('construction-crane-card', `${data.construction.crane_gust_limit_pct}% Limit`, data.construction.wind_hazard_status);
-        updateCardText('construction-pour-card', data.construction.concrete_pour_window, "Curing & washout risk assessment.");
-        updateCardText('construction-heat-card', data.construction.heat_stress_index, "Worker WBGT thermal hydration protocol.");
-        updateCardText('construction-soil-card', `${data.construction.ground_saturation_pct}% Saturation`, "Earthmoving heavy machinery traction.");
-      }
-
-      // 7. Renewable Energy & Utility Grid Cards
-      if (data.energy) {
-        updateCardText('energy-solar-card', `${data.energy.solar_ghi_wm2} W/m²`, `GHI Irradiance | DNI: ${data.energy.solar_dni_wm2} W/m²`);
-        updateCardText('energy-wind-card', `${data.energy.wind_100m_hub_kph} kph`, "Wind velocity at 100m hub height.");
-        updateCardText('energy-degreedays-card', data.energy.hdd_cdd_index, "Grid thermal heating/cooling load demand.");
-        updateCardText('energy-lightning-card', data.energy.lightning_radius_km, "Electrostatic strike detection radius.");
-      }
-
-      // 8. Travel Cards
-      const destString = data.travel?.saved_destinations?.map((d: any) => `${d.name}: ${d.temp_c}°C`).join(' | ') || 'No secondary destinations';
-      updateCardText('travel-saved-card', "Active Trackers", destString);
-      updateCardText('travel-flight-card', data.travel?.flight_alerts?.status || "Normal", data.travel?.flight_alerts?.details || "On-schedule flights.");
-      updateCardText('travel-packing-card', "Luggage Tips", data.travel?.packing_suggestions || "Standard layers.");
-
-      // 9. Family Cards
-      updateCardText('family-commute-card', "Commute Index", data.family?.school_commute || "Normal commute.");
-      updateCardText('family-rain-card', "Rain Timeline", data.family?.rain_alerts || "No rain expected.");
-      updateCardText('family-warning-card', "Severe Bulletins", data.family?.severe_warning || "No severe warnings active.");
-
-      // 10. Commute Cards
-      updateCardText('commute-traffic-card', "Highway Index", data.commute?.traffic_status || "Normal traffic.");
-      updateCardText('commute-visibility-card', `${data.current.visibility_km} km`, data.commute?.visibility_alert || "Good visibility.");
-      updateCardText('commute-storm-card', "Travel Alerts", data.commute?.storm_fog_alert || "No warnings.");
-
-      // 11. Event Planner Cards
-      updateCardText('events-comfort-card', `${data.fitness.comfort_index}/100`, data.event_planner?.extended_comfort || "Good rating.");
-      updateCardText('events-rain-card', `${data.event_planner?.rain_probability_pct || 10}%`, "Precipitation probability during events.");
-      updateCardText('events-suitability-card', (data.event_planner?.rain_probability_pct || 0) > 50 ? "Indoor Backups advised" : "Outdoor Friendly", "Extended gathering suitability.");
-
-    } catch (error) {
-      if (requestId === weatherRequestId) {
-        console.error('Weather fetch error:', error);
-        if (heroCondition) heroCondition.textContent = 'Weather service temporarily offline';
-        cardIds.forEach(id => {
-          updateCardText(id, 'N/A', 'Failed to load weather data for this location.');
-        });
-      }
-    }
-  }
-
-  function updateCardText(cardId: string, value: string, desc: string) {
-    const cardEl = document.getElementById(cardId);
-    if (!cardEl) return;
-    const valueEl = cardEl.querySelector('.text-\\[28px\\]');
-    if (valueEl) valueEl.textContent = value;
-    const descEl = cardEl.querySelector('p');
-    if (descEl) descEl.textContent = desc;
-  }
-
-  async function loadAISuggestions(city: string, persona: string, locationQuery?: string) {
-    const requestId = ++aiRequestId;
-    if (aiRecText) {
-      aiRecText.classList.add('opacity-40');
-      aiRecText.textContent = "Analyzing weather parameters for personalized suggestions...";
-    }
-    try {
-      const qParam = locationQuery ? `&q=${encodeURIComponent(locationQuery)}` : '';
-      const response = await fetch(`/api/recommendations?city=${city}&persona=${persona}${qParam}`);
-      if (!response.ok) throw new Error('AI recommendations fetch failed');
-      const data = await response.json();
-      if (requestId !== aiRequestId) return;
-      if (aiRecText) {
-        aiRecText.classList.remove('opacity-40');
-        aiRecText.textContent = data.recommendation;
-      }
-    } catch (error) {
-      if (requestId === aiRequestId) {
-        console.error(error);
-        if (aiRecText) {
-          aiRecText.classList.remove('opacity-40');
-          aiRecText.textContent = "AI insights could not be retrieved. Please check connection.";
-        }
-      }
-    }
-  }
-
-  function showPersonaGrids(selectedPersona: string) {
-    const sections = document.querySelectorAll('.persona-section');
-    sections.forEach(sec => {
-      const pName = sec.getAttribute('data-persona');
-      if (pName === selectedPersona) {
-        sec.classList.remove('hidden');
-        sec.classList.add('block');
-      } else {
-        sec.classList.add('hidden');
-        sec.classList.remove('block');
-      }
-    });
-    const chips = document.querySelectorAll('.persona-chip');
-    chips.forEach(chip => {
-      const pName = chip.getAttribute('data-select-persona');
-      if (pName === selectedPersona) {
-        chip.className = 'persona-chip w-full px-3.5 py-3 bg-slate-900/90 text-white text-xs sm:text-sm font-semibold border-2 border-emerald-400 rounded-xl transition-all cursor-pointer flex items-center gap-2.5 active-scale shadow-glow-emerald ring-1 ring-emerald-400/40 text-left';
-      } else {
-        chip.className = 'persona-chip w-full px-3.5 py-3 bg-slate-900/50 text-slate-300 text-xs sm:text-sm font-medium border border-white/10 rounded-xl hover:border-white/30 hover:text-white transition-all cursor-pointer flex items-center gap-2.5 active-scale text-left';
-      }
-    });
-  }
-
-  const chips = document.querySelectorAll('.persona-chip');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const targetPersona = chip.getAttribute('data-select-persona');
-      if (targetPersona) {
-        activePersona = targetPersona;
-        localStorage.setItem('mausam_persona', activePersona);
-        showPersonaGrids(activePersona);
-        loadAISuggestions(activeCity, activePersona, selectedLocation?.display || localStorage.getItem('mausam_location_display') || undefined);
-      }
-    });
+  btnHeroSos?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-sos-hub'));
   });
 
-  // --- Use My Current Location (Geolocation API) ---
-  const useMyLocationBtn = document.getElementById('use-my-location-btn');
-  const useMyLocationText = document.getElementById('use-my-location-text');
+  function renderHero(data: any) {
+    if (!data) return;
 
-  if (useMyLocationBtn) {
-    useMyLocationBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        alert('Geolocation is not supported by your browser.');
-        return;
-      }
+    if (heroLocation) heroLocation.textContent = `${data.location.name}, ${data.location.country}`;
+    if (heroTemp) heroTemp.textContent = `${data.current.temp_c}°C`;
+    if (heroCondition) heroCondition.textContent = data.current.condition.text;
+    if (heroHumidity) heroHumidity.textContent = `${data.current.humidity}%`;
+    if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${data.current.wind_dir}`;
 
-      // Show loading state on button
-      if (useMyLocationText) useMyLocationText.textContent = 'Locating...';
-      useMyLocationBtn.classList.add('opacity-60');
-      useMyLocationBtn.setAttribute('disabled', 'true');
+    const uvLabel = data.current.uv >= 8 ? 'Very High' : data.current.uv >= 6 ? 'High' : 'Moderate';
+    if (heroUv) heroUv.textContent = `${data.current.uv} (${uvLabel})`;
 
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          const coordsQuery = `${lat},${lon}`;
-          const key = 'current_location';
+    if (heroOfflineBadge) {
+      if (navigator.onLine) heroOfflineBadge.classList.add('hidden');
+      else heroOfflineBadge.classList.remove('hidden');
+    }
 
-          activeCity = key;
-          selectedLocation = { key, display: '' };
-          localStorage.setItem('mausam_city', key);
-          localStorage.removeItem('mausam_location_display');
+    if (heroPhoto) {
+      const locKey = data.location.name.toLowerCase().replace(/ /g, '_');
+      const photoUrl = SCENIC_PHOTOS[locKey] || SCENIC_PHOTOS['new_delhi'];
+      heroPhoto.style.backgroundImage = `url('${photoUrl}')`;
+    }
 
-          if (locationSearchResults) locationSearchResults.classList.add('hidden');
-
-          if (heroLocation) heroLocation.textContent = 'Detecting location...';
-          if (heroTemp) heroTemp.textContent = '...';
-          if (heroCondition) heroCondition.textContent = 'Loading weather data...';
-
-          suppressInputEvent = true;
-          if (locationSearchInput) locationSearchInput.value = '';
-          suppressInputEvent = false;
-
-          // Single fetch using coordinates
-          try {
-            const resp = await fetch(`/api/weather?city=${key}&q=${encodeURIComponent(coordsQuery)}`);
-            if (!resp.ok) throw new Error('Weather fetch failed');
-            const data = await resp.json();
-            const displayName = `${data.location.name}, ${data.location.country}`;
-
-            // Update all location references
-            activeCity = key;
-            selectedLocation = { key, display: displayName };
-            localStorage.setItem('mausam_city', key);
-            localStorage.setItem('mausam_location_display', displayName);
-
-            if (locationSearchInput) locationSearchInput.value = displayName;
-            if (heroLocation) heroLocation.textContent = displayName;
-            if (heroTemp) heroTemp.textContent = `${data.current.temp_c}°C`;
-            if (heroCondition) heroCondition.textContent = data.current.condition.text;
-            if (heroHumidity) heroHumidity.textContent = `${data.current.humidity}%`;
-            if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${data.current.wind_dir}`;
-
-            const uvLabel = data.current.uv >= 8 ? 'Very High' : data.current.uv >= 6 ? 'High' : 'Moderate';
-            if (heroUv) heroUv.textContent = `${data.current.uv} (${uvLabel})`;
-
-            if (heroPhoto) {
-              const conditionKey = data.current.condition.icon || 'default';
-              const fallbackUrl = WEATHER_FALLBACK_PHOTOS[conditionKey] || WEATHER_FALLBACK_PHOTOS['default'];
-              heroPhoto.style.backgroundImage = `url('${fallbackUrl}')`;
-            }
-
-            if (subNavCityDisplay) subNavCityDisplay.textContent = displayName;
-
-            // Update all persona cards
-            updateCardText('health-aqi-card', `${data.aqi.index} (${data.aqi.label})`, `PM2.5: ${data.aqi.pm25} µg/m³ | PM10: ${data.aqi.pm10} µg/m³`);
-            updateCardText('health-pollen-card', `Grass: ${data.pollen.grass}`, `Tree: ${data.pollen.tree} | Weed: ${data.pollen.weed}`);
-            updateCardText('health-uv-card', `UV Index: ${data.current.uv}`, data.current.uv >= 8 ? "Critical sun hazards. Wear sunscreen!" : "Moderate risk. Standard sunscreen advised.");
-            updateCardText('health-humidity-card', `${data.current.humidity}%`, data.current.humidity > 80 ? "Damp atmosphere, can trigger joint pain." : "Comfortable ambient humidity.");
-            updateCardText('fitness-hours-card', data.fitness.best_running_hours.join(' & '), "Optimal thermal periods today.");
-            updateCardText('fitness-sun-card', `Rise: ${data.fitness.sunrise}`, `Set: ${data.fitness.sunset}`);
-            updateCardText('fitness-wind-card', `${data.current.wind_kph} kph`, `Gusts from ${data.current.wind_dir}`);
-            updateCardText('fitness-heat-card', data.fitness.heat_alert ? "Caution Active" : "No Alerts", data.fitness.heat_alert ? "High risk of heat exhaustion." : "Temperature is safe for outdoor sprints.");
-            updateCardText('marine-sea-card', data.marine.sea_condition, `Wave Period: 8s`);
-            updateCardText('marine-wave-card', `${data.marine.wave_height_m}m`, "Significant swell height.");
-            updateCardText('marine-temp-card', `${data.marine.water_temp_c}°C`, "Sea surface temperature.");
-            const nextTide = data.marine.tide_timings.length > 0 ? `${data.marine.tide_timings[0].type} at ${data.marine.tide_timings[0].time}` : 'N/A';
-            updateCardText('marine-tide-card', nextTide, data.marine.tide_timings.map((t: any) => `${t.type}: ${t.time}`).join(' | '));
-            const destString = data.travel.saved_destinations.map((d: any) => `${d.name}: ${d.temp_c}°C`).join(' | ');
-            updateCardText('travel-saved-card', "Active Trackers", destString);
-            updateCardText('travel-flight-card', data.travel.flight_alerts.status, data.travel.flight_alerts.details);
-            updateCardText('travel-packing-card', "Luggage Tips", data.travel.packing_suggestions);
-            updateCardText('family-commute-card', "Commute Index", data.family.school_commute);
-            updateCardText('family-rain-card', "Rain Timeline", data.family.rain_alerts);
-            updateCardText('family-warning-card', "Severe Bulletins", data.family.severe_warning || "No severe warnings active.");
-            updateCardText('agri-moisture-card', `${data.agriculture.soil_moisture_pct}%`, "Current soil saturation (10cm depth).");
-            updateCardText('agri-rain-card', `${data.agriculture.rainfall_prediction_24h_mm} mm`, "Accumulated next 24 hours.");
-            updateCardText('agri-frost-card', data.agriculture.frost_alert ? "Frost Alert" : "No Frost Risk", data.agriculture.frost_alert ? "Cover high-value plants." : "Ground temperature safe.");
-            updateCardText('agri-planting-card', "Sowing Guide", data.agriculture.seasonal_planting_guidance);
-            updateCardText('commute-traffic-card', "Highway Index", data.commute.traffic_status);
-            updateCardText('commute-visibility-card', `${data.current.visibility_km} km`, data.commute.visibility_alert);
-            updateCardText('commute-storm-card', "Travel Alerts", data.commute.storm_fog_alert);
-            updateCardText('events-comfort-card', `${data.fitness.comfort_index}/100`, data.event_planner.extended_comfort);
-            updateCardText('events-rain-card', `${data.event_planner.rain_probability_pct}%`, "Precipitation probability during events.");
-            updateCardText('events-suitability-card', data.event_planner.rain_probability_pct > 50 ? "Indoor Backups advised" : "Outdoor Friendly", "Extended 12-hour gathering suitability.");
-
-            // Load AI suggestions for this location
-            loadAISuggestions(key, activePersona, displayName);
-
-          } catch (e) {
-            if (heroCondition) heroCondition.textContent = 'Failed to load weather. Try again.';
-          }
-
-          // Restore button state
-          if (useMyLocationText) useMyLocationText.textContent = 'Current Location';
-          useMyLocationBtn.classList.remove('opacity-60');
-          useMyLocationBtn.removeAttribute('disabled');
-        },
-        (error) => {
-          if (useMyLocationText) useMyLocationText.textContent = 'Current Location';
-          useMyLocationBtn.classList.remove('opacity-60');
-          useMyLocationBtn.removeAttribute('disabled');
-
-          let message = 'Unable to retrieve your location.';
-          if (error.code === error.PERMISSION_DENIED) {
-            message = 'Location permission denied. Please allow location access in your browser settings.';
-          } else if (error.code === error.TIMEOUT) {
-            message = 'Location request timed out. Please try again.';
-          } else if (error.code === error.POSITION_UNAVAILABLE) {
-            message = 'Location information is unavailable. Please try again.';
-          }
-          alert(message);
-        },
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
-      );
-    });
+    // Handle Disaster Banner
+    if (disasterBanner && data.isDisasterActive && data.disasterDetails) {
+      if (heroDisasterTitle) heroDisasterTitle.textContent = data.disasterDetails.disasterName;
+      if (heroDisasterDesc) heroDisasterDesc.textContent = data.disasterDetails.description;
+      disasterBanner.classList.remove('hidden');
+    } else if (disasterBanner) {
+      disasterBanner.classList.add('hidden');
+    }
   }
 
-  // Init: run immediately since module scripts execute after DOM is ready
-  (function init() {
-    const savedDisplay = localStorage.getItem('mausam_location_display');
-    if (locationSearchInput) {
-      locationSearchInput.value = savedDisplay || activeCity;
+  async function loadWeather(key: string, display?: string) {
+    try {
+      const data = await fetchWeatherData(key, display);
+      renderHero(data);
+      StorageService.setLastWeatherData(data);
+      window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: data }));
+    } catch (err) {
+      console.warn('[Home] Load weather error:', err);
     }
-    loadWeatherData(activeCity, savedDisplay || undefined);
-    showPersonaGrids(activePersona);
-    loadAISuggestions(activeCity, activePersona, savedDisplay || undefined);
-  })();
+  }
+
+  // Location selection listener
+  window.addEventListener('mausam-location-selected', (e: any) => {
+    const key = e.detail?.key || 'new_delhi';
+    const display = e.detail?.display || 'New Delhi, Delhi, India';
+    loadWeather(key, display);
+  });
+
+  // Init
+  const initialLoc = StorageService.getLastLocation() || 'New Delhi, Delhi, India';
+  const initialKey = initialLoc.split(',')[0].trim().toLowerCase().replace(/ /g, '_');
+
+  // If cached data exists in storage, render immediately to avoid flash
+  const cached = StorageService.getLastWeatherData();
+  if (cached) {
+    renderHero(cached);
+    window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: cached }));
+  }
+
+  loadWeather(initialKey, initialLoc);
 </script>

@@ -1,0 +1,256 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.mausam.app"
+4    android:versionCode="2"
+5    android:versionName="1.0.1" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="35" />
+10
+11    <!-- Permissions for Internet, Network, Location, and Emergency Features -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:5:5-67
+12-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:5:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:6:5-79
+13-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:6:22-76
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:7:5-79
+14-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:7:22-76
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:8:5-81
+15-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:8:22-78
+16    <uses-permission android:name="android.permission.VIBRATE" />
+16-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:9:5-66
+16-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:9:22-63
+17    <uses-permission android:name="android.permission.WAKE_LOCK" />
+17-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:10:5-68
+17-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:10:22-65
+18
+19    <!-- Bluetooth LE Permissions for Android 12+ (API 31+) -->
+20    <uses-permission
+20-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:13:5-120
+21        android:name="android.permission.BLUETOOTH_SCAN"
+21-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:13:22-70
+22        android:usesPermissionFlags="neverForLocation" />
+22-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:13:71-117
+23    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+23-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:14:5-78
+23-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:14:22-75
+24    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+24-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:15:5-76
+24-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:15:22-73
+25
+26    <!-- Legacy Bluetooth Permissions for Android <= 11 -->
+27    <uses-permission
+27-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:18:5-95
+28        android:name="android.permission.BLUETOOTH"
+28-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:18:22-65
+29        android:maxSdkVersion="30" />
+29-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:18:66-92
+30    <uses-permission
+30-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:19:5-101
+31        android:name="android.permission.BLUETOOTH_ADMIN"
+31-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:19:22-71
+32        android:maxSdkVersion="30" />
+32-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:19:72-98
+33
+34    <!-- Hardware Sensor & Feature Declarations (Set to optional for maximum device compatibility) -->
+35    <uses-feature
+35-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:22:5-88
+36        android:name="android.hardware.bluetooth"
+36-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:22:19-60
+37        android:required="false" />
+37-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:22:61-85
+38    <uses-feature
+38-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:23:5-91
+39        android:name="android.hardware.bluetooth_le"
+39-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:23:19-63
+40        android:required="false" />
+40-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:23:64-88
+41    <uses-feature
+41-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:24:5-87
+42        android:name="android.hardware.location"
+42-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:24:19-59
+43        android:required="false" />
+43-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:24:60-84
+44    <uses-feature
+44-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:25:5-91
+45        android:name="android.hardware.location.gps"
+45-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:25:19-63
+46        android:required="false" />
+46-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:25:64-88
+47    <uses-feature
+47-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:26:5-95
+48        android:name="android.hardware.location.network"
+48-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:26:19-67
+49        android:required="false" />
+49-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:26:68-92
+50    <uses-feature
+50-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:27:5-83
+51        android:name="android.hardware.wifi"
+51-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:27:19-55
+52        android:required="false" />
+52-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:27:56-80
+53    <uses-feature
+53-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:28:5-90
+54        android:name="android.hardware.touchscreen"
+54-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:28:19-62
+55        android:required="false" />
+55-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:28:63-87
+56    <uses-feature
+56-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:29:5-95
+57        android:name="android.hardware.sensor.barometer"
+57-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:29:19-67
+58        android:required="false" />
+58-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:29:68-92
+59    <uses-feature
+59-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:30:5-93
+60        android:name="android.hardware.sensor.compass"
+60-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:30:19-65
+61        android:required="false" />
+61-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:30:66-90
+62
+63    <permission
+63-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
+64        android:name="com.mausam.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+64-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:23:9-81
+65        android:protectionLevel="signature" />
+65-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:24:9-44
+66
+67    <uses-permission android:name="com.mausam.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+67-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:26:5-97
+67-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
+68
+69    <application
+69-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:32:5-65:19
+70        android:allowBackup="true"
+70-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:33:9-35
+71        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+71-->[androidx.core:core:1.17.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
+72        android:debuggable="true"
+73        android:extractNativeLibs="false"
+74        android:icon="@mipmap/ic_launcher"
+74-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:34:9-43
+75        android:label="@string/app_name"
+75-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:35:9-41
+76        android:roundIcon="@mipmap/ic_launcher_round"
+76-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:36:9-54
+77        android:supportsRtl="true"
+77-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:37:9-35
+78        android:testOnly="true"
+79        android:theme="@style/AppTheme"
+79-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:39:9-40
+80        android:usesCleartextTraffic="true" >
+80-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:38:9-44
+81        <activity
+81-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:41:9-54:20
+82            android:name="com.mausam.app.MainActivity"
+82-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:43:13-41
+83            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+83-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:42:13-148
+84            android:exported="true"
+84-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:47:13-36
+85            android:label="@string/title_activity_main"
+85-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:44:13-56
+86            android:launchMode="singleTask"
+86-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:46:13-44
+87            android:theme="@style/AppTheme.NoActionBarLaunch" >
+87-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:45:13-62
+88            <intent-filter>
+88-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:49:13-52:29
+89                <action android:name="android.intent.action.MAIN" />
+89-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:50:17-69
+89-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:50:25-66
+90
+91                <category android:name="android.intent.category.LAUNCHER" />
+91-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:51:17-77
+91-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:51:27-74
+92            </intent-filter>
+93        </activity>
+94
+95        <provider
+96            android:name="androidx.core.content.FileProvider"
+96-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:57:13-62
+97            android:authorities="com.mausam.app.fileprovider"
+97-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:58:13-64
+98            android:exported="false"
+98-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:59:13-37
+99            android:grantUriPermissions="true" >
+99-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:60:13-47
+100            <meta-data
+100-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:61:13-63:64
+101                android:name="android.support.FILE_PROVIDER_PATHS"
+101-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:62:17-67
+102                android:resource="@xml/file_paths" />
+102-->D:\ARIZ\Mausam-\android\app\src\main\AndroidManifest.xml:63:17-51
+103        </provider>
+104        <provider
+104-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+105            android:name="androidx.startup.InitializationProvider"
+105-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+106            android:authorities="com.mausam.app.androidx-startup"
+106-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+107            android:exported="false" >
+107-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+108            <meta-data
+108-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+109                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+109-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+110                android:value="androidx.startup" />
+110-->[androidx.emoji2:emoji2:1.3.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+111            <meta-data
+111-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\samee\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+112                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+112-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\samee\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+113                android:value="androidx.startup" />
+113-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\samee\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+114            <meta-data
+114-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+115                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+115-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+116                android:value="androidx.startup" />
+116-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+117        </provider>
+118
+119        <receiver
+119-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+120            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+120-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+121            android:directBootAware="false"
+121-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+122            android:enabled="true"
+122-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+123            android:exported="true"
+123-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+124            android:permission="android.permission.DUMP" >
+124-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+125            <intent-filter>
+125-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+126                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+126-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+126-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+127            </intent-filter>
+128            <intent-filter>
+128-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+129                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+129-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+129-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+130            </intent-filter>
+131            <intent-filter>
+131-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+132                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+132-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+132-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+133            </intent-filter>
+134            <intent-filter>
+134-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+135                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+135-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+135-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\samee\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+136            </intent-filter>
+137        </receiver>
+138    </application>
+139
+140</manifest>

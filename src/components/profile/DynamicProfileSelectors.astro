@@ -1,0 +1,236 @@
+---
+// src/components/profile/DynamicProfileSelectors.astro
+// Dynamic Multi-Persona Profile Header, Quick Switcher, & Custom Selectors
+---
+
+<div class="w-full mb-8" id="dynamic-profile-selectors-root">
+  
+  <!-- 1. Persona Header Banner (Aesthetic Gradient Border & Badges) -->
+  <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/15 relative overflow-hidden shadow-product mb-6">
+    <!-- Top Accent Gradient Line -->
+    <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
+
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      
+      <!-- Icon + Title + Badges -->
+      <div class="flex items-start gap-4">
+        <div id="profile-banner-icon" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 flex items-center justify-center text-2xl shrink-0 shadow-glow-emerald">
+          🌾
+        </div>
+        <div>
+          <!-- Badges Row -->
+          <div class="flex flex-wrap items-center gap-2 mb-1.5" id="profile-banner-badges">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10 uppercase tracking-wider">
+              PERSONALIZED VIEW
+            </span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
+              KISAN INTEL
+            </span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+              Agronomy
+            </span>
+            <span id="profile-banner-lang-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+              🌐 English
+            </span>
+          </div>
+
+          <!-- Title & Subtitle -->
+          <h2 id="profile-banner-title" class="text-lg sm:text-2xl font-bold text-white tracking-apple-tight">
+            Farmer / Precision Agriculture
+          </h2>
+          <p id="profile-banner-subtitle" class="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+            Hyperlocal crop advisory, root-zone soil saturation, and rainfall nowcasting
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Action Buttons -->
+      <div class="flex items-center gap-2.5">
+        <button
+          type="button"
+          id="btn-switch-profile-modal"
+          class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all active-scale cursor-pointer flex items-center gap-1.5 shadow-sm"
+        >
+          <span>⚡</span>
+          <span>Switch Profile</span>
+        </button>
+        <button
+          type="button"
+          id="btn-profile-settings-tune"
+          class="w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all active-scale cursor-pointer shadow-sm"
+          title="Fine-tune parameters"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Quick Switch Pill Strip (12 Personas) -->
+    <div class="flex items-center gap-2 mt-5 pt-4 border-t border-white/10 overflow-x-auto pb-1 no-scrollbar">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1">
+        QUICK SWITCH:
+      </span>
+      <div class="flex items-center gap-2" id="quick-switch-pills-container"></div>
+    </div>
+
+  </div>
+
+  <!-- 2. Dynamic Control Groups (e.g. Target Crop & Growth Stage) -->
+  <div id="dynamic-controls-container" class="space-y-4"></div>
+
+</div>
+
+<script>
+  import { StorageService } from '../../services/storage.service';
+  import { PERSONAS, PERSONA_LIST } from '../../data/personas';
+  import { PROFILE_CONFIGS } from '../../data/profileControls';
+
+  const bannerIcon = document.getElementById('profile-banner-icon');
+  const bannerTitle = document.getElementById('profile-banner-title');
+  const bannerSubtitle = document.getElementById('profile-banner-subtitle');
+  const quickSwitchContainer = document.getElementById('quick-switch-pills-container');
+  const controlsContainer = document.getElementById('dynamic-controls-container');
+  const btnSwitchModal = document.getElementById('btn-switch-profile-modal');
+  const btnSettingsTune = document.getElementById('btn-profile-settings-tune');
+
+  btnSwitchModal?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-profile-settings'));
+  });
+
+  btnSettingsTune?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-profile-settings'));
+  });
+
+  function renderQuickSwitchPills(activeId: string) {
+    if (!quickSwitchContainer) return;
+    quickSwitchContainer.innerHTML = '';
+
+    PERSONA_LIST.forEach(p => {
+      const isSelected = p.id === activeId;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `px-3 py-1 rounded-full text-xs font-medium transition-all active-scale cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+        isSelected
+          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold shadow-glow-emerald'
+          : 'bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-white border border-white/10'
+      }`;
+      btn.innerHTML = `<span>${p.icon}</span> <span>${p.name.split('/')[0].trim()}</span>`;
+      btn.addEventListener('click', () => {
+        StorageService.setActivePersona(p.id);
+        renderProfileView(p.id);
+        window.dispatchEvent(new CustomEvent('mausam-persona-changed', { detail: { personaId: p.id } }));
+      });
+      quickSwitchContainer.appendChild(btn);
+    });
+  }
+
+  function renderControlGroups(personaId: string) {
+    if (!controlsContainer) return;
+    controlsContainer.innerHTML = '';
+
+    const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
+    if (!config.controls || config.controls.length === 0) return;
+
+    config.controls.forEach(grp => {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'glass-panel rounded-2xl p-4 sm:p-5 border border-white/10';
+
+      const selectedOptId = StorageService.getProfileCustomSettings(personaId)[grp.groupId] || grp.options[0]?.id;
+
+      let optionsHtml = '';
+      if (grp.groupId === 'target_crop') {
+        // Grid cards for crops
+        optionsHtml = `
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-3">
+            ${grp.options.map(opt => {
+              const isSel = opt.id === selectedOptId;
+              return `
+                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${
+                  isSel
+                    ? 'bg-slate-900/90 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-400/50'
+                    : 'bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60'
+                }">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-2xl">${opt.icon || '🌱'}</span>
+                    ${opt.badge ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">${opt.badge}</span>` : ''}
+                  </div>
+                  <div class="font-bold text-sm text-white">${opt.label}</div>
+                  <div class="text-xs text-slate-400 font-normal">${opt.subLabel || ''}</div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        // Horizontal stage pills / selectors
+        optionsHtml = `
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3">
+            ${grp.options.map(opt => {
+              const isSel = opt.id === selectedOptId;
+              return `
+                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn active-scale p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border flex flex-col justify-between ${
+                  isSel
+                    ? 'bg-slate-900/90 border-emerald-400 shadow-glow-emerald ring-1 ring-emerald-400/50'
+                    : 'bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60'
+                }">
+                  <span class="font-bold text-xs ${isSel ? 'text-emerald-300' : 'text-slate-200'}">${opt.label}</span>
+                  <span class="text-[11px] text-slate-400 font-light mt-0.5">${opt.subLabel || ''}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      groupEl.innerHTML = `
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>${grp.icon}</span> ${grp.title}
+          </span>
+          <span class="text-xs text-slate-400 font-light">${grp.subTitle}</span>
+        </div>
+        ${optionsHtml}
+      `;
+
+      // Bind buttons
+      groupEl.querySelectorAll('.control-opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const gId = btn.getAttribute('data-group') || '';
+          const oId = btn.getAttribute('data-opt') || '';
+          StorageService.setProfileCustomSetting(personaId, gId, oId);
+          renderControlGroups(personaId);
+          window.dispatchEvent(new CustomEvent('mausam-profile-option-selected', {
+            detail: { personaId, groupId: gId, optionId: oId }
+          }));
+        });
+      });
+
+      controlsContainer.appendChild(groupEl);
+    });
+  }
+
+  function renderProfileView(personaId: string) {
+    const p = PERSONAS[personaId] || PERSONAS.farmer;
+    const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
+
+    if (bannerIcon) bannerIcon.textContent = p.icon;
+    if (bannerTitle) bannerTitle.textContent = config.title;
+    if (bannerSubtitle) bannerSubtitle.textContent = config.subtitle;
+
+    renderQuickSwitchPills(personaId);
+    renderControlGroups(personaId);
+  }
+
+  // Listeners
+  window.addEventListener('mausam-persona-changed', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    renderProfileView(pId);
+  });
+
+  // Init
+  const activeId = StorageService.getActivePersona();
+  renderProfileView(activeId);
+</script>

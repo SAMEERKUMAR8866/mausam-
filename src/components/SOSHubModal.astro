@@ -1,0 +1,214 @@
+---
+// src/components/SOSHubModal.astro
+// Disaster & Emergency SOS Hub Modal: Speed Dial 112, BLE P2P Mesh Beacon, Shelter Compass, & Survival Manuals
+---
+
+<div id="sos-hub-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/90 backdrop-blur-2xl p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-3xl bg-slate-900 border border-red-500/40 rounded-3xl p-5 sm:p-7 shadow-[0_0_50px_rgba(239,68,68,0.25)] relative overflow-hidden my-8">
+    
+    <!-- Top Red Warning Accent Strip -->
+    <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 animate-pulse"></div>
+
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+          🛡️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-white tracking-apple-tight">
+              Mausam Disaster Response & SOS Hub
+            </h2>
+            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-red-500 text-white animate-pulse">
+              STANDBY ACTIVE
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 font-light mt-0.5">
+            Zero-cellular disaster assistance, offline shelters, and emergency hotlines
+          </p>
+        </div>
+      </div>
+
+      <button id="close-sos-hub-btn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <!-- 1. Emergency Speed Dial Grid -->
+    <div class="mb-6">
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <span>📞</span> Emergency Speed Dial
+      </h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <a href="tel:112" class="p-3.5 rounded-2xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-left transition-all active-scale block">
+          <div class="text-2xl font-black text-red-400 leading-none">112</div>
+          <div class="text-xs font-bold text-white mt-1">National Emergency</div>
+          <div class="text-[10px] text-slate-400">All-in-one helpline</div>
+        </a>
+        <a href="tel:1078" class="p-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-950 border border-white/10 text-left transition-all active-scale block">
+          <div class="text-2xl font-black text-amber-400 leading-none">1078</div>
+          <div class="text-xs font-bold text-white mt-1">NDMA Disaster</div>
+          <div class="text-[10px] text-slate-400">Disaster management</div>
+        </a>
+        <a href="tel:1070" class="p-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-950 border border-white/10 text-left transition-all active-scale block">
+          <div class="text-2xl font-black text-cyan-400 leading-none">1070</div>
+          <div class="text-xs font-bold text-white mt-1">State Relief Comm</div>
+          <div class="text-[10px] text-slate-400">Flood & cyclone control</div>
+        </a>
+        <a href="tel:108" class="p-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-950 border border-white/10 text-left transition-all active-scale block">
+          <div class="text-2xl font-black text-emerald-400 leading-none">108</div>
+          <div class="text-xs font-bold text-white mt-1">Ambulance SOS</div>
+          <div class="text-[10px] text-slate-400">Medical emergency</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. Zero-Cellular BLE Mesh Beacon Broadcaster -->
+    <div class="mb-6 p-4 rounded-2xl bg-slate-950/80 border border-white/10">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base">📡</span>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Zero-Cellular BLE P2P SOS Mesh Beacon</h4>
+          </div>
+          <p class="text-[11px] text-slate-400 font-light mt-0.5">
+            Broadcasts Bluetooth Low Energy distress beacon to nearby rescue relays without internet or cellular network.
+          </p>
+        </div>
+        <button
+          type="button"
+          id="btn-toggle-ble-beacon"
+          class="px-4 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition-all active-scale cursor-pointer shadow-lg shrink-0"
+        >
+          Start SOS Beacon
+        </button>
+      </div>
+      <div id="ble-mesh-status-panel" class="hidden text-xs text-emerald-300 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-between">
+        <span class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Broadcasting distress packet • 3 local relay nodes in range</span>
+        </span>
+        <span class="text-[10px] font-mono text-slate-400">RSSI: -64 dBm</span>
+      </div>
+    </div>
+
+    <!-- 3. Nearby Offline Shelters with Directional Compass Bearing -->
+    <div class="mb-6">
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <span>🧭</span> Nearby Offline Emergency Shelters (Compass Bearing)
+      </h3>
+      <div class="space-y-2.5" id="sos-shelters-list"></div>
+    </div>
+
+    <!-- 4. Offline Survival Manuals Accordion -->
+    <div>
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <span>📖</span> Offline Disaster Survival Manuals (NDMA)
+      </h3>
+      <div class="space-y-2" id="sos-survival-guides-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { BleMeshService } from '../services/ble-mesh.service';
+  import { ShelterService } from '../services/shelter.service';
+  import { SurvivalGuidesService } from '../services/survival-guides.service';
+  import { StorageService } from '../services/storage.service';
+
+  const modal = document.getElementById('sos-hub-modal');
+  const closeBtn = document.getElementById('close-sos-hub-btn');
+  const btnToggleBeacon = document.getElementById('btn-toggle-ble-beacon');
+  const bleStatusPanel = document.getElementById('ble-mesh-status-panel');
+  const sheltersContainer = document.getElementById('sos-shelters-list');
+  const guidesContainer = document.getElementById('sos-survival-guides-list');
+
+  let isBeaconOn = false;
+
+  function renderShelters() {
+    if (!sheltersContainer) return;
+    const loc = StorageService.getLastLocation();
+    const shelters = ShelterService.getNearbyShelters(loc);
+
+    sheltersContainer.innerHTML = shelters.map(s => {
+      const dirLabel = ShelterService.getDirectionLabel(s.bearingDeg);
+      return `
+        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-white/10 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 flex items-center justify-center font-bold text-sm shrink-0" style="transform: rotate(${s.bearingDeg}deg);">
+              ➤
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white">${s.name}</div>
+              <div class="text-[11px] text-slate-400 font-light mt-0.5">${s.address} • Occupancy: ${s.currentOccupancy}/${s.capacity}</div>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-xs font-extrabold text-cyan-300">${s.distanceKm} km</div>
+            <div class="text-[10px] text-slate-400 font-bold">${dirLabel} (${s.bearingDeg}°)</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderSurvivalGuides() {
+    if (!guidesContainer) return;
+    const guides = SurvivalGuidesService.getAllGuides();
+
+    guidesContainer.innerHTML = guides.map(g => `
+      <details class="group p-3 rounded-xl bg-slate-950/60 border border-white/10 cursor-pointer">
+        <summary class="flex items-center justify-between text-xs font-bold text-white list-none">
+          <div class="flex items-center gap-2">
+            <span>${g.icon}</span> <span>${g.title}</span>
+          </div>
+          <span class="text-slate-400 text-xs group-open:rotate-180 transition-transform">▾</span>
+        </summary>
+        <div class="mt-3 pt-3 border-t border-white/10 text-xs text-slate-300 space-y-2">
+          <div>
+            <span class="text-[10px] font-bold text-emerald-400 uppercase">Immediate DOs:</span>
+            <ul class="list-disc list-inside text-slate-300 mt-1 space-y-0.5">
+              ${g.dos.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-rose-400 uppercase">DON'Ts:</span>
+            <ul class="list-disc list-inside text-slate-300 mt-1 space-y-0.5">
+              ${g.donts.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="text-[11px] text-slate-400 font-light">
+            <span class="font-semibold text-white">Emergency Go-Bag:</span> ${g.goBagItems.join(', ')}
+          </div>
+        </div>
+      </details>
+    `).join('');
+  }
+
+  btnToggleBeacon?.addEventListener('click', () => {
+    isBeaconOn = !isBeaconOn;
+    if (isBeaconOn) {
+      BleMeshService.startBeacon();
+      btnToggleBeacon.textContent = 'Stop SOS Beacon';
+      btnToggleBeacon.className = 'px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all cursor-pointer';
+      bleStatusPanel?.classList.remove('hidden');
+    } else {
+      BleMeshService.stopBeacon();
+      btnToggleBeacon.textContent = 'Start SOS Beacon';
+      btnToggleBeacon.className = 'px-4 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition-all active-scale cursor-pointer shadow-lg';
+      bleStatusPanel?.classList.add('hidden');
+    }
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    modal?.classList.add('hidden');
+  });
+
+  window.addEventListener('mausam-open-sos-hub', () => {
+    renderShelters();
+    renderSurvivalGuides();
+    modal?.classList.remove('hidden');
+  });
+</script>
