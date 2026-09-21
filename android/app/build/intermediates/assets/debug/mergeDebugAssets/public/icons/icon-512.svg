@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="45%" stop-color="#070b14" />
+      <stop offset="100%" stop-color="#020408" />
+    </linearGradient>
+    <linearGradient id="sunGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="cloudGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="glow512" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad512)" stroke="rgba(255,255,255,0.12)" stroke-width="4" />
+
+  <!-- Sun Glow & Core -->
+  <circle cx="330" cy="180" r="75" fill="url(#sunGrad512)" opacity="0.85" filter="url(#glow512)" />
+  <circle cx="330" cy="180" r="64" fill="url(#sunGrad512)" />
+
+  <!-- Sun Rays -->
+  <g stroke="#fbbf24" stroke-width="8" stroke-linecap="round" opacity="0.65">
+    <line x1="330" y1="75" x2="330" y2="100" />
+    <line x1="330" y1="260" x2="330" y2="285" />
+    <line x1="225" y1="180" x2="250" y2="180" />
+    <line x1="410" y1="180" x2="435" y2="180" />
+    <line x1="256" y1="106" x2="274" y2="124" />
+    <line x1="386" y1="236" x2="404" y2="254" />
+    <line x1="256" y1="254" x2="274" y2="236" />
+    <line x1="386" y1="124" x2="404" y2="106" />
+  </g>
+
+  <!-- Cloud Shape with Emerald/Cyan Glow -->
+  <path d="M165 375h200a70 70 0 0 0 14-138.6 92 92 0 0 0-178-21.6A65 65 0 0 0 165 375z" fill="url(#cloudGrad512)" opacity="0.3" filter="url(#glow512)" />
+  <path d="M165 365h195a65 65 0 0 0 12-128.8 86 86 0 0 0-166-20.2A60 60 0 0 0 165 365z" fill="url(#cloudGrad512)" />
+
+  <!-- Weather Indicator Accents -->
+  <circle cx="205" cy="410" r="9" fill="#38bdf8" opacity="0.9" />
+  <circle cx="265" cy="420" r="9" fill="#34d399" opacity="0.9" />
+  <circle cx="325" cy="410" r="9" fill="#38bdf8" opacity="0.9" />
+</svg>

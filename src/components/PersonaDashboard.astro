@@ -1,0 +1,14 @@
+---
+// src/components/PersonaDashboard.astro
+// Universal Multi-Industry & Personalization Dashboard Container
+import DynamicProfileSelectors from './profile/DynamicProfileSelectors.astro';
+import TelemetryGrid from './dashboard/TelemetryGrid.astro';
+---
+
+<div id="persona-dashboard-container" class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 transition-opacity duration-300">
+  <!-- Dynamic Profile Header & Controls -->
+  <DynamicProfileSelectors />
+
+  <!-- Telemetry Grid (4 KPI cards, AI advisory box, checklist, hazards) -->
+  <TelemetryGrid />
+</div>

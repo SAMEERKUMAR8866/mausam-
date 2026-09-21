@@ -1,0 +1,129 @@
+---
+// src/pages/onboarding.astro
+// Onboarding Setup Wizard for Persona & Location Setup
+import Layout from '../layouts/Layout.astro';
+import { PERSONA_LIST } from '../data/personas';
+import { SUPPORTED_LANGUAGES } from '../data/translations';
+---
+
+<Layout title="Welcome to Mausam - Personalization Setup" description="Personalize your meteorological workspace, persona, and regional language.">
+  <div class="min-h-screen bg-[#070b14] flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden">
+    
+    <!-- Ambient Studio Lights -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/15 blur-[120px] pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-cyan-500/15 blur-[120px] pointer-events-none"></div>
+
+    <div class="w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-10 border border-white/15 relative z-10 shadow-2xl my-6">
+      
+      <!-- Brand & Step Indicator -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold mb-3 shadow-glow-emerald">
+          <span>⚡</span> SETUP WIZARD
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-apple-tight">
+          Personalize Your Mausam Experience
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 font-light mt-1">
+          Select your primary meteorological profile and default language to get started
+        </p>
+      </div>
+
+      <!-- Step 1: Select Persona -->
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
+          1. Select Primary Profile
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[260px] overflow-y-auto pr-1" id="onboarding-personas-list">
+          {PERSONA_LIST.map((p, idx) => (
+            <button
+              type="button"
+              data-persona-id={p.id}
+              class={`onboarding-persona-opt p-3 rounded-2xl border text-left transition-all active-scale cursor-pointer flex items-center gap-2.5 ${
+                idx === 0
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400 font-bold shadow-glow-emerald'
+                  : 'bg-slate-900/60 hover:bg-slate-900 text-slate-300 border-white/10'
+              }`}
+            >
+              <span class="text-xl">{p.icon}</span>
+              <div class="truncate">
+                <span class="text-xs font-bold text-white block truncate">{p.name.split('/')[0].trim()}</span>
+                <span class="text-[10px] text-slate-400 block truncate">{p.category}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Step 2: Select Language -->
+      <div class="mb-8">
+        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
+          2. Select Regional Language
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[160px] overflow-y-auto pr-1" id="onboarding-lang-list">
+          {SUPPORTED_LANGUAGES.map((lang, idx) => (
+            <button
+              type="button"
+              data-lang-code={lang.code}
+              class={`onboarding-lang-opt p-2 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center justify-between ${
+                idx === 0
+                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400 font-bold shadow-glow-cyan'
+                  : 'bg-slate-900/60 hover:bg-slate-900 text-slate-300 border-white/10'
+              }`}
+            >
+              <div class="truncate">
+                <span class="text-xs font-bold text-white block">{lang.name}</span>
+                <span class="text-[9px] text-slate-400 block">{lang.nativeName}</span>
+              </div>
+              <span class="text-xs shrink-0">{lang.flag}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Action CTA -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+        <button
+          type="button"
+          id="btn-complete-onboarding"
+          class="w-full py-3 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold text-sm transition-all active-scale cursor-pointer shadow-glow-emerald text-center"
+        >
+          Launch My Personalized Dashboard ➔
+        </button>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { StorageService } from '../services/storage.service';
+
+  let selectedPersona = 'farmer';
+  let selectedLang = 'en';
+
+  document.querySelectorAll('.onboarding-persona-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.onboarding-persona-opt').forEach(b => {
+        b.className = 'onboarding-persona-opt p-3 rounded-2xl border text-left transition-all active-scale cursor-pointer flex items-center gap-2.5 bg-slate-900/60 hover:bg-slate-900 text-slate-300 border-white/10';
+      });
+      btn.className = 'onboarding-persona-opt p-3 rounded-2xl border text-left transition-all active-scale cursor-pointer flex items-center gap-2.5 bg-emerald-500/20 text-emerald-300 border-emerald-400 font-bold shadow-glow-emerald';
+      selectedPersona = btn.getAttribute('data-persona-id') || 'farmer';
+    });
+  });
+
+  document.querySelectorAll('.onboarding-lang-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.onboarding-lang-opt').forEach(b => {
+        b.className = 'onboarding-lang-opt p-2 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center justify-between bg-slate-900/60 hover:bg-slate-900 text-slate-300 border-white/10';
+      });
+      btn.className = 'onboarding-lang-opt p-2 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center justify-between bg-cyan-500/20 text-cyan-300 border-cyan-400 font-bold shadow-glow-cyan';
+      selectedLang = btn.getAttribute('data-lang-code') || 'en';
+    });
+  });
+
+  document.getElementById('btn-complete-onboarding')?.addEventListener('click', () => {
+    StorageService.setActivePersona(selectedPersona);
+    StorageService.setLanguage(selectedLang);
+    window.location.href = '/';
+  });
+</script>

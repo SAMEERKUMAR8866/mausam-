@@ -1,0 +1,129 @@
+---
+// src/components/ProfileSettingsModal.astro
+// Profile Switcher & 12 Indian Languages Modal
+---
+
+<div id="profile-settings-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-2xl p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-slate-900 border border-white/15 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden my-8">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center justify-center text-xl shadow-glow-emerald">
+          ⚙️
+        </div>
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-white tracking-apple-tight">
+            Personalization & Language Hub
+          </h2>
+          <p class="text-xs text-slate-400 font-light">
+            Select specialized meteorological persona & regional Indian language
+          </p>
+        </div>
+      </div>
+      <button id="close-profile-settings-btn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <!-- 1. Persona Profile Grid (12 Personas) -->
+    <div class="mb-6">
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <span>👤</span> Select Persona Profile
+      </h3>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[260px] overflow-y-auto pr-1" id="modal-personas-grid"></div>
+    </div>
+
+    <!-- 2. Regional Languages Grid (12 Languages) -->
+    <div>
+      <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <span>🌐</span> Select Interface Language
+      </h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[220px] overflow-y-auto pr-1" id="modal-languages-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { StorageService } from '../services/storage.service';
+  import { PERSONA_LIST } from '../data/personas';
+  import { SUPPORTED_LANGUAGES } from '../data/translations';
+
+  const modal = document.getElementById('profile-settings-modal');
+  const closeBtn = document.getElementById('close-profile-settings-btn');
+  const personasGrid = document.getElementById('modal-personas-grid');
+  const languagesGrid = document.getElementById('modal-languages-grid');
+
+  function renderModalContent() {
+    const activePersona = StorageService.getActivePersona();
+    const activeLang = StorageService.getLanguage();
+
+    if (personasGrid) {
+      personasGrid.innerHTML = PERSONA_LIST.map(p => {
+        const isSel = p.id === activePersona;
+        return `
+          <button type="button" data-modal-persona="${p.id}" class="modal-persona-opt p-3 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center gap-2.5 ${
+            isSel
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/60 font-bold shadow-glow-emerald'
+              : 'bg-slate-950/60 hover:bg-slate-950 text-slate-300 border-white/10'
+          }">
+            <span class="text-xl">${p.icon}</span>
+            <div class="truncate">
+              <span class="text-xs block font-bold text-white truncate">${p.name.split('/')[0].trim()}</span>
+              <span class="text-[10px] text-slate-400 block truncate">${p.category}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      personasGrid.querySelectorAll('.modal-persona-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-modal-persona') || 'farmer';
+          StorageService.setActivePersona(id);
+          renderModalContent();
+          modal?.classList.add('hidden');
+          window.dispatchEvent(new CustomEvent('mausam-persona-changed', { detail: { personaId: id } }));
+        });
+      });
+    }
+
+    if (languagesGrid) {
+      languagesGrid.innerHTML = SUPPORTED_LANGUAGES.map(lang => {
+        const isSel = lang.code === activeLang;
+        return `
+          <button type="button" data-modal-lang="${lang.code}" class="modal-lang-opt p-2.5 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center justify-between ${
+            isSel
+              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/60 font-bold shadow-glow-cyan'
+              : 'bg-slate-950/60 hover:bg-slate-950 text-slate-300 border-white/10'
+          }">
+            <div class="truncate">
+              <span class="text-xs font-bold text-white block">${lang.name}</span>
+              <span class="text-[10px] text-slate-400 block">${lang.nativeName}</span>
+            </div>
+            <span class="text-xs shrink-0">${lang.flag}</span>
+          </button>
+        `;
+      }).join('');
+
+      languagesGrid.querySelectorAll('.modal-lang-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const code = btn.getAttribute('data-modal-lang') || 'en';
+          StorageService.setLanguage(code);
+          renderModalContent();
+          modal?.classList.add('hidden');
+          window.dispatchEvent(new CustomEvent('mausam-language-changed', { detail: { langCode: code } }));
+        });
+      });
+    }
+  }
+
+  closeBtn?.addEventListener('click', () => {
+    modal?.classList.add('hidden');
+  });
+
+  window.addEventListener('mausam-open-profile-settings', () => {
+    renderModalContent();
+    modal?.classList.remove('hidden');
+  });
+</script>

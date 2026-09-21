@@ -1,0 +1,27 @@
+---
+// src/components/OfflineBanner.astro
+// Floating Offline Sync & Telemetry Cache Alert Bar
+---
+
+<div id="global-offline-banner" class="hidden fixed top-11 inset-x-0 z-40 bg-amber-600/90 backdrop-blur-md text-slate-950 px-4 py-2 text-xs font-semibold shadow-lg transition-all flex items-center justify-between">
+  <div class="flex items-center gap-2 max-w-[1440px] mx-auto w-full">
+    <span class="text-base">📡</span>
+    <span>You are currently offline. Displaying cached meteorological telemetry and rule-based advisories.</span>
+  </div>
+</div>
+
+<script>
+  const banner = document.getElementById('global-offline-banner');
+
+  function updateStatus() {
+    if (navigator.onLine) {
+      banner?.classList.add('hidden');
+    } else {
+      banner?.classList.remove('hidden');
+    }
+  }
+
+  window.addEventListener('online', updateStatus);
+  window.addEventListener('offline', updateStatus);
+  updateStatus();
+</script>

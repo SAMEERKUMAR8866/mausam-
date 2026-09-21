@@ -1,0 +1,100 @@
+---
+// src/components/DisasterOfflineView.astro
+// Critical Disaster Response & Emergency Overlay View
+---
+
+<div id="disaster-offline-view-container" class="hidden w-full max-w-[1440px] mx-auto px-4 sm:px-6 py-6 transition-all">
+  <div class="rounded-3xl bg-gradient-to-b from-red-950/90 via-slate-900/90 to-slate-950/95 border-2 border-red-500/60 p-6 sm:p-8 shadow-[0_0_60px_rgba(239,68,68,0.3)] relative overflow-hidden">
+    
+    <!-- Top Warning Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/10 mb-6">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-red-600/30 border border-red-500 text-3xl flex items-center justify-center animate-bounce shadow-[0_0_25px_rgba(239,68,68,0.5)]">
+          🚨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded bg-red-600 text-white animate-pulse">
+              CRITICAL DISASTER ALERT
+            </span>
+            <span id="disaster-view-hazard-title" class="text-base sm:text-lg font-extrabold text-white">
+              Severe Weather Alert
+            </span>
+          </div>
+          <p id="disaster-view-hazard-desc" class="text-xs sm:text-sm text-red-200 mt-1">
+            Immediate emergency protocols initiated based on atmospheric threshold violations.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="btn-disaster-open-sos" class="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider shadow-lg transition-all active-scale cursor-pointer flex items-center gap-2">
+          <span>🛡️</span> Open SOS Hub
+        </button>
+      </div>
+    </div>
+
+    <!-- Disaster Trigger Reasons & Active Protocols -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Triggers -->
+      <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10">
+        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <span>⚠️</span> Detection Triggers
+        </h4>
+        <ul id="disaster-triggers-list" class="space-y-1.5 text-xs text-red-300"></ul>
+      </div>
+
+      <!-- Protocols -->
+      <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10">
+        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <span>✅</span> Immediate Safety Protocols
+        </h4>
+        <ul id="disaster-protocols-list" class="space-y-1.5 text-xs text-slate-200"></ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const container = document.getElementById('disaster-offline-view-container');
+  const title = document.getElementById('disaster-view-hazard-title');
+  const desc = document.getElementById('disaster-view-hazard-desc');
+  const triggersList = document.getElementById('disaster-triggers-list');
+  const protocolsList = document.getElementById('disaster-protocols-list');
+  const btnOpenSos = document.getElementById('btn-disaster-open-sos');
+
+  btnOpenSos?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-sos-hub'));
+  });
+
+  window.addEventListener('mausam-weather-updated', (e: any) => {
+    const data = e.detail;
+    if (!data) return;
+
+    if (data.isDisasterActive && data.disasterDetails) {
+      if (title) title.textContent = data.disasterDetails.disasterName;
+      if (desc) desc.textContent = data.disasterDetails.description;
+
+      if (triggersList) {
+        triggersList.innerHTML = (data.disasterDetails.triggerReasons || []).map((r: string) => `
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> <span>${r}</span>
+          </li>
+        `).join('');
+      }
+
+      if (protocolsList) {
+        protocolsList.innerHTML = (data.disasterDetails.activeProtocols || []).map((p: string) => `
+          <li class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> <span>${p}</span>
+          </li>
+        `).join('');
+      }
+
+      container?.classList.remove('hidden');
+    } else {
+      container?.classList.add('hidden');
+    }
+  });
+</script>

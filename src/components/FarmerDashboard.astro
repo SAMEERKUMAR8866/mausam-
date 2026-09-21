@@ -1,0 +1,1312 @@
+---
+// src/components/FarmerDashboard.astro
+// High-Resolution Aesthetic Glassmorphism Agricultural Assistant
+
+interface Props {
+  isStandalone?: boolean;
+  defaultLocation?: string;
+}
+
+const {
+  isStandalone = false,
+  defaultLocation = 'Greater Noida'
+} = Astro.props;
+---
+
+<div id="farmer-dashboard-root" class={`w-full relative overflow-hidden ${isStandalone ? 'max-w-[1440px] mx-auto px-4 sm:px-6 py-6' : ''}`}>
+  
+  <!-- Ambient Studio Lighting & Aurora Glows -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/15 blur-[120px] pointer-events-none aurora-glow-1"></div>
+  <div class="absolute top-1/3 -right-32 w-96 h-96 rounded-full bg-cyan-500/15 blur-[120px] pointer-events-none aurora-glow-2"></div>
+  <div class="absolute -bottom-32 left-1/3 w-96 h-96 rounded-full bg-violet-500/10 blur-[140px] pointer-events-none"></div>
+
+  <!-- Header Branding & Engine Status -->
+  <div class="relative z-10 mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 shadow-glass">
+      
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400/20 via-emerald-500/30 to-cyan-500/20 border border-emerald-400/30 flex items-center justify-center text-2xl shadow-glow-emerald">
+          🌾
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold text-white tracking-apple-tight">
+              Mausam Precision Agri-Intelligence
+            </h1>
+            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              v2.5 Pro
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 mt-0.5">
+            Real-time agro-meteorological guidance & Gemini AI agronomy advisor
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Status Badges -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-glow-emerald"></span>
+          <span id="farmer-source-text" class="font-medium text-emerald-300">Gemini AI Active</span>
+        </div>
+        
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-300">
+          <span>📡</span>
+          <span id="farmer-weather-loc-badge" class="font-medium text-cyan-300">{defaultLocation}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 1. Interactive Crop Selection Tiles (Aesthetic Glass Cards) -->
+  <div class="relative z-10 mb-6">
+    <div class="flex items-center justify-between mb-3 px-1">
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span>🌱</span> Select Target Crop
+      </span>
+      <span class="text-xs text-slate-400">Click to switch instantly</span>
+    </div>
+
+    <!-- 5 Visual Crop Selector Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" id="farmer-crop-cards-container">
+      
+      <button type="button" data-crop-val="Wheat" class="crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/60 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-400/50">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl">🌾</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">Rabi</span>
+        </div>
+        <div class="font-semibold text-sm text-white">Wheat</div>
+        <div class="text-xs text-slate-400 font-normal">गेहूं (Cereal)</div>
+      </button>
+
+      <button type="button" data-crop-val="Rice" class="crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl">🍚</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">Kharif</span>
+        </div>
+        <div class="font-semibold text-sm text-white">Rice / Paddy</div>
+        <div class="text-xs text-slate-400 font-normal">धान (Wetland)</div>
+      </button>
+
+      <button type="button" data-crop-val="Maize" class="crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl">🌽</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">Coarse</span>
+        </div>
+        <div class="font-semibold text-sm text-white">Maize</div>
+        <div class="text-xs text-slate-400 font-normal">मक्का (Corn)</div>
+      </button>
+
+      <button type="button" data-crop-val="Cotton" class="crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl">☁️</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300">Cash</span>
+        </div>
+        <div class="font-semibold text-sm text-white">Cotton</div>
+        <div class="text-xs text-slate-400 font-normal">कपास (Fiber)</div>
+      </button>
+
+      <button type="button" data-crop-val="Sugarcane" class="crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60 col-span-2 sm:col-span-1">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl">🎋</span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">Annual</span>
+        </div>
+        <div class="font-semibold text-sm text-white">Sugarcane</div>
+        <div class="text-xs text-slate-400 font-normal">गन्ना (Sugar)</div>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- 2. Interactive Growth Stage Stepper & Controls Strip -->
+  <div class="relative z-10 mb-8 glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 shadow-glass">
+    
+    <!-- Stage Stepper Title & Progress -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 pb-3 border-b border-white/10">
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span>🔄</span> Phenological Growth Stage
+      </span>
+      <span id="farmer-stage-progress-label" class="text-xs text-emerald-400 font-medium">Stage 2 of 4 • Vegetative Phase (Active Tillering)</span>
+    </div>
+
+    <!-- Interactive 4-Step Stepper Line -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6" id="farmer-stage-stepper-container">
+      
+      <button type="button" data-stage-val="Sowing" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num">1</span>
+          <span class="text-xs font-semibold text-white">Sowing</span>
+        </div>
+        <p class="text-[11px] text-slate-400 pl-8">Seedbed & Emergence</p>
+      </button>
+
+      <button type="button" data-stage-val="Vegetative" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-emerald-500/15 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 text-xs flex items-center justify-center font-bold step-num">2</span>
+          <span class="text-xs font-semibold text-white">Vegetative</span>
+        </div>
+        <p class="text-[11px] text-emerald-300 pl-8">Crown Root & Tillering</p>
+      </button>
+
+      <button type="button" data-stage-val="Flowering" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num">3</span>
+          <span class="text-xs font-semibold text-white">Flowering</span>
+        </div>
+        <p class="text-[11px] text-slate-400 pl-8">Boot Leaf & Anthesis</p>
+      </button>
+
+      <button type="button" data-stage-val="Harvesting" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num">4</span>
+          <span class="text-xs font-semibold text-white">Harvesting</span>
+        </div>
+        <p class="text-[11px] text-slate-400 pl-8">Grain Ripening & Cut</p>
+      </button>
+
+    </div>
+
+    <!-- Location Filter Bar & Quick Region Pills -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center pt-2">
+      
+      <!-- Location Input (7 cols) -->
+      <div class="lg:col-span-8 flex flex-col gap-2">
+        <div class="relative">
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none text-base">
+            📍
+          </div>
+          <input 
+            type="text" 
+            id="farmer-location-input" 
+            value={defaultLocation}
+            placeholder="Search farm location (e.g., Greater Noida, Ludhiana, Karnal)..." 
+            autocomplete="off"
+            class="w-full h-12 pl-11 pr-24 glass-input rounded-xl text-sm font-medium tracking-apple-tight"
+          />
+          <button 
+            type="button" 
+            id="farmer-gps-btn" 
+            class="absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-medium border border-emerald-500/30 transition-colors flex items-center gap-1 active-scale cursor-pointer"
+            title="Use current device GPS location"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path>
+            </svg>
+            <span>GPS</span>
+          </button>
+          
+          <!-- Autocomplete Dropdown -->
+          <div id="farmer-search-dropdown" class="absolute left-0 top-full mt-2 w-full glass-panel rounded-xl shadow-2xl hidden max-h-60 overflow-y-auto z-50 border border-white/10"></div>
+        </div>
+
+        <!-- Quick Region Selector Pills -->
+        <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold mr-1">Quick Select:</span>
+          <button type="button" class="quick-loc-pill px-2.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-white/5 transition-all cursor-pointer" data-loc="Greater Noida">Greater Noida</button>
+          <button type="button" class="quick-loc-pill px-2.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-white/5 transition-all cursor-pointer" data-loc="Ludhiana">Ludhiana</button>
+          <button type="button" class="quick-loc-pill px-2.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-white/5 transition-all cursor-pointer" data-loc="Karnal">Karnal</button>
+          <button type="button" class="quick-loc-pill px-2.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-white/5 transition-all cursor-pointer" data-loc="Nagpur">Nagpur</button>
+          <button type="button" class="quick-loc-pill px-2.5 py-1 rounded-full bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-white/5 transition-all cursor-pointer" data-loc="Meerut">Meerut</button>
+        </div>
+      </div>
+
+      <!-- Action Button & Simulation (4 cols) -->
+      <div class="lg:col-span-4 flex items-center gap-2">
+        <button 
+          type="button" 
+          id="farmer-fetch-btn" 
+          class="flex-1 h-12 px-6 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 text-sm font-bold rounded-xl active-scale transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-glow-emerald"
+        >
+          <svg id="farmer-fetch-spinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="farmer-fetch-btn-text">Generate Advisory</span>
+          <span id="farmer-fetch-arrow">⚡</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 3. Micro-Climate & Soil Gauges Overview (4 Glass Cards) -->
+  <div class="relative z-10 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Card 1: Soil Moisture Gauge -->
+      <div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+            <span>💧</span> Soil Moisture
+          </span>
+          <span id="farmer-moisture-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Optimal
+          </span>
+        </div>
+        
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="text-3xl font-extrabold text-white tracking-apple-tight" id="farmer-moisture-val">
+            68%
+          </div>
+          <span class="text-xs text-slate-400">15cm root-depth</span>
+        </div>
+
+        <!-- Visual Progress Bar -->
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div id="farmer-moisture-bar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-700" style="width: 68%;"></div>
+        </div>
+
+        <p id="farmer-moisture-desc" class="text-[11px] text-slate-300 leading-relaxed">
+          Hydration is in prime buffer zone. Capillary flow adequate.
+        </p>
+      </div>
+
+      <!-- Card 2: 24h Rainfall Forecast -->
+      <div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+            <span>🌧️</span> 24h Precipitation
+          </span>
+          <span id="farmer-rain-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+            Dry Window
+          </span>
+        </div>
+
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="text-3xl font-extrabold text-white tracking-apple-tight" id="farmer-rain-val">
+            0.0 mm
+          </div>
+          <span class="text-xs text-slate-400">Rain Prob: <span id="farmer-rain-prob" class="text-cyan-300 font-semibold">10%</span></span>
+        </div>
+
+        <!-- Visual Progress Bar -->
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div id="farmer-rain-bar" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-700" style="width: 10%;"></div>
+        </div>
+
+        <p id="farmer-rain-desc" class="text-[11px] text-slate-300 leading-relaxed">
+          Clear field window. Suitable for weeding & spraying.
+        </p>
+      </div>
+
+      <!-- Card 3: Ambient Temperature & Humidity -->
+      <div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span>🌡️</span> Ambient Climate
+          </span>
+          <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30" id="farmer-climate-status">
+            Mild
+          </span>
+        </div>
+
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="text-3xl font-extrabold text-white tracking-apple-tight" id="farmer-temp-val">
+            28.0°C
+          </div>
+          <span class="text-xs font-semibold text-slate-300" id="farmer-humidity-val">RH: 65%</span>
+        </div>
+
+        <!-- Wind indicator -->
+        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+          <span id="farmer-wind-val">💨 Wind: 14 km/h NW</span>
+          <span id="farmer-condition-val" class="text-slate-300">Partly Sunny</span>
+        </div>
+
+        <p id="farmer-condition-desc" class="text-[11px] text-slate-300 leading-relaxed">
+          Thermal units accelerating vegetative cell development.
+        </p>
+      </div>
+
+      <!-- Card 4: Agronomic Risk & Yield Health -->
+      <div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+            <span>🛡️</span> Crop Risk Index
+          </span>
+          <span id="farmer-hazard-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Favorable
+          </span>
+        </div>
+
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="text-3xl font-extrabold text-white tracking-apple-tight" id="farmer-hazard-val">
+            Low Risk
+          </div>
+          <span class="text-xs text-emerald-400 font-semibold" id="farmer-yield-est">Yield: 95%</span>
+        </div>
+
+        <!-- Visual Risk Meter -->
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div id="farmer-risk-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full transition-all duration-700" style="width: 20%;"></div>
+        </div>
+
+        <p id="farmer-hazard-desc" class="text-[11px] text-slate-300 leading-relaxed">
+          No acute frost or heat desiccation threats detected.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. Interactive Tabs Navigator (Advisory vs Telemetry vs Soil Sensors vs Calculator) -->
+  <div class="relative z-10 mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
+    
+    <button type="button" data-tab-target="tab-advisory" class="farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-300 border border-emerald-500/40 shadow-glow-emerald">
+      🎯 AI Advisory & Field Action Plan
+    </button>
+    
+    <button type="button" data-tab-target="tab-telemetry" class="farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10">
+      📈 24h Climate & Rain Telemetry Graph
+    </button>
+    
+    <button type="button" data-tab-target="tab-soil" class="farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10">
+      🧪 Soil Sensors & NPK Dashboard
+    </button>
+    
+    <button type="button" data-tab-target="tab-calculator" class="farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10">
+      🧮 Agronomic Seed & Water Calculator
+    </button>
+
+  </div>
+
+  <!-- TAB 1: AI Advisory & Field Action Plan (Default) -->
+  <div id="tab-advisory" class="farmer-tab-pane space-y-6">
+    
+    <!-- AI Weather Impact Banner (Glassmorphism Violet / Emerald Glow) -->
+    <div class="relative overflow-hidden rounded-2xl p-6 sm:p-8 border border-white/15 shadow-2xl bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-950/90" id="farmer-advisory-tile">
+      
+      <!-- Gradient mesh accent lines -->
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-400 to-violet-500"></div>
+      
+      <div class="relative z-10 max-w-[1200px]">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs font-bold uppercase tracking-wider shadow-glow-violet">
+            <span>✨</span> Gemini AI Agronomic Analysis
+          </div>
+          <span class="text-xs px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/10 font-medium" id="farmer-crop-stage-pill">
+            Wheat • Vegetative Stage
+          </span>
+          <span class="text-xs text-slate-400 ml-auto" id="farmer-weather-timestamp">Updated just now</span>
+        </div>
+
+        <p id="farmer-weather-advisory-text" class="text-lg sm:text-xl font-normal leading-relaxed text-slate-100 tracking-apple-tight mb-4">
+          Analyzing environmental factors and soil parameters for your selected crop...
+        </p>
+
+        <!-- Executive Summary Takeaway -->
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-white/10 flex items-start gap-3">
+          <span class="text-xl">💡</span>
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-0.5">Primary Key Recommendation</h4>
+            <p id="farmer-summary-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Evaluating optimum field measures based on current weather parameters...
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2-Column Grid: Action Plan (with interactive checkboxes) & Potential Risk Alerts -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: Interactive Action Plan (7 cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-sm sm:text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
+            <span>📋</span> Actionable Field Checklist
+          </h3>
+          <span id="farmer-action-progress" class="text-xs font-semibold text-emerald-400">
+            0 of 4 Completed
+          </span>
+        </div>
+
+        <!-- Action Items Container (Rendered dynamically) -->
+        <div id="farmer-action-items-container" class="space-y-3">
+          <!-- Dynamic action items inserted by JS -->
+        </div>
+
+      </div>
+
+      <!-- Right Column: Risk Alerts & Growth Stage Agronomy Tip (5 cols) -->
+      <div class="lg:col-span-5 space-y-5">
+        
+        <div>
+          <div class="flex items-center justify-between px-1 mb-3">
+            <h3 class="text-sm sm:text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
+              <span>⚠️</span> Meteorological Hazards & Risks
+            </h3>
+            <span class="text-[11px] text-slate-400">Real-time alerts</span>
+          </div>
+
+          <div id="farmer-risk-warnings-container" class="space-y-3">
+            <!-- Dynamic risk warnings inserted by JS -->
+          </div>
+        </div>
+
+        <!-- Stage Agronomy Guide Box -->
+        <div class="glass-panel rounded-2xl p-5 border border-white/10 shadow-glass">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-base">🔬</span>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400">Yield Optimization Strategy</h4>
+          </div>
+          <p id="farmer-stage-tip-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+            Loading phenological guidelines...
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TAB 2: 24h Climate & Rain Telemetry Graph -->
+  <div id="tab-telemetry" class="farmer-tab-pane hidden space-y-6">
+    <div class="glass-panel rounded-2xl p-6 border border-white/10 shadow-glass">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-white/10">
+        <div>
+          <h3 class="text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
+            <span>📈</span> 24-Hour Micro-Climate & Rain Curve
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Interactive hourly temperature (°C) and precipitation chance (%) simulation</p>
+        </div>
+        <div class="flex items-center gap-4 text-xs">
+          <span class="flex items-center gap-1.5 text-cyan-400 font-medium">
+            <span class="w-3 h-0.5 bg-cyan-400 rounded-full"></span> Temperature (°C)
+          </span>
+          <span class="flex items-center gap-1.5 text-blue-400 font-medium">
+            <span class="w-3 h-0.5 bg-blue-400 rounded-full"></span> Rain Probability (%)
+          </span>
+        </div>
+      </div>
+
+      <!-- Interactive SVG Chart -->
+      <div class="relative w-full h-64 sm:h-72">
+        <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Horizontal Grid Lines -->
+          <line x1="40" y1="40" x2="760" y2="40" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4 4" />
+          <line x1="40" y1="90" x2="760" y2="90" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4 4" />
+          <line x1="40" y1="140" x2="760" y2="140" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4 4" />
+          <line x1="40" y1="190" x2="760" y2="190" stroke="rgba(255,255,255,0.06)" />
+
+          <!-- Left Axis Labels -->
+          <text x="15" y="45" fill="#94a3b8" font-size="10" font-family="sans-serif">35°C</text>
+          <text x="15" y="95" fill="#94a3b8" font-size="10" font-family="sans-serif">28°C</text>
+          <text x="15" y="145" fill="#94a3b8" font-size="10" font-family="sans-serif">20°C</text>
+          <text x="15" y="195" fill="#94a3b8" font-size="10" font-family="sans-serif">12°C</text>
+
+          <!-- Temperature Gradient Fill -->
+          <defs>
+            <linearGradient id="tempGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+            </linearGradient>
+            <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0" />
+            </linearGradient>
+          </defs>
+
+          <!-- Temp Area & Line -->
+          <path d="M 60 140 Q 180 160 300 90 T 540 70 T 740 130 L 740 190 L 60 190 Z" fill="url(#tempGrad)" />
+          <path id="farmer-temp-curve" d="M 60 140 Q 180 160 300 90 T 540 70 T 740 130" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+
+          <!-- Rain Probability Curve -->
+          <path d="M 60 180 Q 200 170 340 130 T 520 150 T 740 180 L 740 190 L 60 190 Z" fill="url(#rainGrad)" />
+          <path id="farmer-rain-curve" d="M 60 180 Q 200 170 340 130 T 520 150 T 740 180" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 0" />
+
+          <!-- Timeline Data Points (Interactive Hoverable Circles) -->
+          <g class="cursor-pointer group">
+            <circle cx="60" cy="140" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="50" y="215" fill="#64748b" font-size="10">06:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="180" cy="155" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="170" y="215" fill="#64748b" font-size="10">09:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="300" cy="90" r="6" fill="#34d399" class="hover:r-8 transition-all shadow-glow-emerald" />
+            <text x="290" y="215" fill="#34d399" font-weight="bold" font-size="10">12:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="420" cy="75" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="410" y="215" fill="#64748b" font-size="10">15:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="540" cy="70" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="530" y="215" fill="#64748b" font-size="10">18:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="640" cy="100" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="630" y="215" fill="#64748b" font-size="10">21:00</text>
+          </g>
+          <g class="cursor-pointer group">
+            <circle cx="740" cy="130" r="5" fill="#38bdf8" class="hover:r-7 transition-all" />
+            <text x="725" y="215" fill="#64748b" font-size="10">00:00</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="mt-4 p-4 rounded-xl bg-slate-900/60 border border-white/5 flex items-center justify-between text-xs text-slate-300">
+        <span class="flex items-center gap-2">
+          <span>💡</span> <strong>Spraying Recommendation:</strong> Optimal spraying window is <strong>06:30 AM - 09:00 AM</strong> before thermal gusts peak.
+        </span>
+        <span class="text-emerald-400 font-semibold">Low Drift Risk</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 3: Soil Sensors & NPK Dashboard (From 3D Render) -->
+  <div id="tab-soil" class="farmer-tab-pane hidden space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Soil pH Meter -->
+      <div class="glass-card-interactive rounded-2xl p-5 border border-white/10">
+        <div class="flex items-center justify-between mb-3 text-xs font-bold text-slate-400 uppercase">
+          <span>🧪 Soil pH Level</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">Slightly Acidic</span>
+        </div>
+        <div class="text-4xl font-extrabold text-white mb-2">6.8 <span class="text-sm font-normal text-slate-400">pH</span></div>
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div class="h-full bg-emerald-400 rounded-full" style="width: 68%;"></div>
+        </div>
+        <p class="text-xs text-slate-300">Ideal range (6.5 - 7.5) for optimal phosphorus and zinc availability.</p>
+      </div>
+
+      <!-- Electrical Conductivity EC -->
+      <div class="glass-card-interactive rounded-2xl p-5 border border-white/10">
+        <div class="flex items-center justify-between mb-3 text-xs font-bold text-slate-400 uppercase">
+          <span>⚡ Soil Salinity (EC)</span>
+          <span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-semibold">Non-Saline</span>
+        </div>
+        <div class="text-4xl font-extrabold text-white mb-2">1.2 <span class="text-sm font-normal text-slate-400">dS/m</span></div>
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div class="h-full bg-cyan-400 rounded-full" style="width: 30%;"></div>
+        </div>
+        <p class="text-xs text-slate-300">Safe salinity threshold. No root osmotic restriction observed.</p>
+      </div>
+
+      <!-- NPK Nutrients Status -->
+      <div class="glass-card-interactive rounded-2xl p-5 border border-white/10">
+        <div class="flex items-center justify-between mb-3 text-xs font-bold text-slate-400 uppercase">
+          <span>🌱 Primary N-P-K</span>
+          <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold">Medium N</span>
+        </div>
+        <div class="space-y-1.5 text-xs text-slate-300 mb-2">
+          <div class="flex justify-between"><span>Nitrogen (N):</span><span class="text-amber-400 font-bold">180 kg/ha</span></div>
+          <div class="flex justify-between"><span>Phosphorus (P):</span><span class="text-emerald-400 font-bold">24 kg/ha</span></div>
+          <div class="flex justify-between"><span>Potassium (K):</span><span class="text-cyan-400 font-bold">210 kg/ha</span></div>
+        </div>
+        <p class="text-xs text-slate-400">Top-dress with urea recommended during tillering.</p>
+      </div>
+
+      <!-- Yield Projection -->
+      <div class="glass-card-interactive rounded-2xl p-5 border border-white/10">
+        <div class="flex items-center justify-between mb-3 text-xs font-bold text-slate-400 uppercase">
+          <span>📊 Projected Yield</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">+8% Above Avg</span>
+        </div>
+        <div class="text-4xl font-extrabold text-white mb-2">4.8 <span class="text-sm font-normal text-slate-400">tons/acre</span></div>
+        <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mb-2">
+          <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: 82%;"></div>
+        </div>
+        <p class="text-xs text-slate-300">Assuming steady weather parameters and timely weed control.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 4: Agronomic Smart Calculator -->
+  <div id="tab-calculator" class="farmer-tab-pane hidden space-y-6">
+    <div class="glass-panel rounded-2xl p-6 border border-white/10 shadow-glass max-w-2xl mx-auto">
+      
+      <div class="mb-5 pb-3 border-b border-white/10">
+        <h3 class="text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
+          <span>🧮</span> Interactive Farm Dosage & Seed Rate Calculator
+        </h3>
+        <p class="text-xs text-slate-400 mt-0.5">Input your cultivated farm area to calculate exact requirements</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label for="calc-acres-input" class="text-xs font-semibold text-slate-300 mb-1.5 block">Cultivated Land Area (Acres):</label>
+          <input type="number" id="calc-acres-input" value="2.5" min="0.1" step="0.5" class="w-full h-11 px-4 glass-input rounded-xl text-sm font-bold text-emerald-300" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-300 mb-1.5 block">Selected Crop Reference:</label>
+          <div id="calc-crop-label" class="h-11 px-4 rounded-xl bg-slate-900/80 border border-white/10 flex items-center text-sm font-bold text-white">
+            🌾 Wheat (गेहूं)
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Calculated Outputs -->
+      <div class="grid grid-cols-3 gap-3 p-4 rounded-xl bg-slate-950/70 border border-white/10 text-center">
+        <div>
+          <div class="text-[11px] text-slate-400 uppercase font-bold mb-1">Seed Quantity</div>
+          <div class="text-xl font-extrabold text-white" id="calc-seed-out">100 kg</div>
+          <div class="text-[10px] text-slate-500">@ 40 kg/acre</div>
+        </div>
+        <div>
+          <div class="text-[11px] text-slate-400 uppercase font-bold mb-1">Urea (Nitrogen)</div>
+          <div class="text-xl font-extrabold text-emerald-400" id="calc-urea-out">112.5 kg</div>
+          <div class="text-[10px] text-slate-500">Split dose</div>
+        </div>
+        <div>
+          <div class="text-[11px] text-slate-400 uppercase font-bold mb-1">Water Need</div>
+          <div class="text-xl font-extrabold text-cyan-400" id="calc-water-out">1,250 m³</div>
+          <div class="text-[10px] text-slate-500">5cm irrigation</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error Alert Notification -->
+  <div id="farmer-error-box" class="hidden my-6 p-4 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-sm flex items-center justify-between shadow-2xl">
+    <div class="flex items-center gap-2">
+      <span>🚨</span>
+      <span id="farmer-error-msg">Failed to load recommendations. Please verify network or location.</span>
+    </div>
+    <button type="button" id="farmer-error-retry-btn" class="px-3 py-1 rounded-lg bg-red-800/60 hover:bg-red-700 text-white text-xs font-semibold cursor-pointer">
+      Retry
+    </button>
+  </div>
+
+</div>
+
+<!-- Client Script for Interactive Controls & Real-time Visual Updates -->
+<script>
+  let currentCrop = localStorage.getItem('mausam_farmer_crop') || 'Wheat';
+  let currentStage = localStorage.getItem('mausam_farmer_stage') || 'Vegetative';
+  let currentLocation = localStorage.getItem('mausam_farmer_location') || 'Greater Noida';
+  let farmerRequestId = 0;
+  let searchDebounce: ReturnType<typeof setTimeout> | null = null;
+  let completedActions: Set<number> = new Set(JSON.parse(localStorage.getItem('mausam_actions_done') || '[]'));
+
+  // DOM Elements
+  const locationInput = document.getElementById('farmer-location-input') as HTMLInputElement | null;
+  const searchDropdown = document.getElementById('farmer-search-dropdown');
+  const fetchBtn = document.getElementById('farmer-fetch-btn');
+  const fetchBtnText = document.getElementById('farmer-fetch-btn-text');
+  const fetchSpinner = document.getElementById('farmer-fetch-spinner');
+  const fetchArrow = document.getElementById('farmer-fetch-arrow');
+  const gpsBtn = document.getElementById('farmer-gps-btn');
+  const errorBox = document.getElementById('farmer-error-box');
+  const errorMsg = document.getElementById('farmer-error-msg');
+  const errorRetryBtn = document.getElementById('farmer-error-retry-btn');
+
+  // Weather Displays
+  const weatherLocBadge = document.getElementById('farmer-weather-loc-badge');
+  const weatherTimestamp = document.getElementById('farmer-weather-timestamp');
+  const moistureVal = document.getElementById('farmer-moisture-val');
+  const moistureBadge = document.getElementById('farmer-moisture-badge');
+  const moistureBar = document.getElementById('farmer-moisture-bar');
+  const moistureDesc = document.getElementById('farmer-moisture-desc');
+  
+  const rainVal = document.getElementById('farmer-rain-val');
+  const rainBadge = document.getElementById('farmer-rain-badge');
+  const rainBar = document.getElementById('farmer-rain-bar');
+  const rainProb = document.getElementById('farmer-rain-prob');
+  const rainDesc = document.getElementById('farmer-rain-desc');
+  
+  const tempVal = document.getElementById('farmer-temp-val');
+  const humidityVal = document.getElementById('farmer-humidity-val');
+  const windVal = document.getElementById('farmer-wind-val');
+  const conditionVal = document.getElementById('farmer-condition-val');
+  const conditionDesc = document.getElementById('farmer-condition-desc');
+  const climateStatus = document.getElementById('farmer-climate-status');
+  
+  const hazardVal = document.getElementById('farmer-hazard-val');
+  const hazardBadge = document.getElementById('farmer-hazard-badge');
+  const riskBar = document.getElementById('farmer-risk-bar');
+  const hazardDesc = document.getElementById('farmer-hazard-desc');
+  const yieldEst = document.getElementById('farmer-yield-est');
+
+  // Advisory Displays
+  const advisoryText = document.getElementById('farmer-weather-advisory-text');
+  const summaryText = document.getElementById('farmer-summary-text');
+  const cropStagePill = document.getElementById('farmer-crop-stage-pill');
+  const actionItemsContainer = document.getElementById('farmer-action-items-container');
+  const riskWarningsContainer = document.getElementById('farmer-risk-warnings-container');
+  const stageTipText = document.getElementById('farmer-stage-tip-text');
+  const sourceText = document.getElementById('farmer-source-text');
+  const actionProgress = document.getElementById('farmer-action-progress');
+  const stageProgressLabel = document.getElementById('farmer-stage-progress-label');
+
+  // Calculator Elements
+  const calcAcresInput = document.getElementById('calc-acres-input') as HTMLInputElement | null;
+  const calcCropLabel = document.getElementById('calc-crop-label');
+  const calcSeedOut = document.getElementById('calc-seed-out');
+  const calcUreaOut = document.getElementById('calc-urea-out');
+  const calcWaterOut = document.getElementById('calc-water-out');
+
+  // 1. Interactive Tabs Switching
+  const tabBtns = document.querySelectorAll('.farmer-tab-btn');
+  const tabPanes = document.querySelectorAll('.farmer-tab-pane');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-tab-target');
+      if (!targetId) return;
+
+      tabBtns.forEach(b => {
+        b.className = 'farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10';
+      });
+      btn.className = 'farmer-tab-btn active-scale px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-300 border border-emerald-500/40 shadow-glow-emerald';
+
+      tabPanes.forEach(pane => {
+        if (pane.id === targetId) pane.classList.remove('hidden');
+        else pane.classList.add('hidden');
+      });
+    });
+  });
+
+  // 2. Interactive Crop Cards Switching
+  function updateCropSelection(crop: string) {
+    currentCrop = crop;
+    localStorage.setItem('mausam_farmer_crop', crop);
+
+    const cropCards = document.querySelectorAll('.crop-card');
+    cropCards.forEach(card => {
+      const cVal = card.getAttribute('data-crop-val');
+      if (cVal === crop) {
+        card.className = 'crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/80 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)] ring-1 ring-emerald-400/50';
+      } else {
+        card.className = 'crop-card active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60';
+      }
+    });
+
+    if (calcCropLabel) calcCropLabel.textContent = `🌾 ${crop}`;
+    recalculateFarmDosage();
+    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+  }
+
+  document.querySelectorAll('.crop-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const crop = card.getAttribute('data-crop-val');
+      if (crop) updateCropSelection(crop);
+    });
+  });
+
+  // 3. Interactive Growth Stage Stepper Switching
+  function updateStageSelection(stage: string) {
+    currentStage = stage;
+    localStorage.setItem('mausam_farmer_stage', stage);
+
+    const stepBtns = document.querySelectorAll('.stage-step-btn');
+    const stageNames = ['Sowing', 'Vegetative', 'Flowering', 'Harvesting'];
+    const stepIdx = stageNames.indexOf(stage);
+
+    if (stageProgressLabel) {
+      stageProgressLabel.textContent = `Stage ${stepIdx + 1} of 4 • ${stage} Phase`;
+    }
+
+    stepBtns.forEach((btn) => {
+      const sVal = btn.getAttribute('data-stage-val');
+      const numSpan = btn.querySelector('.step-num');
+
+      if (sVal === stage) {
+        btn.className = 'stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-emerald-500/20 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)]';
+        if (numSpan) numSpan.className = 'w-6 h-6 rounded-full bg-emerald-500 text-slate-950 text-xs flex items-center justify-center font-bold step-num';
+      } else {
+        btn.className = 'stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50';
+        if (numSpan) numSpan.className = 'w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num';
+      }
+    });
+
+    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+  }
+
+  document.querySelectorAll('.stage-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const stage = btn.getAttribute('data-stage-val');
+      if (stage) updateStageSelection(stage);
+    });
+  });
+
+  // 4. Quick Location Selector Pills
+  document.querySelectorAll('.quick-loc-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const loc = pill.getAttribute('data-loc');
+      if (loc) {
+        currentLocation = loc;
+        if (locationInput) locationInput.value = loc;
+        localStorage.setItem('mausam_farmer_location', loc);
+        loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+      }
+    });
+  });
+
+  // 5. Main Fetch & Advisory Renderer
+  async function loadFarmerAdvisory(crop: string, stage: string, location: string) {
+    const requestId = ++farmerRequestId;
+    setLoadingState(true);
+    hideError();
+
+    if (cropStagePill) cropStagePill.textContent = `${crop} • ${stage} Stage`;
+    if (weatherLocBadge) weatherLocBadge.textContent = location;
+
+    try {
+      const url = `/api/recommendations?crop=${encodeURIComponent(crop)}&stage=${encodeURIComponent(stage)}&q=${encodeURIComponent(location)}&location=${encodeURIComponent(location)}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      const data = await response.json();
+
+      if (requestId !== farmerRequestId) return;
+
+      // Update weather UI
+      if (data.weatherSummary) {
+        updateWeatherUI(data.weatherSummary, data.location || location);
+      }
+
+      // Update AI Advisory banner
+      if (advisoryText) {
+        advisoryText.textContent = data.weatherAdvisory || data.recommendation || 'Analyzing field conditions...';
+      }
+      if (summaryText) {
+        summaryText.textContent = data.summary || data.recommendation || 'Standard field monitoring recommended.';
+      }
+      if (stageTipText) {
+        stageTipText.textContent = data.growthStageTips || `Follow optimal agronomy protocol for ${crop} during ${stage} phase.`;
+      }
+      if (sourceText) {
+        sourceText.textContent = data.source === 'gemini' ? 'Gemini AI Advisor' : 'Agronomic Science Engine';
+      }
+
+      // Render Action Items with interactive checkboxes
+      renderActionItems(data.cropActionItems || []);
+
+      // Render Risk Alerts
+      renderRiskWarnings(data.riskWarnings || []);
+
+      if (weatherTimestamp) {
+        const now = new Date();
+        weatherTimestamp.textContent = `Live Telemetry at ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+
+    } catch (err) {
+      if (requestId === farmerRequestId) {
+        console.error('Advisory fetch error:', err);
+        showError('Unable to fetch live advisory. Fallback to local science guidelines.');
+      }
+    } finally {
+      if (requestId === farmerRequestId) setLoadingState(false);
+    }
+  }
+
+  function updateWeatherUI(summary: any, locName: string) {
+    if (weatherLocBadge) weatherLocBadge.textContent = locName;
+
+    // Soil Moisture
+    const moisture = Math.round(summary.soil_moisture_pct ?? 50);
+    if (moistureVal) moistureVal.textContent = `${moisture}%`;
+    if (moistureBar) moistureBar.style.width = `${Math.min(100, moisture)}%`;
+    if (moistureBadge) {
+      if (moisture > 80) {
+        moistureBadge.textContent = 'High Saturation';
+        moistureBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
+      } else if (moisture < 40) {
+        moistureBadge.textContent = 'Moisture Deficit';
+        moistureBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      } else {
+        moistureBadge.textContent = 'Optimal Range';
+        moistureBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      }
+    }
+    if (moistureDesc) {
+      moistureDesc.textContent = moisture > 80 
+        ? 'Soil saturated. Hold off on extra irrigation.'
+        : moisture < 40 
+        ? 'Moisture deficit. Early morning irrigation recommended.'
+        : 'Good root hydration for active nutrient uptake.';
+    }
+
+    // Rainfall
+    const rain = summary.rainfall_prediction_24h_mm ?? 0;
+    if (rainVal) rainVal.textContent = `${rain.toFixed(1)} mm`;
+    const rainProbability = rain > 2 ? 75 : 10;
+    if (rainProb) rainProb.textContent = `${rainProbability}%`;
+    if (rainBar) rainBar.style.width = `${rainProbability}%`;
+    if (rainBadge) {
+      if (rain > 10) {
+        rainBadge.textContent = 'Heavy Rain Alert';
+        rainBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-600 text-white shadow-glow-cyan';
+      } else if (rain > 2) {
+        rainBadge.textContent = 'Showers Expected';
+        rainBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-300 border border-blue-400/30';
+      } else {
+        rainBadge.textContent = 'Dry Window';
+        rainBadge.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10';
+      }
+    }
+    if (rainDesc) {
+      rainDesc.textContent = rain > 2 
+        ? 'Precipitation expected in next 24h. Postpone foliar spraying.'
+        : 'Dry conditions favor intercultural weeding & fertilizer.';
+    }
+
+    // Temperature & Wind
+    const temp = summary.temp_c ?? 25;
+    const humidity = summary.humidity ?? 60;
+    if (tempVal) tempVal.textContent = `${temp.toFixed(1)}°C`;
+    if (humidityVal) humidityVal.textContent = `RH: ${humidity}%`;
+    if (windVal) windVal.textContent = `💨 Wind: ${summary.wind_kph || 12} km/h`;
+    if (conditionVal) conditionVal.textContent = summary.condition || 'Clear';
+    if (climateStatus) {
+      climateStatus.textContent = temp > 35 ? 'Heat Wave' : temp < 10 ? 'Cold Chill' : 'Pleasant';
+    }
+
+    // Hazards
+    const frost = summary.frost_alert || temp < 3;
+    const heat = temp > 35;
+    if (hazardVal) hazardVal.textContent = frost ? 'Frost Alert' : heat ? 'Heat Stress' : 'Low Risk';
+    if (hazardBadge) {
+      hazardBadge.textContent = frost ? 'Cold Chill' : heat ? 'Thermal Peak' : 'Favorable';
+      hazardBadge.className = frost 
+        ? 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30'
+        : heat 
+        ? 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30'
+        : 'text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
+    }
+    if (riskBar) {
+      riskBar.style.width = frost || heat ? '85%' : '20%';
+    }
+    if (conditionDesc) {
+      conditionDesc.textContent = `${summary.condition || 'Clear'} • Ideal vegetative micro-climate.`;
+    }
+    if (hazardDesc) {
+      hazardDesc.textContent = frost 
+        ? 'Ground freeze danger. Provide light overnight sprinkler.'
+        : heat 
+        ? 'Thermal stress. Maintain soil moisture buffer.'
+        : 'Micro-climate parameters are safe and stable.';
+    }
+    if (yieldEst) {
+      yieldEst.textContent = frost || heat ? 'Yield: 78%' : 'Yield: 95%';
+    }
+  }
+
+  // Render Action Items with interactive checkboxes
+  function renderActionItems(items: any[]) {
+    if (!actionItemsContainer) return;
+
+    if (items.length === 0) {
+      actionItemsContainer.innerHTML = `
+        <div class="glass-panel rounded-xl p-5 text-xs text-slate-400 text-center">
+          No urgent actions required today. Routine monitoring advised.
+        </div>
+      `;
+      return;
+    }
+
+    actionItemsContainer.innerHTML = items.map((item, idx) => {
+      const isDone = completedActions.has(idx);
+      const priorityBadge = item.priority === 'high'
+        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+        : item.priority === 'medium'
+        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+        : 'bg-slate-800 text-slate-300 border border-white/10';
+
+      return `
+        <div class="action-item-card glass-card-interactive rounded-xl p-4 transition-all duration-200 ${isDone ? 'opacity-55 border-emerald-500/30 bg-emerald-950/20' : ''}" data-idx="${idx}">
+          <div class="flex items-start gap-3">
+            <button type="button" class="action-checkbox-btn mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center transition-all cursor-pointer ${isDone ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'bg-slate-800/80 border-white/20 hover:border-emerald-400 text-transparent'}" data-idx="${idx}">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="flex-1">
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">${item.icon || '📌'}</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-200">${item.category || 'Field Duty'}</span>
+                </div>
+                <span class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full ${priorityBadge}">
+                  ${item.priority || 'Routine'}
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed ${isDone ? 'line-through text-slate-400' : ''}">
+                ${item.action}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    updateActionProgress(items.length);
+
+    // Attach interactive checkbox listeners
+    actionItemsContainer.querySelectorAll('.action-checkbox-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = Number(btn.getAttribute('data-idx'));
+        if (completedActions.has(idx)) completedActions.delete(idx);
+        else completedActions.add(idx);
+        localStorage.setItem('mausam_actions_done', JSON.stringify(Array.from(completedActions)));
+        renderActionItems(items);
+      });
+    });
+  }
+
+  function updateActionProgress(total: number) {
+    if (!actionProgress) return;
+    const doneCount = completedActions.size;
+    actionProgress.textContent = `${doneCount} of ${total} Completed`;
+    actionProgress.className = doneCount === total 
+      ? 'text-xs font-semibold text-emerald-300' 
+      : 'text-xs font-semibold text-cyan-400';
+  }
+
+  // Render Risk Alerts
+  function renderRiskWarnings(warnings: any[]) {
+    if (!riskWarningsContainer) return;
+
+    if (warnings.length === 0) {
+      riskWarningsContainer.innerHTML = `
+        <div class="glass-panel rounded-xl p-4 text-xs text-slate-400 text-center">
+          No active weather hazards. Conditions are balanced.
+        </div>
+      `;
+      return;
+    }
+
+    riskWarningsContainer.innerHTML = warnings.map(warn => {
+      const isCritical = warn.severity === 'critical';
+      const isWarning = warn.severity === 'warning';
+      const isFavorable = warn.severity === 'favorable';
+
+      const borderClass = isCritical 
+        ? 'border-l-4 border-l-rose-500 bg-rose-950/30' 
+        : isWarning 
+        ? 'border-l-4 border-l-amber-500 bg-amber-950/30' 
+        : isFavorable 
+        ? 'border-l-4 border-l-emerald-500 bg-emerald-950/30' 
+        : 'border-l-4 border-l-cyan-500 bg-cyan-950/30';
+
+      const badgeColor = isCritical 
+        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' 
+        : isWarning 
+        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
+        : isFavorable 
+        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
+        : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
+
+      const icon = isCritical ? '🚨' : isWarning ? '⚠️' : isFavorable ? '✅' : 'ℹ️';
+
+      return `
+        <div class="glass-panel rounded-xl p-3.5 ${borderClass} border border-white/10 shadow-xs">
+          <div class="flex items-center justify-between mb-1">
+            <h4 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <span>${icon}</span> ${warn.title}
+            </h4>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${badgeColor}">
+              ${warn.severity}
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed font-normal">
+            ${warn.description}
+          </p>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 6. Farm Dosage & Seed Calculator
+  function recalculateFarmDosage() {
+    if (!calcAcresInput) return;
+    const acres = parseFloat(calcAcresInput.value) || 1;
+
+    let seedPerAcre = 40; // kg
+    let ureaPerAcre = 45; // kg
+    let waterPerAcre = 500; // m3
+
+    if (currentCrop === 'Rice') { seedPerAcre = 20; ureaPerAcre = 60; waterPerAcre = 1200; }
+    else if (currentCrop === 'Maize') { seedPerAcre = 8; ureaPerAcre = 50; waterPerAcre = 450; }
+    else if (currentCrop === 'Cotton') { seedPerAcre = 3; ureaPerAcre = 40; waterPerAcre = 600; }
+    else if (currentCrop === 'Sugarcane') { seedPerAcre = 3000; ureaPerAcre = 100; waterPerAcre = 1800; }
+
+    if (calcSeedOut) calcSeedOut.textContent = `${(acres * seedPerAcre).toLocaleString()} ${currentCrop === 'Sugarcane' ? 'setts' : 'kg'}`;
+    if (calcUreaOut) calcUreaOut.textContent = `${(acres * ureaPerAcre).toFixed(1)} kg`;
+    if (calcWaterOut) calcWaterOut.textContent = `${(acres * waterPerAcre).toLocaleString()} m³`;
+  }
+
+  if (calcAcresInput) {
+    calcAcresInput.addEventListener('input', recalculateFarmDosage);
+  }
+
+  // 7. Location Search Autocomplete & Events
+  if (locationInput) {
+    locationInput.addEventListener('input', () => {
+      const val = locationInput.value.trim();
+      if (searchDebounce) clearTimeout(searchDebounce);
+      if (val.length < 2) {
+        if (searchDropdown) searchDropdown.classList.add('hidden');
+        return;
+      }
+      searchDebounce = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(val)}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          renderFarmerSearchResults(Array.isArray(data) ? data : (data.value || []));
+        } catch (e) {
+          console.error(e);
+        }
+      }, 250);
+    });
+
+    locationInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = locationInput.value.trim();
+        if (val) {
+          currentLocation = val;
+          localStorage.setItem('mausam_farmer_location', currentLocation);
+          if (searchDropdown) searchDropdown.classList.add('hidden');
+          loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+        }
+      }
+    });
+  }
+
+  function renderFarmerSearchResults(results: any[]) {
+    if (!searchDropdown) return;
+    if (results.length === 0) {
+      searchDropdown.innerHTML = '<div class="px-4 py-3 text-xs text-slate-400">No matching farm location</div>';
+      searchDropdown.classList.remove('hidden');
+      return;
+    }
+
+    searchDropdown.innerHTML = results.slice(0, 6).map(loc => `
+      <div class="farmer-search-item px-4 py-2.5 text-xs cursor-pointer hover:bg-slate-800/80 border-b border-white/5 last:border-b-0 transition-colors"
+           data-name="${loc.name}"
+           data-display="${loc.display || loc.name}">
+        <div class="font-bold text-white">${loc.name}</div>
+        <div class="text-[11px] text-slate-400">${loc.region ? loc.region + ', ' : ''}${loc.country}</div>
+      </div>
+    `).join('');
+
+    searchDropdown.classList.remove('hidden');
+
+    searchDropdown.querySelectorAll('.farmer-search-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const name = item.getAttribute('data-name') || 'Greater Noida';
+        const display = item.getAttribute('data-display') || name;
+        currentLocation = name;
+        if (locationInput) locationInput.value = display;
+        localStorage.setItem('mausam_farmer_location', currentLocation);
+        searchDropdown.classList.add('hidden');
+        loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+      });
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (searchDropdown && locationInput && !searchDropdown.contains(e.target as Node) && !locationInput.contains(e.target as Node)) {
+      searchDropdown.classList.add('hidden');
+    }
+  });
+
+  if (fetchBtn) {
+    fetchBtn.addEventListener('click', () => {
+      if (locationInput) {
+        const val = locationInput.value.trim();
+        if (val) currentLocation = val;
+      }
+      localStorage.setItem('mausam_farmer_location', currentLocation);
+      loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    });
+  }
+
+  if (errorRetryBtn) {
+    errorRetryBtn.addEventListener('click', () => {
+      loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    });
+  }
+
+  // GPS Current Location
+  if (gpsBtn) {
+    gpsBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation not supported.');
+        return;
+      }
+      const prevText = gpsBtn.innerHTML;
+      gpsBtn.innerHTML = `<span>Locating...</span>`;
+      gpsBtn.setAttribute('disabled', 'true');
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const coords = `${lat},${lon}`;
+          try {
+            const resp = await fetch(`/api/weather?city=current_location&q=${encodeURIComponent(coords)}`);
+            if (!resp.ok) throw new Error('GPS fetch error');
+            const data = await resp.json();
+            const displayName = data.location?.name ? `${data.location.name}` : coords;
+            currentLocation = displayName;
+            if (locationInput) locationInput.value = data.location?.name ? `${data.location.name}, ${data.location.country}` : coords;
+            localStorage.setItem('mausam_farmer_location', currentLocation);
+            loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+          } catch (e) {
+            currentLocation = coords;
+            if (locationInput) locationInput.value = coords;
+            loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+          } finally {
+            gpsBtn.innerHTML = prevText;
+            gpsBtn.removeAttribute('disabled');
+          }
+        },
+        () => {
+          gpsBtn.innerHTML = prevText;
+          gpsBtn.removeAttribute('disabled');
+          alert('Unable to access device GPS.');
+        },
+        { enableHighAccuracy: false, timeout: 8000 }
+      );
+    });
+  }
+
+  function setLoadingState(isLoading: boolean) {
+    if (fetchBtn) {
+      if (isLoading) {
+        fetchBtn.classList.add('opacity-75', 'pointer-events-none');
+        if (fetchSpinner) fetchSpinner.classList.remove('hidden');
+        if (fetchArrow) fetchArrow.classList.add('hidden');
+        if (fetchBtnText) fetchBtnText.textContent = 'Analyzing...';
+      } else {
+        fetchBtn.classList.remove('opacity-75', 'pointer-events-none');
+        if (fetchSpinner) fetchSpinner.classList.add('hidden');
+        if (fetchArrow) fetchArrow.classList.remove('hidden');
+        if (fetchBtnText) fetchBtnText.textContent = 'Generate Advisory';
+      }
+    }
+  }
+
+  function showError(msg: string) {
+    if (errorBox) {
+      if (errorMsg) errorMsg.textContent = msg;
+      errorBox.classList.remove('hidden');
+    }
+  }
+
+  function hideError() {
+    if (errorBox) errorBox.classList.add('hidden');
+  }
+
+  // Initial Boot
+  updateCropSelection(currentCrop);
+  updateStageSelection(currentStage);
+</script>

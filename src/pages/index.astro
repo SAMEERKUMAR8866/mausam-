@@ -1,0 +1,291 @@
+---
+// src/pages/index.astro
+// Mausam - Personalized Precision Weather & Agri-Intelligence Homepage
+import Layout from '../layouts/Layout.astro';
+import GlobalNav from '../components/GlobalNav.astro';
+import SubNav from '../components/SubNav.astro';
+import OfflineBanner from '../components/OfflineBanner.astro';
+import DisasterOfflineView from '../components/DisasterOfflineView.astro';
+import ForecastCarousel7Day from '../components/dashboard/ForecastCarousel7Day.astro';
+import HourlyOverviewGraph from '../components/dashboard/HourlyOverviewGraph.astro';
+import WeatherDetailsGrid from '../components/dashboard/WeatherDetailsGrid.astro';
+import PersonaDashboard from '../components/PersonaDashboard.astro';
+import BottomNav from '../components/BottomNav.astro';
+import SavedLocationsDrawer from '../components/SavedLocationsDrawer.astro';
+import RadarModal from '../components/RadarModal.astro';
+import SOSHubModal from '../components/SOSHubModal.astro';
+import ProfileSettingsModal from '../components/ProfileSettingsModal.astro';
+import InstallPrompt from '../components/InstallPrompt.astro';
+---
+
+<Layout
+  title="Mausam - Personalized Weather Dashboard & Kisan Intel"
+  description="Next-generation personalized meteorological intelligence with 7-day forecast horizon, 24h temperature spline curve, and AI agro-advisories."
+>
+  <!-- Global Navigation Header -->
+  <GlobalNav />
+  <SubNav />
+  <OfflineBanner />
+
+  <main class="flex-1 bg-[#070b14] relative w-full max-w-[100vw] overflow-x-hidden pb-16 md:pb-0">
+    
+    <!-- Critical Disaster Banner & Overlay (Triggered on Extreme Hazards) -->
+    <DisasterOfflineView />
+
+    <!-- Severe Disaster Alert Banner -->
+    <div id="severe-disaster-alert-banner" class="hidden w-full bg-gradient-to-r from-red-950 via-red-900 to-rose-950 border-b border-red-500/50 px-4 sm:px-6 py-3.5 shadow-2xl">
+      <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl animate-bounce">🚨</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-red-200 bg-red-500/30 px-2 py-0.5 rounded border border-red-400/40 animate-pulse">
+                CRITICAL WEATHER DISASTER ALERT
+              </span>
+              <span id="hero-disaster-title" class="text-xs text-white font-bold">Severe Cyclone Warning</span>
+            </div>
+            <p id="hero-disaster-desc" class="text-xs text-red-200 mt-0.5">
+              Rapid atmospheric depression detected. Move away from coastal and weak structures immediately.
+            </p>
+          </div>
+        </div>
+        <button id="btn-hero-open-sos" type="button" class="px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg transition-all active-scale cursor-pointer flex items-center gap-1.5 shrink-0">
+          <span>🛡️</span> <span>Open Disaster Response Hub</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Live Weather View -->
+    <div id="main-weather-content" class="w-full max-w-full overflow-x-hidden transition-opacity duration-300">
+      
+      <!-- Photography-First Hero Section (India Gate / City Scenic) -->
+      <section class="relative w-full min-h-[380px] md:min-h-[440px] h-auto bg-[#080c14] overflow-hidden flex items-end pt-12 pb-8 sm:pb-12">
+        <!-- Background Scenic Photo -->
+        <div
+          id="hero-photo"
+          class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out scale-102"
+          style="background-image: url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop'); background-color: #1a1a2e;"
+        >
+        </div>
+        <!-- Soft gradient overlays -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#070b14] via-[#070b14]/60 to-transparent"></div>
+        <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#070b14]/70 to-transparent"></div>
+
+        <!-- Hero Content Stack -->
+        <div class="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 text-white">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 sm:gap-6">
+            <div class="min-w-0">
+              <!-- Location Display & Offline Badge -->
+              <div class="flex items-center gap-2 mb-1">
+                <p id="hero-location" class="text-base sm:text-xl font-semibold tracking-apple-tight text-cyan-300 truncate">
+                  New Delhi, Delhi, India
+                </p>
+                <span id="hero-offline-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 hidden">
+                  Offline (Cached)
+                </span>
+              </div>
+
+              <!-- Temperature -->
+              <h1 id="hero-temp" class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-apple-hero leading-tight sm:leading-none mb-1.5 sm:mb-2">
+                29.6°C
+              </h1>
+
+              <!-- Condition Tagline -->
+              <p id="hero-condition" class="text-base sm:text-xl md:text-2xl font-normal text-slate-200 tracking-apple-tight">
+                Partly Cloudy
+              </p>
+            </div>
+
+            <!-- Key Horizontal Weather Strips -->
+            <div class="flex flex-wrap items-center gap-x-5 sm:gap-x-8 gap-y-2.5 text-sm text-slate-300 border-t md:border-t-0 md:border-l border-white/20 pt-3 md:pt-0 md:pl-8">
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Humidity</span>
+                <span id="hero-humidity" class="text-sm sm:text-base font-semibold text-white">65%</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Wind Speed</span>
+                <span id="hero-wind" class="text-sm sm:text-base font-semibold text-white">2.6 kph ESE</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">UV Index</span>
+                <span id="hero-uv" class="text-sm sm:text-base font-semibold text-white">0 (Moderate)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comprehensive Meteorological Dashboard Horizon Container -->
+      <section class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 pt-6 overflow-x-hidden">
+        
+        <!-- 1. 7-Day Interactive Forecast Horizon -->
+        <ForecastCarousel7Day />
+
+        <!-- 2. 24-Hour Meteorological Spline Curve Graph -->
+        <HourlyOverviewGraph />
+
+        <!-- 3. 8-Card Comprehensive Meteorological Diagnostics Grid -->
+        <WeatherDetailsGrid />
+
+      </section>
+
+      <!-- Dynamic Persona Dashboard Container (Profile Selector + 4 KPI Cards + AI Advisory + Checklist) -->
+      <PersonaDashboard />
+
+    </div>
+
+  </main>
+
+  <!-- Dark Glass Footer -->
+  <footer class="w-full bg-slate-950 border-t border-white/10 text-slate-400 text-xs py-12 px-6">
+    <div class="max-w-[980px] mx-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8 border-b border-white/10 pb-8">
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Mausam Intel</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="/farmer" class="hover:text-emerald-400">Agriculture Hub</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Outdoor Fitness</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Coastal Maritime</a></li>
+            <li><a href="#" class="hover:text-amber-400">Aviation Flight Ops</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Safety & SOS</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="#" class="sos-hub-trigger hover:text-red-400">Emergency SOS Hub</a></li>
+            <li><a href="#" class="hover:text-emerald-400">Offline BLE Mesh</a></li>
+            <li><a href="#" class="hover:text-cyan-400">Disaster Shelters</a></li>
+            <li><a href="#" class="hover:text-white">Survival Manuals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">Weather Science</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><a href="#" class="hover:text-white">Air Quality Index</a></li>
+            <li><a href="#" class="hover:text-white">UV Hazard Index</a></li>
+            <li><a href="#" class="hover:text-white">Barometric Tracking</a></li>
+            <li><a href="#" class="hover:text-white">Doppler Rain Radar</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-white uppercase tracking-wider mb-2.5">System</h4>
+          <ul class="space-y-1 text-slate-400">
+            <li><span class="text-emerald-400 font-semibold">SIH26076</span></li>
+            <li><span class="text-slate-400">Static PWA / Capacitor</span></li>
+            <li><span class="text-slate-400">Open-Meteo & Gemini AI</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-slate-500">
+        <div>Copyright © 2026 Mausam Precision Weather Systems. All rights reserved.</div>
+        <div class="flex items-center gap-3">
+          <a href="#" class="hover:underline hover:text-emerald-400">Privacy Policy</a>
+          <span>•</span>
+          <a href="#" class="hover:underline hover:text-emerald-400">Terms of Use</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals and Drawers -->
+  <SavedLocationsDrawer />
+  <RadarModal />
+  <SOSHubModal />
+  <ProfileSettingsModal />
+  <InstallPrompt />
+  <BottomNav />
+</Layout>
+
+<script>
+  import '../scripts/client-api-bridge';
+  import { StorageService } from '../services/storage.service';
+  import { fetchWeatherData } from '../services/weather.service';
+
+  const heroLocation = document.getElementById('hero-location');
+  const heroTemp = document.getElementById('hero-temp');
+  const heroCondition = document.getElementById('hero-condition');
+  const heroHumidity = document.getElementById('hero-humidity');
+  const heroWind = document.getElementById('hero-wind');
+  const heroUv = document.getElementById('hero-uv');
+  const heroPhoto = document.getElementById('hero-photo');
+  const heroOfflineBadge = document.getElementById('hero-offline-badge');
+  const disasterBanner = document.getElementById('severe-disaster-alert-banner');
+  const heroDisasterTitle = document.getElementById('hero-disaster-title');
+  const heroDisasterDesc = document.getElementById('hero-disaster-desc');
+  const btnHeroSos = document.getElementById('btn-hero-open-sos');
+
+  const SCENIC_PHOTOS: Record<string, string> = {
+    new_delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop', // India Gate
+    mumbai: 'https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1200&auto=format&fit=crop',
+    london: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop',
+    new_york: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop'
+  };
+
+  btnHeroSos?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-sos-hub'));
+  });
+
+  function renderHero(data: any) {
+    if (!data) return;
+
+    if (heroLocation) heroLocation.textContent = `${data.location.name}, ${data.location.country}`;
+    if (heroTemp) heroTemp.textContent = `${data.current.temp_c}°C`;
+    if (heroCondition) heroCondition.textContent = data.current.condition.text;
+    if (heroHumidity) heroHumidity.textContent = `${data.current.humidity}%`;
+    if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${data.current.wind_dir}`;
+
+    const uvLabel = data.current.uv >= 8 ? 'Very High' : data.current.uv >= 6 ? 'High' : 'Moderate';
+    if (heroUv) heroUv.textContent = `${data.current.uv} (${uvLabel})`;
+
+    if (heroOfflineBadge) {
+      if (navigator.onLine) heroOfflineBadge.classList.add('hidden');
+      else heroOfflineBadge.classList.remove('hidden');
+    }
+
+    if (heroPhoto) {
+      const locKey = data.location.name.toLowerCase().replace(/ /g, '_');
+      const photoUrl = SCENIC_PHOTOS[locKey] || SCENIC_PHOTOS['new_delhi'];
+      heroPhoto.style.backgroundImage = `url('${photoUrl}')`;
+    }
+
+    // Handle Disaster Banner
+    if (disasterBanner && data.isDisasterActive && data.disasterDetails) {
+      if (heroDisasterTitle) heroDisasterTitle.textContent = data.disasterDetails.disasterName;
+      if (heroDisasterDesc) heroDisasterDesc.textContent = data.disasterDetails.description;
+      disasterBanner.classList.remove('hidden');
+    } else if (disasterBanner) {
+      disasterBanner.classList.add('hidden');
+    }
+  }
+
+  async function loadWeather(key: string, display?: string) {
+    try {
+      const data = await fetchWeatherData(key, display);
+      renderHero(data);
+      StorageService.setLastWeatherData(data);
+      window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: data }));
+    } catch (err) {
+      console.warn('[Home] Load weather error:', err);
+    }
+  }
+
+  // Location selection listener
+  window.addEventListener('mausam-location-selected', (e: any) => {
+    const key = e.detail?.key || 'new_delhi';
+    const display = e.detail?.display || 'New Delhi, Delhi, India';
+    loadWeather(key, display);
+  });
+
+  // Init
+  const initialLoc = StorageService.getLastLocation() || 'New Delhi, Delhi, India';
+  const initialKey = initialLoc.split(',')[0].trim().toLowerCase().replace(/ /g, '_');
+
+  // If cached data exists in storage, render immediately to avoid flash
+  const cached = StorageService.getLastWeatherData();
+  if (cached) {
+    renderHero(cached);
+    window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: cached }));
+  }
+
+  loadWeather(initialKey, initialLoc);
+</script>
