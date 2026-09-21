@@ -1,0 +1,22 @@
+{
+  "name": "ariz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm --prefix Mausam- run dev",
+    "dev": "npm --prefix Mausam- run dev",
+    "build": "npm --prefix Mausam- run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "astro": "^7.3.3"
+  }
+}

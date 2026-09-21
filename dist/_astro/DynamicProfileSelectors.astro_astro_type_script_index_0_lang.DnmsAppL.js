@@ -1,0 +1,42 @@
+import{t as e}from"./i18n.service.Ber3Lkiq.js";import{n as t,r as n,t as r}from"./storage.service.DpZMG_4C.js";import{t as i}from"./profileControls.C7jiixiH.js";import{t as a}from"./network.service.BRUQDYT6.js";var o=document.getElementById(`profile-banner-icon`),s=document.getElementById(`profile-banner-title`),c=document.getElementById(`profile-banner-subtitle`),l=document.getElementById(`quick-switch-pills-container`),u=document.getElementById(`dynamic-controls-container`),d=document.getElementById(`btn-switch-profile-modal`),f=document.getElementById(`btn-profile-settings-tune`),p=document.getElementById(`btn-generate-persona-ai-suggestion`),m=document.getElementById(`btn-generate-persona-ai-label`),h=document.getElementById(`ai-suggestion-target-summary`),g=document.getElementById(`ai-suggestion-target-badge`);d?.addEventListener(`click`,()=>{window.dispatchEvent(new CustomEvent(`mausam-open-profile-settings`))}),f?.addEventListener(`click`,()=>{window.dispatchEvent(new CustomEvent(`mausam-open-profile-settings`))});function _(t){let n=i[t]||i.farmer,o=r.getProfileCustomSettings(t),s=a.isOnline();if(!n.controls||n.controls.length===0){h&&(h.textContent=e.t(n.title,n.title)),g&&(g.textContent=s?`READY`:`OFFLINE`);return}let c=[];n.controls.forEach(t=>{let n=o[t.groupId]||t.options[0]?.id,r=t.options.find(e=>e.id===n)||t.options[0];if(r){let n=e.t(r.label,r.label);t.groupId===`target_crop`&&(n=e.translateCrop(r.id)),t.groupId===`growth_stage`&&(n=`${e.translateStage(r.id)} ${e.t(`Phase`,`Phase`)}`),c.push(n)}}),h&&(h.textContent=c.join(` • `)),g&&(g.textContent=s?e.t(`READY`,`READY`):e.t(`OFFLINE`,`OFFLINE`))}function v(t){l&&(l.innerHTML=``,n.forEach(n=>{let i=n.id===t,a=n.name.split(`/`)[0].trim(),o=e.t(a,a),s=document.createElement(`button`);s.type=`button`,s.className=`px-3.5 py-1.5 rounded-full text-xs transition-all framer-spring-hover framer-spring-press cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap ${i?`bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 text-slate-950 font-black shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-200 ring-2 ring-emerald-400/40 scale-[1.03]`:`bg-slate-900/70 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 font-medium`}`,s.innerHTML=`<span>${n.icon}</span> <span>${o}</span>${i?`<span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span>`:``}`,s.addEventListener(`click`,()=>{r.setActivePersona(n.id),b(n.id),window.dispatchEvent(new CustomEvent(`mausam-persona-changed`,{detail:{personaId:n.id}}))}),l.appendChild(s)}))}function y(t){if(!u)return;u.innerHTML=``;let n=i[t]||i.farmer;if(!n.controls||n.controls.length===0){_(t);return}n.controls.forEach(n=>{let i=document.createElement(`div`);i.className=`glass-panel spotlight-card rounded-2xl p-3.5 sm:p-4 border border-white/10`;let a=r.getProfileCustomSettings(t)[n.groupId]||n.options[0]?.id,o=e.t(n.title,n.title),s=e.t(n.subTitle,n.subTitle),c=``;c=n.groupId===`target_crop`?`
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-2.5">
+            ${n.options.map(t=>{let r=t.id===a,i=e.translateCrop(t.id)||e.t(t.label,t.label),o=t.subLabel?e.t(t.subLabel,t.subLabel):``,s=t.badge?e.t(t.badge,t.badge):``;return`
+                <button type="button" data-group="${n.groupId}" data-opt="${t.id}" class="control-opt-btn spotlight-card framer-spring-hover framer-spring-press p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${r?`bg-slate-900/90 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-400/50`:`bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60`}">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xl sm:text-2xl">${t.icon||`🌱`}</span>
+                    ${s?`<span class="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">${s}</span>`:``}
+                  </div>
+                  <div class="font-bold text-xs sm:text-sm text-white">${i}</div>
+                  <div class="text-[11px] text-slate-400 font-normal truncate">${o}</div>
+                </button>
+              `}).join(``)}
+          </div>
+        `:`
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2.5">
+            ${n.options.map(t=>{let r=t.id===a,i=e.t(t.label,t.label);n.groupId===`growth_stage`&&(i=`${e.translateStage(t.id)} ${e.t(`Phase`,`Phase`)}`);let o=t.subLabel?e.t(t.subLabel,t.subLabel):``;return`
+                <button type="button" data-group="${n.groupId}" data-opt="${t.id}" class="control-opt-btn spotlight-card framer-spring-hover framer-spring-press p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border flex flex-col justify-between ${r?`bg-slate-900/90 border-emerald-400 shadow-glow-emerald ring-1 ring-emerald-400/50`:`bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60`}">
+                  <span class="font-bold text-xs ${r?`text-emerald-300 font-extrabold`:`text-slate-200`}">${i}</span>
+                  <span class="text-[10px] text-slate-400 font-light mt-0.5 truncate">${o}</span>
+                </button>
+              `}).join(``)}
+          </div>
+        `,i.innerHTML=`
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>${n.icon}</span> ${o}
+          </span>
+          <span class="text-[11px] text-slate-400 font-light">${s}</span>
+        </div>
+        ${c}
+      `,i.querySelectorAll(`.control-opt-btn`).forEach(e=>{e.addEventListener(`click`,()=>{let n=e.getAttribute(`data-group`)||``,i=e.getAttribute(`data-opt`)||``;r.setProfileCustomSetting(t,n,i),y(t),_(t)})}),u.appendChild(i)}),_(t)}function b(n){let r=t[n]||t.farmer,a=i[n]||i.farmer;o&&(o.textContent=r.icon),s&&(s.textContent=e.t(a.title,a.title)),c&&(c.textContent=e.t(a.subtitle,a.subtitle));let l=document.getElementById(`profile-banner-badges`);if(l){let t=e.getLanguageMeta();l.innerHTML=`
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10 uppercase tracking-wider">
+          ${e.t(`personalizedView`,`PERSONALIZED VIEW`)}
+        </span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
+          ${e.t(`kisanIntel`,`KISAN INTEL`)}
+        </span>
+        ${(a.badges||[`Agronomy`]).map(t=>`<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">${e.t(t,t)}</span>`).join(` `)}
+        <span id="profile-banner-lang-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+          🌐 ${t.nativeName||t.name}
+        </span>
+      `}v(n),y(n),_(n)}p?.addEventListener(`click`,()=>{let t=r.getActivePersona(),n=a.isOnline(),i=r.getProfileCustomSettings(t);m&&(m.textContent=n?e.t(`Analyzing parameters...`,`Analyzing parameters...`):e.t(`Applying local rules...`,`Applying local rules...`)),window.dispatchEvent(new CustomEvent(`mausam-request-ai-generation`,{detail:{personaId:t,customSettings:i}}));let o=document.getElementById(`ai-advisory-container`);o&&(o.scrollIntoView({behavior:`smooth`,block:`center`}),o.classList.add(`ring-2`,`ring-emerald-400`,`shadow-glow-emerald`),setTimeout(()=>{o.classList.remove(`ring-2`,`ring-emerald-400`,`shadow-glow-emerald`)},1600)),setTimeout(()=>{m&&(m.textContent=e.t(`✓ AI Suggestion Generated`,`✓ AI Suggestion Generated`)),setTimeout(()=>{m&&(m.textContent=e.t(`generateAiSuggestion`,`Generate AI Suggestion`))},1800)},450)}),window.addEventListener(`mausam-persona-changed`,e=>{b(e.detail?.personaId||r.getActivePersona())}),window.addEventListener(`mausam-profile-setting-changed`,e=>{let t=e.detail?.personaId||r.getActivePersona(),n=r.getActivePersona();t===n&&(y(n),_(n))}),window.addEventListener(`mausam-state-synced`,e=>{let t=e.detail?.personaId||r.getActivePersona(),n=r.getActivePersona();t===n&&(y(n),_(n))}),window.addEventListener(`mausam-network-status-changed`,()=>{_(r.getActivePersona())}),window.addEventListener(`mausam-language-changed`,()=>{let t=document.getElementById(`dynamic-profile-selectors-root`);t&&e.translateDocument(t),b(r.getActivePersona())}),b(r.getActivePersona());
