@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mausam.app.test" >
+    package="com.wildxcoders.mausam.test" >
 
     <uses-sdk
         android:minSdkVersion="24"
-        android:targetSdkVersion="35" />
+        android:targetSdkVersion="36" />
 
     <instrumentation
         android:name="androidx.test.runner.AndroidJUnitRunner"
         android:functionalTest="false"
         android:handleProfiling="false"
-        android:label="Tests for com.mausam.app"
-        android:targetPackage="com.mausam.app" />
+        android:label="Tests for com.wildxcoders.mausam"
+        android:targetPackage="com.wildxcoders.mausam" />
 
     <queries>
         <package android:name="androidx.test.orchestrator" />

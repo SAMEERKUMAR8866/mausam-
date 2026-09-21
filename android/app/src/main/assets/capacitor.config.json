@@ -1,19 +1,5 @@
 {
-	"appId": "com.mausam.app",
+	"appId": "com.wildxcoders.mausam",
 	"appName": "Mausam",
-	"webDir": "dist",
-	"server": {
-		"androidScheme": "https"
-	},
-	"plugins": {
-		"SplashScreen": {
-			"launchShowDuration": 1500,
-			"backgroundColor": "#070b14",
-			"showSpinner": false
-		},
-		"StatusBar": {
-			"style": "DARK",
-			"backgroundColor": "#070b14"
-		}
-	}
+	"webDir": "dist"
 }

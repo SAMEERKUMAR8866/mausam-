@@ -1,2 +1,2 @@
-com.mausam.app.test:style/WhiteBackgroundTheme = 0x7f010001
-com.mausam.app.test:style/WhiteBackgroundDialogTheme = 0x7f010000
+com.wildxcoders.mausam.test:style/WhiteBackgroundTheme = 0x7f010001
+com.wildxcoders.mausam.test:style/WhiteBackgroundDialogTheme = 0x7f010000

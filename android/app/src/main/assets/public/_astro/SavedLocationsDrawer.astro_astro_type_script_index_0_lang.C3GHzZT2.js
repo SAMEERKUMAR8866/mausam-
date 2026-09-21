@@ -1,9 +1,0 @@
-import{t as e}from"./storage.service.CLMgyCBK.js";var t=document.getElementById(`saved-locations-drawer`),n=document.getElementById(`close-saved-drawer-btn`),r=document.getElementById(`saved-locations-list`);function i(){if(!r)return;let n=e.getSavedLocations();if(r.innerHTML=``,n.length===0){r.innerHTML=`<p class="text-xs text-slate-400 p-4 text-center">No saved locations yet.</p>`;return}n.forEach(n=>{let a=document.createElement(`div`);a.className=`flex items-center justify-between p-3 rounded-xl bg-slate-950/60 hover:bg-slate-950 border border-white/10 transition-all`,a.innerHTML=`
-        <button type="button" class="loc-select-btn text-left flex-1 min-w-0 mr-2 cursor-pointer">
-          <div class="text-xs font-semibold text-white truncate">${n}</div>
-          <span class="text-[10px] text-emerald-400 font-medium">Cached Offline</span>
-        </button>
-        <button type="button" class="loc-delete-btn p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="Remove">
-          🗑️
-        </button>
-      `,a.querySelector(`.loc-select-btn`)?.addEventListener(`click`,()=>{t?.classList.add(`hidden`),e.setLastLocation(n),window.dispatchEvent(new CustomEvent(`mausam-location-selected`,{detail:{display:n,key:n.split(`,`)[0].trim().toLowerCase()}}))}),a.querySelector(`.loc-delete-btn`)?.addEventListener(`click`,()=>{e.removeSavedLocation(n),i()}),r.appendChild(a)})}n?.addEventListener(`click`,()=>{t?.classList.add(`hidden`)}),window.addEventListener(`mausam-open-saved-locations`,()=>{i(),t?.classList.remove(`hidden`)}),window.addEventListener(`mausam-saved-locations-changed`,i);

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.mausam.app-mergeDebugResources-26:/values-kn/values-kn.xml",
+            "outputFile": "com.wildxcoders.mausam.app-mergeDebugResources-26:/values-kn/values-kn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\samee\\.gradle\\caches\\8.14.3\\transforms\\11094a199bb7945826b161d8a9c17beb\\transformed\\core-1.17.0\\res\\values-kn\\values-kn.xml",

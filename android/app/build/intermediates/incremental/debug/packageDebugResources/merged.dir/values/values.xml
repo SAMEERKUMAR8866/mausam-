@@ -2,8 +2,8 @@
 <resources>
     <color name="ic_launcher_background">#FFFFFF</color>
     <string name="app_name">Mausam</string>
-    <string name="custom_url_scheme">com.mausam.app</string>
-    <string name="package_name">com.mausam.app</string>
+    <string name="custom_url_scheme">com.wildxcoders.mausam</string>
+    <string name="package_name">com.wildxcoders.mausam</string>
     <string name="title_activity_main">Mausam</string>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         

@@ -329,9 +329,9 @@
     <string name="call_notification_incoming_text">Incoming call</string>
     <string name="call_notification_ongoing_text">Ongoing call</string>
     <string name="call_notification_screening_text">Screening an incoming call</string>
-    <string name="custom_url_scheme">com.mausam.app</string>
+    <string name="custom_url_scheme">com.wildxcoders.mausam</string>
     <string name="no_webview_text">This app requires a WebView to work</string>
-    <string name="package_name">com.mausam.app</string>
+    <string name="package_name">com.wildxcoders.mausam</string>
     <string name="search_menu_title">Search</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="title_activity_main">Mausam</string>
@@ -1900,14 +1900,6 @@
     <style name="Widget.Compat.NotificationActionText" parent=""/>
     <style name="Widget.Support.CoordinatorLayout" parent="android:Widget">
         <item name="statusBarBackground">#000000</item>
-    </style>
-    <style name="capacitor_default_style" parent="AppTheme.NoActionBar">
-    </style>
-    <style name="capacitor_full_screen_style" parent="AppTheme.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
-    </style>
-    <style name="capacitor_immersive_style" parent="capacitor_full_screen_style">
-        <item name="android:windowTranslucentNavigation">true</item>
     </style>
     <declare-styleable name="ActionBar">
         
