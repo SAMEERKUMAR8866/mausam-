@@ -1,5 +1,9 @@
 // src/services/geocoding.service.ts
-// Geocoding & Reverse Geocoding service with offline fallback database
+// Intelligent Geocoding & Reverse Geocoding service with Pre-Populated Offline DB, Typo Tolerance & Fallback Suggestions
+
+import { PREPOPULATED_OFFLINE_LOCATIONS, REGIONAL_STATE_MAPPINGS, type OfflineLocation } from '../data/offline-locations';
+import { WeatherCacheService } from './weather-cache.service';
+import { NetworkService } from './network.service';
 
 export interface GeocodingResult {
   id: string;
@@ -9,43 +13,32 @@ export interface GeocodingResult {
   lat: number;
   lon: number;
   display: string;
+  category?: string;
+  aliases?: string[];
+  isCoastal?: boolean;
+  isFallback?: boolean;
+  matchType?: 'exact' | 'prefix' | 'alias' | 'regional' | 'fuzzy' | 'fallback' | 'live';
+  suggestionReason?: string;
 }
 
-export const MOCK_LOCATIONS: GeocodingResult[] = [
-  // --- India Major Metros & Cities ---
-  { id: 'in-delhi', name: 'New Delhi', region: 'Delhi', country: 'India', lat: 28.61, lon: 77.20, display: 'New Delhi, Delhi, India' },
-  { id: 'in-mumbai', name: 'Mumbai', region: 'Maharashtra', country: 'India', lat: 19.07, lon: 72.87, display: 'Mumbai, Maharashtra, India' },
-  { id: 'in-bengaluru', name: 'Bengaluru', region: 'Karnataka', country: 'India', lat: 12.97, lon: 77.59, display: 'Bengaluru, Karnataka, India' },
-  { id: 'in-kolkata', name: 'Kolkata', region: 'West Bengal', country: 'India', lat: 22.57, lon: 88.36, display: 'Kolkata, West Bengal, India' },
-  { id: 'in-chennai', name: 'Chennai', region: 'Tamil Nadu', country: 'India', lat: 13.08, lon: 80.27, display: 'Chennai, Tamil Nadu, India' },
-  { id: 'in-hyderabad', name: 'Hyderabad', region: 'Telangana', country: 'India', lat: 17.38, lon: 78.48, display: 'Hyderabad, Telangana, India' },
-  { id: 'in-ahmedabad', name: 'Ahmedabad', region: 'Gujarat', country: 'India', lat: 23.02, lon: 72.57, display: 'Ahmedabad, Gujarat, India' },
-  { id: 'in-pune', name: 'Pune', region: 'Maharashtra', country: 'India', lat: 18.52, lon: 73.85, display: 'Pune, Maharashtra, India' },
-  { id: 'in-noida', name: 'Greater Noida', region: 'Uttar Pradesh', country: 'India', lat: 28.47, lon: 77.50, display: 'Greater Noida, Uttar Pradesh, India' },
-  { id: 'in-lucknow', name: 'Lucknow', region: 'Uttar Pradesh', country: 'India', lat: 26.84, lon: 80.94, display: 'Lucknow, Uttar Pradesh, India' },
-  { id: 'in-jaipur', name: 'Jaipur', region: 'Rajasthan', country: 'India', lat: 26.91, lon: 75.78, display: 'Jaipur, Rajasthan, India' },
-  { id: 'in-chandigarh', name: 'Chandigarh', region: 'Chandigarh', country: 'India', lat: 30.73, lon: 76.77, display: 'Chandigarh, Chandigarh, India' },
-  { id: 'in-patna', name: 'Patna', region: 'Bihar', country: 'India', lat: 25.59, lon: 85.13, display: 'Patna, Bihar, India' },
-  { id: 'in-bhopal', name: 'Bhopal', region: 'Madhya Pradesh', country: 'India', lat: 23.25, lon: 77.41, display: 'Bhopal, Madhya Pradesh, India' },
-  { id: 'in-guwahati', name: 'Guwahati', region: 'Assam', country: 'India', lat: 26.14, lon: 91.73, display: 'Guwahati, Assam, India' },
-  { id: 'in-visakhapatnam', name: 'Visakhapatnam', region: 'Andhra Pradesh', country: 'India', lat: 17.68, lon: 83.21, display: 'Visakhapatnam, Andhra Pradesh, India' },
-  { id: 'in-kochi', name: 'Kochi', region: 'Kerala', country: 'India', lat: 9.93, lon: 76.26, display: 'Kochi, Kerala, India' },
-  { id: 'in-shimla', name: 'Shimla', region: 'Himachal Pradesh', country: 'India', lat: 31.10, lon: 77.17, display: 'Shimla, Himachal Pradesh, India' },
-  { id: 'in-dehradun', name: 'Dehradun', region: 'Uttarakhand', country: 'India', lat: 30.31, lon: 78.03, display: 'Dehradun, Uttarakhand, India' },
-  { id: 'in-puri', name: 'Puri', region: 'Odisha', country: 'India', lat: 19.81, lon: 85.83, display: 'Puri, Odisha, India' },
-
-  // --- International ---
-  { id: 'gb-london', name: 'London', region: 'Greater London', country: 'United Kingdom', lat: 51.50, lon: -0.12, display: 'London, United Kingdom' },
-  { id: 'us-nyc', name: 'New York', region: 'New York', country: 'United States', lat: 40.71, lon: -74.00, display: 'New York, United States' },
-  { id: 'au-sydney', name: 'Sydney', region: 'New South Wales', country: 'Australia', lat: -33.86, lon: 151.20, display: 'Sydney, Australia' },
-  { id: 'jp-tokyo', name: 'Tokyo', region: 'Kanto', country: 'Japan', lat: 35.67, lon: 139.65, display: 'Tokyo, Japan' },
-  { id: 'ae-dubai', name: 'Dubai', region: 'Dubai', country: 'United Arab Emirates', lat: 25.20, lon: 55.27, display: 'Dubai, United Arab Emirates' }
-];
+// Backward compatibility export
+export const MOCK_LOCATIONS: GeocodingResult[] = PREPOPULATED_OFFLINE_LOCATIONS.map(loc => ({
+  id: loc.id,
+  name: loc.name,
+  region: loc.region,
+  country: loc.country,
+  lat: loc.lat,
+  lon: loc.lon,
+  display: loc.display,
+  category: loc.category,
+  aliases: loc.aliases,
+  isCoastal: loc.isCoastal
+}));
 
 const COASTAL_KEYWORDS = [
   'mumbai', 'chennai', 'kolkata', 'kochi', 'visakhapatnam', 'puri', 'goa', 'panaji', 'port blair',
   'mangalore', 'surat', 'bhavnagar', 'ratnagiri', 'alibaug', 'pondicherry', 'puducherry', 'daman',
-  'diu', 'kavaratti', 'paradip', 'sydney', 'miami', 'honolulu', 'san francisco'
+  'diu', 'kavaratti', 'paradip', 'sydney', 'miami', 'honolulu', 'san francisco', 'tokyo', 'dubai', 'singapore', 'new york'
 ];
 
 export function isCoastalLocation(name = '', region = '', country = ''): boolean {
@@ -55,15 +48,19 @@ export function isCoastalLocation(name = '', region = '', country = ''): boolean
 
 export function getFallbackCoordinates(cityKey: string): { lat: number; lon: number } {
   const key = cityKey.toLowerCase().replace(/_/g, ' ');
-  const match = MOCK_LOCATIONS.find(l => l.name.toLowerCase().includes(key) || l.id.toLowerCase().includes(key));
-  return match ? { lat: match.lat, lon: match.lon } : { lat: 28.61, lon: 77.20 };
+  const match = PREPOPULATED_OFFLINE_LOCATIONS.find(
+    l => l.name.toLowerCase().includes(key) ||
+         l.id.toLowerCase().includes(key) ||
+         (l.aliases && l.aliases.some(a => a.toLowerCase().includes(key)))
+  );
+  return match ? { lat: match.lat, lon: match.lon } : { lat: 28.47, lon: 77.50 }; // Default to Greater Noida / Delhi NCR
 }
 
 export function getReverseGeocodeOffline(lat: number, lon: number): { name: string; region: string; country: string; display: string } {
-  let closest = MOCK_LOCATIONS[0];
+  let closest: OfflineLocation = PREPOPULATED_OFFLINE_LOCATIONS[0];
   let minDistance = Infinity;
 
-  for (const loc of MOCK_LOCATIONS) {
+  for (const loc of PREPOPULATED_OFFLINE_LOCATIONS) {
     const dLat = loc.lat - lat;
     const dLon = loc.lon - lon;
     const distSq = dLat * dLat + dLon * dLon;
@@ -73,8 +70,8 @@ export function getReverseGeocodeOffline(lat: number, lon: number): { name: stri
     }
   }
 
-  // If very close (within ~0.5 deg), return closest match, else coordinates
-  if (minDistance < 0.25) {
+  // If reasonably close, return closest location match
+  if (minDistance < 0.6) {
     return { name: closest.name, region: closest.region, country: closest.country, display: closest.display };
   }
 
@@ -86,44 +83,372 @@ export function getReverseGeocodeOffline(lat: number, lon: number): { name: stri
   };
 }
 
-export function getCityMatches(query: string): GeocodingResult[] {
-  if (!query || query.length < 1) return [];
+const SEARCHED_LOCATIONS_KEY = 'mausam_searched_locations_cache';
+
+export function getCachedSearchedLocations(): GeocodingResult[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(SEARCHED_LOCATIONS_KEY);
+    if (!raw) return [];
+    const list = JSON.parse(raw);
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveSearchedLocation(loc: GeocodingResult): void {
+  if (typeof window === 'undefined' || !loc || !loc.name) return;
+  try {
+    const current = getCachedSearchedLocations();
+    const normName = loc.name.toLowerCase().trim();
+    const normRegion = (loc.region || '').toLowerCase().trim();
+    const normCountry = (loc.country || '').toLowerCase().trim();
+
+    const filtered = current.filter(l => {
+      const matchName = l.name.toLowerCase().trim() === normName;
+      const matchRegion = (l.region || '').toLowerCase().trim() === normRegion;
+      const matchCountry = (l.country || '').toLowerCase().trim() === normCountry;
+      return !(matchName && matchRegion && matchCountry) && l.id !== loc.id;
+    });
+
+    const entry: GeocodingResult = {
+      id: loc.id || `loc-${normName.replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`,
+      name: loc.name,
+      region: loc.region || '',
+      country: loc.country || 'India',
+      lat: loc.lat,
+      lon: loc.lon,
+      display: loc.display || `${loc.name}${loc.region ? `, ${loc.region}` : ''}, ${loc.country || 'India'}`,
+      category: loc.category || 'District',
+      isCoastal: loc.isCoastal ?? isCoastalLocation(loc.name, loc.region, loc.country)
+    };
+
+    const updated = [entry, ...filtered].slice(0, 50);
+    localStorage.setItem(SEARCHED_LOCATIONS_KEY, JSON.stringify(updated));
+
+    // Persistent sync to IndexedDB
+    WeatherCacheService.saveLocationRecord({
+      ...entry,
+      isCustomSearched: true,
+      lastSearchedAt: Date.now()
+    }).catch(() => {});
+  } catch (e) {
+    console.warn('[GeocodingService] Failed to cache searched location:', e);
+  }
+}
+
+// =========================================================================
+// FUZZY STRING MATCHING & TYPO TOLERANCE ALGORITHMS
+// =========================================================================
+
+/**
+ * Computes Levenshtein edit distance between two strings
+ */
+function levenshteinDistance(s1: string, s2: string): number {
+  const m = s1.length;
+  const n = s2.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (s1[i - 1] === s2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,    // deletion
+          dp[i][j - 1] + 1,    // insertion
+          dp[i - 1][j - 1] + 1 // substitution
+        );
+      }
+    }
+  }
+  return dp[m][n];
+}
+
+function getBigrams(str: string): Set<string> {
+  const s = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const bigrams = new Set<string>();
+  for (let i = 0; i < s.length - 1; i++) {
+    bigrams.add(s.slice(i, i + 2));
+  }
+  return bigrams;
+}
+
+/**
+ * Calculates similarity coefficient between 0 (no match) and 1 (exact match)
+ * Combines Levenshtein distance and Dice's bigram coefficient for robust typo matching.
+ */
+function calculateSimilarity(query: string, target: string): number {
   const q = query.toLowerCase().trim();
-  return MOCK_LOCATIONS.filter(l =>
-    l.name.toLowerCase().includes(q) ||
-    l.region.toLowerCase().includes(q) ||
-    l.country.toLowerCase().includes(q) ||
-    l.display.toLowerCase().includes(q)
-  ).slice(0, 8);
+  const t = target.toLowerCase().trim();
+  if (q === t) return 1.0;
+  if (t.startsWith(q)) return 0.95;
+  if (t.includes(q)) return 0.85;
+
+  const maxLen = Math.max(q.length, t.length);
+  if (maxLen === 0) return 1.0;
+
+  const levDist = levenshteinDistance(q, t);
+  const levScore = Math.max(0, 1 - levDist / maxLen);
+
+  // Bigram Dice score
+  const b1 = getBigrams(q);
+  const b2 = getBigrams(t);
+  let intersection = 0;
+  for (const bg of b1) {
+    if (b2.has(bg)) intersection++;
+  }
+  const bigramScore = (b1.size + b2.size > 0) ? (2 * intersection) / (b1.size + b2.size) : 0;
+
+  return Math.max(levScore, bigramScore);
+}
+
+// =========================================================================
+// ADVANCED OFFLINE SEARCH WITH REGIONAL FALLBACK & SUGGESTIONS
+// =========================================================================
+
+/**
+ * Searches the pre-populated offline database and user cached locations.
+ * Uses exact, prefix, alias, regional, and fuzzy matching with fallback suggestions.
+ */
+export function getCityMatches(query: string): GeocodingResult[] {
+  if (!query || query.trim().length === 0) {
+    // Return curated popular hubs if empty
+    return PREPOPULATED_OFFLINE_LOCATIONS.slice(0, 8).map(loc => ({
+      ...loc,
+      matchType: 'exact'
+    }));
+  }
+
+  const rawQuery = query.toLowerCase().trim();
+  const tokens = rawQuery.split(/[\s,]+/).filter(t => t.length > 0);
+
+  // Combine user cached history + pre-populated database
+  const userCached = getCachedSearchedLocations();
+  const allLocationsMap = new Map<string, GeocodingResult>();
+
+  // Insert pre-populated first
+  for (const loc of PREPOPULATED_OFFLINE_LOCATIONS) {
+    allLocationsMap.set(loc.id, { ...loc });
+  }
+
+  // Insert / override with user cached
+  for (const loc of userCached) {
+    allLocationsMap.set(loc.id, {
+      ...loc,
+      category: loc.category || 'District'
+    });
+  }
+
+  const allLocations = Array.from(allLocationsMap.values());
+
+  const exactMatches: GeocodingResult[] = [];
+  const prefixMatches: GeocodingResult[] = [];
+  const tokenMatches: GeocodingResult[] = [];
+  const regionalMatches: GeocodingResult[] = [];
+  const fuzzyMatches: { loc: GeocodingResult; score: number }[] = [];
+
+  const seenIds = new Set<string>();
+
+  // 1. Direct Matching (Exact, Prefix, Aliases, Tokens)
+  for (const loc of allLocations) {
+    const nameLower = loc.name.toLowerCase();
+    const regionLower = (loc.region || '').toLowerCase();
+    const countryLower = (loc.country || '').toLowerCase();
+    const displayLower = (loc.display || '').toLowerCase();
+    const aliases = (loc.aliases || []).map(a => a.toLowerCase());
+
+    // 1.1 Exact Name or Alias Match
+    if (nameLower === rawQuery || aliases.includes(rawQuery)) {
+      if (!seenIds.has(loc.id)) {
+        seenIds.add(loc.id);
+        exactMatches.push({ ...loc, matchType: 'exact' });
+      }
+      continue;
+    }
+
+    // 1.2 Starts With / Prefix Match
+    if (nameLower.startsWith(rawQuery) || aliases.some(a => a.startsWith(rawQuery))) {
+      if (!seenIds.has(loc.id)) {
+        seenIds.add(loc.id);
+        prefixMatches.push({ ...loc, matchType: 'prefix' });
+      }
+      continue;
+    }
+
+    // 1.3 Substring or Multi-token Match
+    const isSubstring = nameLower.includes(rawQuery) ||
+      regionLower.includes(rawQuery) ||
+      countryLower.includes(rawQuery) ||
+      displayLower.includes(rawQuery) ||
+      aliases.some(a => a.includes(rawQuery));
+
+    const allTokensMatch = tokens.every(t =>
+      nameLower.includes(t) ||
+      regionLower.includes(t) ||
+      countryLower.includes(t) ||
+      aliases.some(a => a.includes(t))
+    );
+
+    if (isSubstring || allTokensMatch) {
+      if (!seenIds.has(loc.id)) {
+        seenIds.add(loc.id);
+        tokenMatches.push({ ...loc, matchType: 'alias' });
+      }
+      continue;
+    }
+
+    // 1.4 Fuzzy Score for Typo Tolerance
+    let bestSimilarity = calculateSimilarity(rawQuery, nameLower);
+    // Check individual words in multi-word names (e.g. "Delhi" in "New Delhi")
+    for (const word of nameLower.split(/\s+/)) {
+      if (word.length >= 3) {
+        const wSim = calculateSimilarity(rawQuery, word);
+        if (wSim > bestSimilarity) bestSimilarity = wSim;
+      }
+    }
+    for (const alias of aliases) {
+      const sim = calculateSimilarity(rawQuery, alias);
+      if (sim > bestSimilarity) bestSimilarity = sim;
+    }
+
+    // Typo tolerance threshold (e.g. "noyda" -> 0.8, "dheli" -> 0.8, "begaluru" -> 0.88)
+    if (bestSimilarity >= 0.60) {
+      if (!seenIds.has(loc.id)) {
+        seenIds.add(loc.id);
+        fuzzyMatches.push({
+          loc: {
+            ...loc,
+            matchType: 'fuzzy',
+            suggestionReason: `Did you mean ${loc.name}?`
+          },
+          score: bestSimilarity
+        });
+      }
+    }
+  }
+
+  // 2. Regional / State Fallback (e.g., searching "Uttar Pradesh" or "UP" or "Karnataka")
+  for (const [regionKey, locIds] of Object.entries(REGIONAL_STATE_MAPPINGS)) {
+    if (regionKey.includes(rawQuery) || rawQuery.includes(regionKey)) {
+      for (const id of locIds) {
+        if (!seenIds.has(id)) {
+          const loc = allLocationsMap.get(id);
+          if (loc) {
+            seenIds.add(id);
+            regionalMatches.push({
+              ...loc,
+              matchType: 'regional',
+              suggestionReason: `Regional Hub for ${regionKey.toUpperCase()}`
+            });
+          }
+        }
+      }
+    }
+  }
+
+  // Sort fuzzy matches by similarity score descending
+  fuzzyMatches.sort((a, b) => b.score - a.score);
+
+  // Combine primary matches
+  const primaryResults = [
+    ...exactMatches,
+    ...prefixMatches,
+    ...tokenMatches,
+    ...fuzzyMatches.map(f => f.loc),
+    ...regionalMatches
+  ];
+
+  if (primaryResults.length > 0) {
+    return primaryResults.slice(0, 10);
+  }
+
+  // =========================================================================
+  // 3. Helpful Fallback Suggestions (Never Return Empty Dead Ends Offline!)
+  // =========================================================================
+  // If no direct or fuzzy match is found, provide top regional default hubs
+  const fallbackSuggestions: GeocodingResult[] = [
+    {
+      ...PREPOPULATED_OFFLINE_LOCATIONS[1], // Greater Noida
+      isFallback: true,
+      matchType: 'fallback',
+      suggestionReason: `Offline suggestion for "${query}" (Regional Hub)`
+    },
+    {
+      ...PREPOPULATED_OFFLINE_LOCATIONS[0], // New Delhi
+      isFallback: true,
+      matchType: 'fallback',
+      suggestionReason: `National Capital Hub (Offline Ready)`
+    },
+    {
+      ...PREPOPULATED_OFFLINE_LOCATIONS[6], // Bengaluru
+      isFallback: true,
+      matchType: 'fallback',
+      suggestionReason: `Major Tech Hub (Offline Ready)`
+    },
+    {
+      ...PREPOPULATED_OFFLINE_LOCATIONS[7], // Mumbai
+      isFallback: true,
+      matchType: 'fallback',
+      suggestionReason: `Financial & Coastal Metro (Offline Ready)`
+    }
+  ];
+
+  return fallbackSuggestions;
 }
 
 export function searchLocations(query: string): GeocodingResult[] {
   return getCityMatches(query);
 }
 
+/**
+ * Async location search with live Open-Meteo geocoding API when online,
+ * and intelligent offline database search with fallback suggestions when offline.
+ */
 export async function searchLocationsAsync(query: string): Promise<GeocodingResult[]> {
-  if (!query || query.trim().length < 2) return [];
+  if (!query || query.trim().length === 0) return [];
 
+  const isOnline = typeof navigator !== 'undefined' ? (navigator.onLine && NetworkService.isOnline()) : true;
   const offlineMatches = getCityMatches(query);
 
-  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+  if (!isOnline) {
     return offlineMatches;
   }
 
   try {
-    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const res = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query.trim())}&count=8&language=en&format=json`,
+      { signal: controller.signal }
+    ).finally(() => clearTimeout(timeoutId));
+
     if (res.ok) {
       const data = await res.json();
-      if (data.results && Array.isArray(data.results)) {
-        return data.results.map((r: any) => ({
-          id: `om-${r.id || r.name}`,
+      if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+        const liveResults: GeocodingResult[] = data.results.map((r: any) => ({
+          id: `om-${r.id || r.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
           name: r.name,
           region: r.admin1 || '',
           country: r.country || 'India',
           lat: r.latitude,
           lon: r.longitude,
-          display: `${r.name}${r.admin1 ? `, ${r.admin1}` : ''}, ${r.country || 'India'}`
+          display: `${r.name}${r.admin1 ? `, ${r.admin1}` : ''}, ${r.country || 'India'}`,
+          category: 'District',
+          isCoastal: isCoastalLocation(r.name, r.admin1, r.country),
+          matchType: 'live'
         }));
+
+        // Dynamically save live results to offline persistent cache
+        if (typeof window !== 'undefined') {
+          liveResults.forEach(r => saveSearchedLocation(r));
+        }
+
+        return liveResults;
       }
     }
   } catch (err) {

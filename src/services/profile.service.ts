@@ -2,7 +2,7 @@
 // Persona & Profile management service
 
 import { PERSONAS, PERSONA_LIST, type PersonaDefinition } from '../data/personas';
-import { PROFILE_CONFIGS, getProfileConfig, type PersonaProfileConfig } from '../data/profileControls';
+import { getProfileConfig, type PersonaProfileConfig } from '../data/profileControls';
 import { StorageService } from './storage.service';
 
 export class ProfileService {

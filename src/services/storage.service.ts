@@ -89,8 +89,8 @@ export class StorageService {
   }
 
   static getLastLocation(): string {
-    if (typeof window === 'undefined') return 'New Delhi, Delhi, India';
-    return localStorage.getItem(STORAGE_KEYS.LAST_LOCATION) || 'New Delhi, Delhi, India';
+    if (typeof window === 'undefined') return 'Sasarām, Bihar, India';
+    return localStorage.getItem(STORAGE_KEYS.LAST_LOCATION) || 'Sasarām, Bihar, India';
   }
 
   static setLastLocation(display: string, cityKey?: string): void {
@@ -116,26 +116,119 @@ export class StorageService {
     } catch {}
   }
 
+  static getDefaultProfileSettings(personaId: string): Record<string, any> {
+    const normKey = (personaId === 'agriculture' ? 'farmer' : personaId).toLowerCase();
+    const defaults: Record<string, any> = {};
+
+    // Standard baseline defaults for specific personas
+    if (normKey === 'farmer') {
+      defaults.target_crop = 'Wheat';
+      defaults.growth_stage = 'Sowing';
+      defaults.crop = 'Wheat';
+      defaults.stage = 'Sowing';
+    } else if (normKey === 'health') {
+      defaults.health_profile = 'Standard';
+    } else if (normKey === 'fitness') {
+      defaults.activity_type = 'Running';
+    } else if (normKey === 'maritime' || normKey === 'marine') {
+      defaults.vessel_type = 'Surf';
+    } else if (normKey === 'aviation') {
+      defaults.flight_rule = 'VFR';
+    }
+
+    return defaults;
+  }
+
   static getProfileCustomSettings(personaId: string): Record<string, any> {
-    if (typeof window === 'undefined') return {};
+    const normKey = (personaId === 'agriculture' ? 'farmer' : personaId).toLowerCase();
+    const defaults = this.getDefaultProfileSettings(normKey);
+    if (typeof window === 'undefined') return defaults;
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CUSTOM_SETTINGS);
-      if (!raw) return {};
-      const all = JSON.parse(raw);
-      return all[personaId] || {};
+      const all = raw ? JSON.parse(raw) : {};
+      const saved = all[normKey] || all[personaId] || {};
+
+      // If farmer, also check legacy explicit localStorage items
+      if (normKey === 'farmer') {
+        const legCrop = localStorage.getItem('mausam_farmer_crop');
+        const legStage = localStorage.getItem('mausam_farmer_stage');
+        if (legCrop && !saved.target_crop && !saved.crop) saved.target_crop = legCrop;
+        if (legStage && !saved.growth_stage && !saved.stage) saved.growth_stage = legStage;
+      }
+
+      const merged = { ...defaults, ...saved };
+
+      // Ensure bidirectional alias synchronization
+      if (merged.crop && !merged.target_crop) merged.target_crop = merged.crop;
+      if (merged.target_crop && !merged.crop) merged.crop = merged.target_crop;
+      if (merged.stage && !merged.growth_stage) merged.growth_stage = merged.stage;
+      if (merged.growth_stage && !merged.stage) merged.stage = merged.growth_stage;
+
+      return merged;
     } catch {
-      return {};
+      return defaults;
     }
   }
 
   static setProfileCustomSetting(personaId: string, key: string, value: any): void {
     if (typeof window === 'undefined') return;
+    const normKey = (personaId === 'agriculture' ? 'farmer' : personaId).toLowerCase();
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CUSTOM_SETTINGS);
       const all = raw ? JSON.parse(raw) : {};
-      all[personaId] = { ...(all[personaId] || {}), [key]: value };
+      const current = { ...this.getDefaultProfileSettings(normKey), ...(all[normKey] || all[personaId] || {}) };
+      
+      current[key] = value;
+
+      // Synchronize aliases across storage
+      if (key === 'target_crop' || key === 'crop') {
+        current.target_crop = value;
+        current.crop = value;
+        if (normKey === 'farmer') {
+          localStorage.setItem('mausam_farmer_crop', value);
+        }
+      }
+      if (key === 'growth_stage' || key === 'stage') {
+        current.growth_stage = value;
+        current.stage = value;
+        if (normKey === 'farmer') {
+          localStorage.setItem('mausam_farmer_stage', value);
+        }
+      }
+
+      all[normKey] = current;
       localStorage.setItem(STORAGE_KEYS.CUSTOM_SETTINGS, JSON.stringify(all));
-      window.dispatchEvent(new CustomEvent('mausam-profile-setting-changed', { detail: { personaId, key, value } }));
-    } catch {}
+
+      // Broadcast synchronous unified events
+      window.dispatchEvent(new CustomEvent('mausam-profile-setting-changed', {
+        detail: { personaId: normKey, key, value, allSettings: current }
+      }));
+      window.dispatchEvent(new CustomEvent('mausam-profile-option-selected', {
+        detail: { personaId: normKey, groupId: key, optionId: value, allSettings: current }
+      }));
+      window.dispatchEvent(new CustomEvent('mausam-state-synced', {
+        detail: { personaId: normKey, key, value, allSettings: current }
+      }));
+    } catch (err) {
+      console.warn('[StorageService] setProfileCustomSetting error:', err);
+    }
+  }
+
+  static getActiveCrop(): string {
+    const settings = this.getProfileCustomSettings('farmer');
+    return settings.target_crop || 'Wheat';
+  }
+
+  static setActiveCrop(crop: string): void {
+    this.setProfileCustomSetting('farmer', 'target_crop', crop);
+  }
+
+  static getActiveStage(): string {
+    const settings = this.getProfileCustomSettings('farmer');
+    return settings.growth_stage || 'Sowing';
+  }
+
+  static setActiveStage(stage: string): void {
+    this.setProfileCustomSetting('farmer', 'growth_stage', stage);
   }
 }

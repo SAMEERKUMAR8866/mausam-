@@ -1,8 +1,21 @@
 ---
 // src/pages/dashboard.astro
 // Route redirecting to main dashboard
+import Layout from '../layouts/Layout.astro';
 ---
-<meta http-equiv="refresh" content="0;url=/" />
-<script>
-  window.location.href = '/';
-</script>
+
+<Layout 
+  title="Mausam Dashboard - Precision Weather Systems" 
+  description="Personalized hyper-local weather intelligence, multi-persona telemetry, and emergency disaster advisories."
+>
+  <meta http-equiv="refresh" content="0;url=/" />
+  <div class="min-h-screen flex items-center justify-center bg-[#070b14] text-slate-400 text-sm">
+    <div class="flex items-center gap-2">
+      <span class="animate-spin text-emerald-400">⚡</span>
+      <span>Loading dashboard...</span>
+    </div>
+  </div>
+  <script>
+    window.location.href = '/';
+  </script>
+</Layout>

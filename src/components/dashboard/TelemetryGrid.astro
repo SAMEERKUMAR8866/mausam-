@@ -3,10 +3,10 @@
 // Persona Telemetry KPI Cards, AI Advisory Engine, & Actionable Operations Checklist
 ---
 
-<div class="w-full space-y-6" id="telemetry-grid-root">
+<div class="w-full space-y-4" id="telemetry-grid-root">
   
   <!-- 1. 4 Dynamic KPI Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpi-cards-container">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5" id="kpi-cards-container">
     <div class="p-6 text-xs text-slate-400 animate-pulse">Loading persona telemetry cards...</div>
   </div>
 
@@ -15,36 +15,36 @@
     <button
       type="button"
       id="tab-btn-advisory"
-      class="px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 shadow-glow-emerald shrink-0"
+      class="px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 shadow-glow-emerald shrink-0 framer-spring-hover framer-spring-press"
     >
-      <span>🎯</span> AI Advisory & Action Checklist
+      <span>🎯</span> <span data-i18n="aiAdvisoryTab">AI Advisory & Action Checklist</span>
     </button>
     <button
       type="button"
       id="tab-btn-curve"
-      class="px-4 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-900 border border-white/10 transition-all cursor-pointer flex items-center gap-2 shrink-0"
+      class="px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-900 border border-white/10 transition-all cursor-pointer flex items-center gap-2 shrink-0 framer-spring-hover framer-spring-press"
     >
-      <span>📈</span> 24h Telemetry Curve Graph
+      <span>📈</span> <span data-i18n="hourlyGraphTab">24h Telemetry Curve Graph</span>
     </button>
     <button
       type="button"
       id="tab-btn-sensors"
-      class="px-4 py-2 rounded-full text-xs font-medium text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-900 border border-white/10 transition-all cursor-pointer flex items-center gap-2 shrink-0"
+      class="px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-900 border border-white/10 transition-all cursor-pointer flex items-center gap-2 shrink-0 framer-spring-hover framer-spring-press"
     >
-      <span>📡</span> Environmental Sensors & Metrics
+      <span>📡</span> <span data-i18n="sensorsTab">Environmental Sensors & Metrics</span>
     </button>
   </div>
 
   <!-- 3. AI Advisory Panel Box (Offline banner / Live Gemini Insights) -->
-  <div class="glass-panel rounded-2xl p-5 sm:p-7 border border-white/15 relative overflow-hidden shadow-product" id="ai-advisory-container">
+  <div class="glass-panel spotlight-card shimmer-beam-container rounded-2xl p-4 sm:p-5.5 border border-white/15 relative overflow-hidden shadow-product" id="ai-advisory-container">
     <!-- Top Accent Line -->
     <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
 
     <!-- Offline Warning Notice Banner if offline -->
-    <div id="ai-offline-notice-bar" class="mb-4 px-3.5 py-2 rounded-xl bg-slate-950/80 border border-white/10 flex items-center justify-between text-xs text-slate-300">
+    <div id="ai-offline-notice-bar" class="mb-3.5 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-white/10 flex items-center justify-between text-xs text-slate-300 backdrop-blur-md">
       <div class="flex items-center gap-2">
         <span class="text-amber-400">⚠️</span>
-        <span id="ai-offline-text">You are in offline mode. AI features are disabled. Connect to internet.</span>
+        <span id="ai-offline-text" data-i18n="offlineNotice">You are in offline mode. AI features are disabled. Connect to internet.</span>
       </div>
       <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-white/10">
         OFFLINE
@@ -52,27 +52,27 @@
     </div>
 
     <!-- Advisory Header Tags -->
-    <div class="flex items-center justify-between gap-3 mb-3">
+    <div class="flex items-center justify-between gap-3 mb-2.5">
       <div class="flex items-center gap-2">
         <span class="text-xs">⚠️</span>
-        <span id="ai-crop-stage-tag" class="text-xs font-bold text-white">Wheat • Vegetative Phase</span>
+        <span id="ai-crop-stage-tag" class="text-xs font-bold text-white">Wheat • Sowing Phase</span>
         <span id="ai-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-white/10">
           AI OFFLINE
         </span>
       </div>
-      <span class="text-xs text-slate-400 font-light">Awaiting generation</span>
+      <span id="ai-awaiting-label" class="text-xs text-slate-400 font-light">Awaiting generation</span>
     </div>
 
     <!-- Live AI Summary Text -->
-    <p id="ai-advisory-main-text" class="text-sm sm:text-base text-slate-200 font-normal leading-relaxed mb-5">
-      Select your target options above and click 'Generate AI Advisory' to view tailored recommendations.
+    <p id="ai-advisory-main-text" class="text-sm sm:text-base text-slate-200 font-normal leading-relaxed mb-4">
+      Select your target options above and click 'Generate Live AI' to view tailored recommendations.
     </p>
 
     <!-- Primary Key Recommendation Box -->
-    <div class="rounded-xl p-4 bg-slate-950/80 border border-white/10 mb-4">
+    <div class="rounded-xl p-3.5 bg-slate-950/80 border border-white/10 mb-3.5 framer-spring-hover">
       <div class="flex items-center gap-2 mb-1">
         <span class="text-amber-400 text-xs">💡</span>
-        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-300">PRIMARY KEY RECOMMENDATION</span>
+        <span data-i18n="primaryRecommendation" class="text-[11px] font-bold uppercase tracking-wider text-slate-300">PRIMARY KEY RECOMMENDATION</span>
       </div>
       <p id="ai-primary-rec-text" class="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
         Withhold foliar chemical spraying before anticipated showers. Ensure drainage channels are unobstructed.
@@ -83,12 +83,13 @@
     <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-white/10">
       <div class="flex items-center gap-1.5">
         <span>⚡</span>
-        <span>Connect to the internet to unlock real-time Gemini 2.5 AI operational strategies & live diagnostics.</span>
+        <span id="ai-footer-note">Connect to the internet to unlock real-time Gemini 2.5 AI operational strategies & live diagnostics.</span>
       </div>
       <button
         type="button"
         id="btn-generate-ai-advisory"
-        class="px-3 py-1 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all active-scale cursor-pointer shadow-glow-emerald shrink-0"
+        data-i18n="generateLiveAi"
+        class="px-3.5 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all framer-spring-hover framer-spring-press cursor-pointer shadow-glow-emerald shrink-0"
       >
         Generate Live AI
       </button>
@@ -97,33 +98,33 @@
   </div>
 
   <!-- 4. Operations Checklist & Meteorological Hazards Columns -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="checklist-and-hazards-section">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5" id="checklist-and-hazards-section">
     
     <!-- Actionable Operations Checklist -->
-    <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 flex flex-col justify-between">
+    <div class="glass-panel spotlight-card rounded-2xl p-4 sm:p-5 border border-white/10 flex flex-col justify-between">
       <div>
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-3.5">
           <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-            <span>📋</span> Actionable Operations Checklist
+            <span>📋</span> <span data-i18n="operationsChecklist">Actionable Operations Checklist</span>
           </h4>
           <span id="checklist-progress-text" class="text-xs font-semibold text-emerald-400">
             0 of 3 Completed
           </span>
         </div>
-        <div id="operations-checklist-items" class="space-y-2.5"></div>
+        <div id="operations-checklist-items" class="space-y-2"></div>
       </div>
     </div>
 
     <!-- Meteorological Hazards & Alerts -->
-    <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 flex flex-col justify-between">
+    <div class="glass-panel spotlight-card rounded-2xl p-4 sm:p-5 border border-white/10 flex flex-col justify-between">
       <div>
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-3.5">
           <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-            <span>⚠️</span> Meteorological Hazards & Alerts
+            <span>⚠️</span> <span data-i18n="hazardsAlerts">Meteorological Hazards & Alerts</span>
           </h4>
-          <span class="text-xs font-semibold text-cyan-400">Real-Time</span>
+          <span id="hazards-realtime-badge" class="text-xs font-semibold text-cyan-400">Real-Time</span>
         </div>
-        <div id="hazards-alerts-items" class="space-y-2.5"></div>
+        <div id="hazards-alerts-items" class="space-y-2"></div>
       </div>
     </div>
 
@@ -133,7 +134,9 @@
 
 <script>
   import { StorageService } from '../../services/storage.service';
-  import { PROFILE_CONFIGS } from '../../data/profileControls';
+  import { I18nService } from '../../services/i18n.service';
+  import { NetworkService } from '../../services/network.service';
+  import { PROFILE_CONFIGS, getDynamicOperationsForPersona } from '../../data/profileControls';
   import { generateProfileAdvisory } from '../../services/ai.service';
 
   const kpiContainer = document.getElementById('kpi-cards-container');
@@ -142,10 +145,13 @@
   const cropStageTag = document.getElementById('ai-crop-stage-tag');
   const aiStatusBadge = document.getElementById('ai-status-badge');
   const aiOfflineNotice = document.getElementById('ai-offline-notice-bar');
+  const aiAwaitingLabel = document.getElementById('ai-awaiting-label');
+  const aiFooterNote = document.getElementById('ai-footer-note');
+  const hazardsRealtimeBadge = document.getElementById('hazards-realtime-badge');
   const checklistContainer = document.getElementById('operations-checklist-items');
   const checklistProgress = document.getElementById('checklist-progress-text');
   const hazardsContainer = document.getElementById('hazards-alerts-items');
-  const btnGenAi = document.getElementById('btn-generate-ai-advisory');
+  const btnGenAi = document.getElementById('btn-generate-ai-advisory') as HTMLButtonElement | null;
 
   let currentCompletedTasks = new Set<string>();
 
@@ -158,32 +164,53 @@
     const currentRain = weatherData?.agriculture?.rainfall_prediction_24h_mm !== undefined ? `${weatherData.agriculture.rainfall_prediction_24h_mm} mm` : config.kpiCards[1]?.defaultVal || '4.5 mm';
     const currentMoisture = weatherData?.agriculture?.soil_moisture_pct ? `${weatherData.agriculture.soil_moisture_pct}%` : config.kpiCards[0]?.defaultVal || '58.5%';
 
+    const kpiGradients = [
+      'from-emerald-400 to-teal-500',
+      'from-cyan-400 to-blue-500',
+      'from-amber-400 to-orange-500',
+      'from-violet-400 to-purple-500'
+    ];
+    const kpiTints = [
+      'card-tint-aqi',
+      'card-tint-precip',
+      'card-tint-feels',
+      'card-tint-cloud'
+    ];
+
     config.kpiCards.forEach((kpi, idx) => {
       let val = kpi.defaultVal;
       if (idx === 0) val = currentMoisture;
       else if (idx === 1) val = currentRain;
       else if (idx === 2) val = currentTemp;
 
+      const label = I18nService.t(kpi.label, kpi.label);
+      const badge = I18nService.t(kpi.defaultBadge, kpi.defaultBadge);
+      const desc = I18nService.t(kpi.description, kpi.description);
+      const displayVal = (typeof val === 'string' && isNaN(Number(val))) ? I18nService.t(val, val) : val;
+      const gradClass = kpiGradients[idx % kpiGradients.length];
+      const tintClass = kpiTints[idx % kpiTints.length];
+      const enterClass = `animate-enter-${idx + 1}`;
+
       const card = document.createElement('div');
-      card.className = 'glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass';
+      card.className = `glass-card-interactive ${tintClass} ${enterClass} spotlight-card framer-spring-hover framer-spring-press rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass relative overflow-hidden`;
       card.innerHTML = `
         <div class="flex items-center justify-between mb-2">
           <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <span>${kpi.icon}</span> ${kpi.label}
+            <span class="text-sm">${kpi.icon}</span> ${label}
           </span>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-            ${kpi.defaultBadge}
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shadow-sm">
+            ${badge}
           </span>
         </div>
         <div>
-          <div class="text-3xl font-extrabold text-white tracking-apple-tight mb-2">
-            ${val}
+          <div class="text-2xl sm:text-3xl font-extrabold text-white tracking-apple-tight mb-2">
+            ${displayVal}
           </div>
-          <div class="w-full bg-slate-950/80 rounded-full h-1.5 overflow-hidden mb-2">
-            <div class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full" style="width: ${kpi.defaultProgress}%;"></div>
+          <div class="w-full bg-slate-950/70 rounded-full h-1.5 overflow-hidden mb-2 relative border border-white/5">
+            <div class="bg-gradient-to-r ${gradClass} h-full rounded-full transition-all duration-500" style="width: ${kpi.defaultProgress}%;"></div>
           </div>
-          <p class="text-xs text-slate-300 font-light leading-relaxed">
-            ${kpi.description}
+          <p class="text-xs text-slate-300 font-normal leading-relaxed">
+            ${desc}
           </p>
         </div>
       `;
@@ -193,25 +220,36 @@
 
   function renderChecklistAndHazards(personaId: string) {
     const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
+    const customSettings = StorageService.getProfileCustomSettings(personaId);
+    const lastWeather = StorageService.getLastWeatherData();
+    const dynamicOps = getDynamicOperationsForPersona(personaId, customSettings, lastWeather);
+
+    if (hazardsRealtimeBadge) {
+      hazardsRealtimeBadge.textContent = I18nService.t('Real-Time', 'Real-Time');
+    }
 
     if (checklistContainer) {
       checklistContainer.innerHTML = '';
-      if (!config.defaultOperations || config.defaultOperations.length === 0) {
-        checklistContainer.innerHTML = `<p class="text-xs text-slate-400">All standard protocols completed for this profile.</p>`;
+      if (!dynamicOps || dynamicOps.length === 0) {
+        checklistContainer.innerHTML = `<p class="text-xs text-slate-400">${I18nService.t('All standard protocols completed for this profile.')}</p>`;
       } else {
-        config.defaultOperations.forEach(op => {
+        dynamicOps.forEach(op => {
           const isChecked = currentCompletedTasks.has(op.id);
+          const task = I18nService.t(op.task, op.task);
+          const category = I18nService.t(op.category, op.category);
+          const status = I18nService.t(op.status, op.status);
+
           const item = document.createElement('label');
-          item.className = 'flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 hover:bg-slate-950/90 border border-white/10 cursor-pointer transition-all';
+          item.className = 'flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-950/90 border border-white/10 cursor-pointer transition-all framer-spring-hover';
           item.innerHTML = `
-            <input type="checkbox" ${isChecked ? 'checked' : ''} class="mt-0.5 rounded border-white/20 text-emerald-500 focus:ring-0 cursor-pointer w-4 h-4 bg-slate-900" />
+            <input type="checkbox" ${isChecked ? 'checked' : ''} class="mt-0.5 rounded border-white/20 text-emerald-500 focus:ring-0 cursor-pointer w-4 h-4 bg-slate-900 transition-transform active:scale-90" />
             <div class="flex-1 min-w-0">
-              <span class="text-xs font-semibold ${isChecked ? 'line-through text-slate-500' : 'text-slate-200'}">${op.task}</span>
-              <span class="text-[10px] text-slate-400 block mt-0.5">${op.category}</span>
+              <span class="text-xs font-semibold ${isChecked ? 'line-through text-slate-500' : 'text-slate-200'}">${task}</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">${category}</span>
             </div>
             <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
               op.status === 'urgent' ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'
-            }">${op.status}</span>
+            }">${status}</span>
           `;
 
           const checkbox = item.querySelector('input');
@@ -225,7 +263,10 @@
         });
 
         if (checklistProgress) {
-          checklistProgress.textContent = `${currentCompletedTasks.size} of ${config.defaultOperations.length} Completed`;
+          const completedWord = I18nService.t('completed', 'Completed');
+          const ofWord = I18nService.t('of', 'of');
+          const completedCount = dynamicOps.filter(o => currentCompletedTasks.has(o.id)).length;
+          checklistProgress.textContent = `${completedCount} ${ofWord} ${dynamicOps.length} ${completedWord}`;
         }
       }
     }
@@ -234,22 +275,26 @@
       hazardsContainer.innerHTML = '';
       if (!config.hazards || config.hazards.length === 0) {
         hazardsContainer.innerHTML = `
-          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-400/20 text-xs text-emerald-300 flex items-center gap-2">
-            <span>🛡️</span> <span>No active weather hazards for this profile. Conditions nominal.</span>
+          <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-400/20 text-xs text-emerald-300 flex items-center gap-2">
+            <span>🛡️</span> <span>${I18nService.t('No active weather hazards for this profile. Conditions nominal.')}</span>
           </div>
         `;
       } else {
         config.hazards.forEach(haz => {
+          const title = I18nService.t(haz.title, haz.title);
+          const severity = I18nService.t(haz.severity, haz.severity);
+          const desc = I18nService.t(haz.desc, haz.desc);
+
           const card = document.createElement('div');
-          card.className = 'p-3.5 rounded-xl bg-slate-950/80 border border-white/10';
+          card.className = 'p-3 rounded-xl bg-slate-950/80 border border-white/10';
           card.innerHTML = `
             <div class="flex items-center justify-between mb-1">
               <span class="text-xs font-bold text-white flex items-center gap-1.5">
-                <span>⚠️</span> ${haz.title}
+                <span>⚠️</span> ${title}
               </span>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 uppercase">${haz.severity}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 uppercase">${severity}</span>
             </div>
-            <p class="text-xs text-slate-300 font-light mt-1 leading-relaxed">${haz.desc}</p>
+            <p class="text-xs text-slate-300 font-light mt-0.5 leading-relaxed">${desc}</p>
           `;
           hazardsContainer.appendChild(card);
         });
@@ -258,7 +303,7 @@
   }
 
   async function updateAdvisory(personaId: string) {
-    const isOnline = navigator.onLine;
+    const isOnline = NetworkService.isOnline();
     const loc = StorageService.getLastLocation();
 
     if (aiOfflineNotice) {
@@ -269,31 +314,76 @@
       }
     }
 
+    if (btnGenAi) {
+      if (isOnline) {
+        btnGenAi.disabled = false;
+        btnGenAi.textContent = I18nService.t('generateLiveAi', 'Generate Live AI');
+        btnGenAi.className = 'px-3 py-1 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all active-scale cursor-pointer shadow-glow-emerald shrink-0';
+        btnGenAi.title = 'Generate real-time AI recommendations';
+      } else {
+        btnGenAi.disabled = true;
+        btnGenAi.textContent = I18nService.t('AI Disabled (Offline)', 'AI Disabled (Offline)');
+        btnGenAi.className = 'px-3 py-1 rounded-full bg-slate-800 text-slate-500 border border-white/10 font-bold text-xs cursor-not-allowed shrink-0 opacity-60';
+        btnGenAi.title = 'Live AI generation is paused while offline.';
+      }
+    }
+
     if (aiStatusBadge) {
-      aiStatusBadge.textContent = isOnline ? 'Gemini AI Active' : 'AI OFFLINE';
+      aiStatusBadge.textContent = isOnline ? I18nService.t('Gemini AI Active', 'Gemini AI Active') : I18nService.t('OFFLINE CACHE', 'OFFLINE CACHE');
       aiStatusBadge.className = isOnline
         ? 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
-        : 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-white/10';
+        : 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30';
+    }
+
+    if (aiAwaitingLabel) {
+      aiAwaitingLabel.textContent = isOnline ? I18nService.t('Awaiting generation', 'Awaiting generation') : I18nService.t('Rule-Based Engine Active', 'Rule-Based Engine Active');
+    }
+
+    if (aiFooterNote) {
+      aiFooterNote.textContent = isOnline
+        ? I18nService.t('Connect to the internet to unlock real-time Gemini 2.5 AI operational strategies & live diagnostics.')
+        : I18nService.t('Offline rule-based agricultural telemetry active. Live AI resumes automatically upon reconnecting.');
     }
 
     const customSettings = StorageService.getProfileCustomSettings(personaId);
+    const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
+
     if (cropStageTag) {
-      const crop = customSettings.target_crop || 'Wheat';
-      const stage = customSettings.growth_stage || 'Vegetative';
-      cropStageTag.textContent = `${crop} • ${stage} Phase`;
+      if (personaId === 'farmer' || personaId === 'agriculture') {
+        const crop = customSettings.target_crop || 'Wheat';
+        const stage = customSettings.growth_stage || 'Sowing';
+        const transCrop = I18nService.translateCrop(crop);
+        const transStage = I18nService.translateStage(stage);
+        const phaseWord = I18nService.t('Phase', 'Phase');
+        cropStageTag.textContent = `${transCrop} • ${transStage} ${phaseWord}`;
+      } else if (config.controls && config.controls.length > 0) {
+        const parts: string[] = [];
+        config.controls.forEach(grp => {
+          const selId = customSettings[grp.groupId] || grp.options[0]?.id;
+          const opt = grp.options.find(o => o.id === selId) || grp.options[0];
+          if (opt) {
+            parts.push(I18nService.t(opt.label, opt.label));
+          }
+        });
+        cropStageTag.textContent = parts.join(' • ') || I18nService.t(config.title, config.title);
+      } else {
+        cropStageTag.textContent = I18nService.t(config.title, config.title);
+      }
     }
 
     try {
-      const adv = await generateProfileAdvisory(personaId, 'current_location', loc);
+      const lastWeather = StorageService.getLastWeatherData();
+      const adv = await generateProfileAdvisory(personaId, 'current_location', loc, lastWeather, customSettings);
       if (advisoryMainText) advisoryMainText.textContent = adv.recommendation;
       if (primaryRecText) primaryRecText.textContent = adv.recommendation;
     } catch {
-      if (advisoryMainText) advisoryMainText.textContent = "Select your target options above and click 'Generate Live AI' to view tailored recommendations.";
+      if (advisoryMainText) advisoryMainText.textContent = I18nService.t("Select your target options above to view tailored recommendations.");
     }
   }
 
   // Bind Generate AI button
   btnGenAi?.addEventListener('click', () => {
+    if (!NetworkService.isOnline()) return;
     const pId = StorageService.getActivePersona();
     updateAdvisory(pId);
   });
@@ -324,7 +414,28 @@
     updateAdvisory(pId);
   });
 
+  window.addEventListener('mausam-profile-setting-changed', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    renderKPIs(pId);
+    renderChecklistAndHazards(pId);
+    updateAdvisory(pId);
+  });
+
+  window.addEventListener('mausam-state-synced', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    renderKPIs(pId);
+    renderChecklistAndHazards(pId);
+    updateAdvisory(pId);
+  });
+
   window.addEventListener('mausam-profile-option-selected', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    renderKPIs(pId);
+    renderChecklistAndHazards(pId);
+    updateAdvisory(pId);
+  });
+
+  window.addEventListener('mausam-request-ai-generation', (e: any) => {
     const pId = e.detail?.personaId || StorageService.getActivePersona();
     updateAdvisory(pId);
   });
@@ -332,6 +443,29 @@
   window.addEventListener('mausam-weather-updated', (e: any) => {
     const pId = StorageService.getActivePersona();
     renderKPIs(pId, e.detail);
+    updateAdvisory(pId);
+  });
+
+  window.addEventListener('mausam-network-status-changed', () => {
+    const pId = StorageService.getActivePersona();
+    updateAdvisory(pId);
+  });
+  window.addEventListener('online', () => {
+    const pId = StorageService.getActivePersona();
+    updateAdvisory(pId);
+  });
+  window.addEventListener('offline', () => {
+    const pId = StorageService.getActivePersona();
+    updateAdvisory(pId);
+  });
+
+  window.addEventListener('mausam-language-changed', () => {
+    const root = document.getElementById('telemetry-grid-root');
+    if (root) I18nService.translateDocument(root);
+    const pId = StorageService.getActivePersona();
+    renderKPIs(pId);
+    renderChecklistAndHazards(pId);
+    updateAdvisory(pId);
   });
 
   // Init
@@ -340,3 +474,6 @@
   renderChecklistAndHazards(initialPersona);
   updateAdvisory(initialPersona);
 </script>
+
+
+

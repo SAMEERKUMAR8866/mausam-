@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlareCardDemo from '../components/ui/glare-card-demo';
+---
+
+<Layout title="Glare Card Demo | Mausam">
+  <main class="min-h-screen bg-[#070b14] py-16 px-4 sm:px-6 lg:px-8 text-white flex flex-col items-center justify-center">
+    <div class="max-w-7xl mx-auto w-full">
+      <div class="mb-12 text-center">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          ✨ 3D Glare & Hologram Effect
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
+          Interactive Glare Cards
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto text-base sm:text-lg">
+          Hover and tilt over the cards to experience dynamic 3D perspective rotation, iridescent rainbow foil reflection, and spotlight glare.
+        </p>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <GlareCardDemo client:load />
+      </div>
+    </div>
+  </main>
+</Layout>

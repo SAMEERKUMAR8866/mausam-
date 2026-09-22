@@ -27,7 +27,7 @@ import InstallPrompt from '../components/InstallPrompt.astro';
   <SubNav />
   <OfflineBanner />
 
-  <main class="flex-1 bg-[#070b14] relative w-full max-w-[100vw] overflow-x-hidden pb-16 md:pb-0">
+  <main class="flex-1 bg-[#0B0F19] relative w-full max-w-[100vw] overflow-x-hidden pb-16 md:pb-0">
     
     <!-- Critical Disaster Banner & Overlay (Triggered on Extreme Hazards) -->
     <DisasterOfflineView />
@@ -39,7 +39,7 @@ import InstallPrompt from '../components/InstallPrompt.astro';
           <span class="text-2xl animate-bounce">🚨</span>
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-black uppercase tracking-wider text-red-200 bg-red-500/30 px-2 py-0.5 rounded border border-red-400/40 animate-pulse">
+              <span data-i18n="disasterAlert" class="text-[10px] font-black uppercase tracking-wider text-red-200 bg-red-500/30 px-2 py-0.5 rounded border border-red-400/40 animate-pulse">
                 CRITICAL WEATHER DISASTER ALERT
               </span>
               <span id="hero-disaster-title" class="text-xs text-white font-bold">Severe Cyclone Warning</span>
@@ -50,7 +50,7 @@ import InstallPrompt from '../components/InstallPrompt.astro';
           </div>
         </div>
         <button id="btn-hero-open-sos" type="button" class="px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg transition-all active-scale cursor-pointer flex items-center gap-1.5 shrink-0">
-          <span>🛡️</span> <span>Open Disaster Response Hub</span>
+          <span>🛡️</span> <span data-i18n="openSOSHub">Open Disaster Response Hub</span>
         </button>
       </div>
     </div>
@@ -58,57 +58,77 @@ import InstallPrompt from '../components/InstallPrompt.astro';
     <!-- Main Live Weather View -->
     <div id="main-weather-content" class="w-full max-w-full overflow-x-hidden transition-opacity duration-300">
       
-      <!-- Photography-First Hero Section (India Gate / City Scenic) -->
-      <section class="relative w-full min-h-[380px] md:min-h-[440px] h-auto bg-[#080c14] overflow-hidden flex items-end pt-12 pb-8 sm:pb-12">
-        <!-- Background Scenic Photo -->
-        <div
-          id="hero-photo"
-          class="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out scale-102"
-          style="background-image: url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop'); background-color: #1a1a2e;"
-        >
+      <!-- Dynamic Photography Hero Section with Location & Weather Atmospheric Scene -->
+      <section class="relative w-full min-h-[380px] md:min-h-[460px] h-auto bg-[#0B0F19] overflow-hidden flex items-end pt-14 pb-8 sm:pb-12">
+        <!-- Dynamic Background Scenic Photo Container with Dual-Layer Crossfade -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            id="hero-bg-layer-1"
+            class="absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-100 scale-102"
+            style="background-image: url('https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1600&auto=format&fit=crop'); background-color: #0b0f19;"
+          >
+          </div>
+          <div
+            id="hero-bg-layer-2"
+            class="absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out opacity-0 scale-102"
+            style="background-color: #0b0f19;"
+          >
+          </div>
         </div>
-        <!-- Soft gradient overlays -->
-        <div class="absolute inset-0 bg-gradient-to-t from-[#070b14] via-[#070b14]/60 to-transparent"></div>
-        <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#070b14]/70 to-transparent"></div>
+
+        <!-- Ambient 21st.dev Radial Backdrop Glow -->
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Dark translucent gradient overlays ensuring 100% white text contrast & readability -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/70 to-[#0B0F19]/40 pointer-events-none"></div>
+        <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0F19]/80 via-[#0B0F19]/30 to-transparent pointer-events-none"></div>
 
         <!-- Hero Content Stack -->
         <div class="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-6 text-white">
-          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 sm:gap-6">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 sm:gap-8">
             <div class="min-w-0">
               <!-- Location Display & Offline Badge -->
-              <div class="flex items-center gap-2 mb-1">
-                <p id="hero-location" class="text-base sm:text-xl font-semibold tracking-apple-tight text-cyan-300 truncate">
-                  New Delhi, Delhi, India
-                </p>
-                <span id="hero-offline-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 hidden">
-                  Offline (Cached)
-                </span>
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 backdrop-blur-xl border border-white/15 shadow-sm framer-spring-hover cursor-default">
+                  <span class="text-xs text-cyan-400">📍</span>
+                  <p id="hero-location" class="text-xs sm:text-sm font-semibold tracking-apple-tight text-cyan-200 truncate">
+                    Sasarām, Bihar, India
+                  </p>
+                </div>
+                <div id="hero-offline-badge-container" class="hidden items-center gap-1.5">
+                  <span id="hero-offline-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/25 text-amber-200 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                    📡 OFFLINE • CACHED TELEMETRY
+                  </span>
+                </div>
               </div>
 
               <!-- Temperature -->
-              <h1 id="hero-temp" class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-apple-hero leading-tight sm:leading-none mb-1.5 sm:mb-2">
+              <h1 id="hero-temp" class="text-6xl sm:text-7xl md:text-8xl font-black tracking-apple-hero leading-none mb-2 text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-300 drop-shadow-[0_4px_18px_rgba(0,0,0,0.6)]">
                 29.6°C
               </h1>
 
               <!-- Condition Tagline -->
-              <p id="hero-condition" class="text-base sm:text-xl md:text-2xl font-normal text-slate-200 tracking-apple-tight">
-                Partly Cloudy
+              <p id="hero-condition" class="text-lg sm:text-2xl font-medium text-slate-200 tracking-apple-tight drop-shadow-sm flex items-center gap-2">
+                <span>Partly Cloudy Night</span>
               </p>
             </div>
 
-            <!-- Key Horizontal Weather Strips -->
-            <div class="flex flex-wrap items-center gap-x-5 sm:gap-x-8 gap-y-2.5 text-sm text-slate-300 border-t md:border-t-0 md:border-l border-white/20 pt-3 md:pt-0 md:pl-8">
+            <!-- Key Horizontal Weather Strips (21st.dev Shimmer Glass Pill) -->
+            <div class="glass-panel shimmer-beam-container framer-spring-hover rounded-2xl px-4 py-3 sm:px-6 sm:py-3.5 flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-2 border border-white/15 shadow-product">
               <div class="flex flex-col">
-                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Humidity</span>
-                <span id="hero-humidity" class="text-sm sm:text-base font-semibold text-white">65%</span>
+                <span data-i18n="humidity" class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Humidity</span>
+                <span id="hero-humidity" class="text-sm sm:text-base font-bold text-white mt-0.5">65%</span>
               </div>
+              <div class="w-px h-7 bg-white/10 hidden sm:block"></div>
               <div class="flex flex-col">
-                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">Wind Speed</span>
-                <span id="hero-wind" class="text-sm sm:text-base font-semibold text-white">2.6 kph ESE</span>
+                <span data-i18n="windSpeed" class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Wind Speed</span>
+                <span id="hero-wind" class="text-sm sm:text-base font-bold text-white mt-0.5">2.6 kph ESE</span>
               </div>
+              <div class="w-px h-7 bg-white/10 hidden sm:block"></div>
               <div class="flex flex-col">
-                <span class="text-[11px] sm:text-xs uppercase text-slate-400 font-medium">UV Index</span>
-                <span id="hero-uv" class="text-sm sm:text-base font-semibold text-white">0 (Moderate)</span>
+                <span data-i18n="uvIndex" class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">UV Index</span>
+                <span id="hero-uv" class="text-sm sm:text-base font-bold text-white mt-0.5">0 (Moderate)</span>
               </div>
             </div>
           </div>
@@ -137,7 +157,7 @@ import InstallPrompt from '../components/InstallPrompt.astro';
   </main>
 
   <!-- Dark Glass Footer -->
-  <footer class="w-full bg-slate-950 border-t border-white/10 text-slate-400 text-xs py-12 px-6">
+  <footer class="w-full bg-[#0F172A] border-t border-white/10 text-slate-400 text-xs py-12 px-6">
     <div class="max-w-[980px] mx-auto">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8 border-b border-white/10 pb-8">
         <div>
@@ -199,7 +219,15 @@ import InstallPrompt from '../components/InstallPrompt.astro';
 <script>
   import '../scripts/client-api-bridge';
   import { StorageService } from '../services/storage.service';
+  import { I18nService } from '../services/i18n.service';
+  import { NetworkService } from '../services/network.service';
+  import { WeatherCacheService } from '../services/weather-cache.service';
   import { fetchWeatherData } from '../services/weather.service';
+  import { DynamicImageService } from '../services/dynamic-image.service';
+
+  // Initialize global reactive i18n and network engine
+  I18nService.initI18n();
+  NetworkService.init();
 
   const heroLocation = document.getElementById('hero-location');
   const heroTemp = document.getElementById('hero-temp');
@@ -207,51 +235,91 @@ import InstallPrompt from '../components/InstallPrompt.astro';
   const heroHumidity = document.getElementById('hero-humidity');
   const heroWind = document.getElementById('hero-wind');
   const heroUv = document.getElementById('hero-uv');
-  const heroPhoto = document.getElementById('hero-photo');
+  const heroBgLayer1 = document.getElementById('hero-bg-layer-1');
+  const heroBgLayer2 = document.getElementById('hero-bg-layer-2');
+  const heroOfflineBadgeContainer = document.getElementById('hero-offline-badge-container');
   const heroOfflineBadge = document.getElementById('hero-offline-badge');
   const disasterBanner = document.getElementById('severe-disaster-alert-banner');
   const heroDisasterTitle = document.getElementById('hero-disaster-title');
   const heroDisasterDesc = document.getElementById('hero-disaster-desc');
   const btnHeroSos = document.getElementById('btn-hero-open-sos');
 
-  const SCENIC_PHOTOS: Record<string, string> = {
-    new_delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop', // India Gate
-    mumbai: 'https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=1200&auto=format&fit=crop',
-    london: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop',
-    new_york: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop'
-  };
+  let activeBgLayer = 1;
+  let currentLoadedBgUrl = '';
+
+  async function updateHeroBackground(location: string, condition: string, isDay: boolean) {
+    const targetUrl = DynamicImageService.getBackgroundImageUrl({ location, condition, isDay });
+    if (!targetUrl || targetUrl === currentLoadedBgUrl) return;
+
+    try {
+      await DynamicImageService.preloadImage(targetUrl);
+      currentLoadedBgUrl = targetUrl;
+
+      const incomingLayer = activeBgLayer === 1 ? heroBgLayer2 : heroBgLayer1;
+      const outgoingLayer = activeBgLayer === 1 ? heroBgLayer1 : heroBgLayer2;
+
+      if (incomingLayer && outgoingLayer) {
+        incomingLayer.style.backgroundImage = `url('${targetUrl}')`;
+        incomingLayer.style.opacity = '1';
+        outgoingLayer.style.opacity = '0';
+        activeBgLayer = activeBgLayer === 1 ? 2 : 1;
+      }
+    } catch {
+      if (heroBgLayer1) heroBgLayer1.style.backgroundImage = `url('${targetUrl}')`;
+    }
+  }
 
   btnHeroSos?.addEventListener('click', () => {
     window.dispatchEvent(new CustomEvent('mausam-open-sos-hub'));
   });
 
+  let currentHeroData: any = null;
+
   function renderHero(data: any) {
     if (!data) return;
+    currentHeroData = data;
+    const isOnline = NetworkService.isOnline();
 
     if (heroLocation) heroLocation.textContent = `${data.location.name}, ${data.location.country}`;
     if (heroTemp) heroTemp.textContent = `${data.current.temp_c}°C`;
-    if (heroCondition) heroCondition.textContent = data.current.condition.text;
+    if (heroCondition) heroCondition.textContent = I18nService.translateWeather(data.current.condition.text);
     if (heroHumidity) heroHumidity.textContent = `${data.current.humidity}%`;
-    if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${data.current.wind_dir}`;
+    if (heroWind) heroWind.textContent = `${data.current.wind_kph} kph ${I18nService.translateWindDir(data.current.wind_dir)}`;
 
     const uvLabel = data.current.uv >= 8 ? 'Very High' : data.current.uv >= 6 ? 'High' : 'Moderate';
-    if (heroUv) heroUv.textContent = `${data.current.uv} (${uvLabel})`;
+    const transUv = I18nService.t(uvLabel, uvLabel);
+    if (heroUv) heroUv.textContent = `${data.current.uv} (${transUv})`;
 
-    if (heroOfflineBadge) {
-      if (navigator.onLine) heroOfflineBadge.classList.add('hidden');
-      else heroOfflineBadge.classList.remove('hidden');
+    if (heroOfflineBadgeContainer) {
+      if (isOnline) {
+        heroOfflineBadgeContainer.classList.add('hidden');
+        heroOfflineBadgeContainer.classList.remove('flex');
+      } else {
+        heroOfflineBadgeContainer.classList.remove('hidden');
+        heroOfflineBadgeContainer.classList.add('flex');
+        if (heroOfflineBadge) {
+          heroOfflineBadge.textContent = I18nService.t('📡 OFFLINE • CACHED TELEMETRY', '📡 OFFLINE • CACHED TELEMETRY');
+        }
+      }
     }
 
-    if (heroPhoto) {
-      const locKey = data.location.name.toLowerCase().replace(/ /g, '_');
-      const photoUrl = SCENIC_PHOTOS[locKey] || SCENIC_PHOTOS['new_delhi'];
-      heroPhoto.style.backgroundImage = `url('${photoUrl}')`;
-    }
+    // Trigger dynamic location-aware & weather-aware background transition
+    const isDay = data.current.is_day !== undefined ? data.current.is_day : (data.current.isDay !== undefined ? data.current.isDay : false);
+    const condText = data.current.condition?.text || 'Partly Cloudy Night';
+    const locDisplay = `${data.location.name}, ${data.location.country}`;
+    updateHeroBackground(locDisplay, condText, isDay);
 
-    // Handle Disaster Banner
-    if (disasterBanner && data.isDisasterActive && data.disasterDetails) {
-      if (heroDisasterTitle) heroDisasterTitle.textContent = data.disasterDetails.disasterName;
-      if (heroDisasterDesc) heroDisasterDesc.textContent = data.disasterDetails.description;
+    // Handle Full-Width Red Emergency Disaster Alert Banner
+    // Requires Red Alert (Extreme Severity) or explicit official CAP severe weather status
+    const isRedEmergency = data.isDisasterActive && data.disasterDetails && (
+      data.disasterDetails.alertLevel === 'Red' ||
+      data.disasterDetails.severity === 'Extreme' ||
+      (typeof data.disasterDetails.source === 'string' && data.disasterDetails.source.toLowerCase().includes('official'))
+    );
+
+    if (disasterBanner && isRedEmergency) {
+      if (heroDisasterTitle) heroDisasterTitle.textContent = I18nService.t(data.disasterDetails.disasterName, data.disasterDetails.disasterName);
+      if (heroDisasterDesc) heroDisasterDesc.textContent = I18nService.t(data.disasterDetails.description, data.disasterDetails.description);
       disasterBanner.classList.remove('hidden');
     } else if (disasterBanner) {
       disasterBanner.classList.add('hidden');
@@ -259,25 +327,83 @@ import InstallPrompt from '../components/InstallPrompt.astro';
   }
 
   async function loadWeather(key: string, display?: string) {
+    const isOnline = typeof navigator !== 'undefined' ? (navigator.onLine && NetworkService.isOnline()) : true;
+    if (!isOnline) {
+      // Offline: Read immediately from dynamic cache, localStorage, or deterministic engine
+      const cached = await WeatherCacheService.getWeather(key) || 
+                     await WeatherCacheService.getWeather(display || key) ||
+                     await WeatherCacheService.getLastCachedEntry();
+      if (cached && cached.data) {
+        renderHero(cached.data);
+        StorageService.setLastWeatherData(cached.data);
+        window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: cached.data }));
+        return;
+      }
+
+      const lastData = StorageService.getLastWeatherData();
+      if (lastData) {
+        renderHero(lastData);
+        window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: lastData }));
+        return;
+      }
+
+      // Offline generator fallback
+      const offlineData = await fetchWeatherData(key, display);
+      renderHero(offlineData);
+      StorageService.setLastWeatherData(offlineData);
+      window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: offlineData }));
+      return;
+    }
+
     try {
       const data = await fetchWeatherData(key, display);
       renderHero(data);
       StorageService.setLastWeatherData(data);
       window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: data }));
     } catch (err) {
-      console.warn('[Home] Load weather error:', err);
+      console.warn('[Home] Load weather error, fallback to cache:', err);
+      const cached = await WeatherCacheService.getWeather(key) || StorageService.getLastWeatherData();
+      if (cached) {
+        const d = (cached as any).data || cached;
+        renderHero(d);
+        window.dispatchEvent(new CustomEvent('mausam-weather-updated', { detail: d }));
+      }
     }
   }
 
   // Location selection listener
   window.addEventListener('mausam-location-selected', (e: any) => {
-    const key = e.detail?.key || 'new_delhi';
-    const display = e.detail?.display || 'New Delhi, Delhi, India';
+    const key = e.detail?.key || 'sasaram';
+    const display = e.detail?.display || 'Sasarām, Bihar, India';
     loadWeather(key, display);
   });
 
+  window.addEventListener('mausam-language-changed', () => {
+    if (currentHeroData) {
+      renderHero(currentHeroData);
+    }
+  });
+
+  window.addEventListener('mausam-network-status-changed', () => {
+    if (currentHeroData) {
+      renderHero(currentHeroData);
+    }
+  });
+  window.addEventListener('online', () => {
+    NetworkService.notifyStateChange();
+    const loc = StorageService.getLastLocation() || 'Sasarām, Bihar, India';
+    const k = loc.split(',')[0].trim().toLowerCase().replace(/ /g, '_');
+    loadWeather(k, loc);
+  });
+  window.addEventListener('offline', () => {
+    NetworkService.notifyStateChange();
+    if (currentHeroData) {
+      renderHero({ ...currentHeroData, isCached: true });
+    }
+  });
+
   // Init
-  const initialLoc = StorageService.getLastLocation() || 'New Delhi, Delhi, India';
+  const initialLoc = StorageService.getLastLocation() || 'Sasarām, Bihar, India';
   const initialKey = initialLoc.split(',')[0].trim().toLowerCase().replace(/ /g, '_');
 
   // If cached data exists in storage, render immediately to avoid flash
@@ -289,3 +415,4 @@ import InstallPrompt from '../components/InstallPrompt.astro';
 
   loadWeather(initialKey, initialLoc);
 </script>
+

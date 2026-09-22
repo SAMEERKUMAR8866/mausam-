@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
-import { searchLocations } from '../../services/geocoding.service';
+import { searchLocationsAsync } from '../../services/geocoding.service';
 
 export const GET: APIRoute = async ({ url }) => {
   const query = url.searchParams.get('q') || '';
 
-  if (query.length < 2) {
+  if (!query || query.trim().length === 0) {
     return new Response(JSON.stringify([]), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -41,8 +41,8 @@ export const GET: APIRoute = async ({ url }) => {
     }
   }
 
-  // Get mock results (includes all Indian states)
-  const mockResults = searchLocations(query);
+  // Get geocoding results with live API & offline fallback
+  const mockResults = await searchLocationsAsync(query);
 
   // Merge: combine both, remove duplicates by name+country
   const seen = new Set<string>();

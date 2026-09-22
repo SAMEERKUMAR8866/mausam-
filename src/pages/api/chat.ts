@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request }) => {
       location = 'Greater Noida', 
       persona = 'agriculture', 
       crop = 'Wheat', 
-      stage = 'Vegetative' 
+      stage = 'Sowing' 
     } = body;
 
     const chatHistory: ChatMessage[] = Array.isArray(messages) && messages.length > 0 
@@ -69,7 +69,7 @@ export const GET: APIRoute = async ({ url }) => {
   const location = url.searchParams.get('location') || url.searchParams.get('city') || 'Greater Noida';
   const persona = url.searchParams.get('persona') || 'agriculture';
   const crop = url.searchParams.get('crop') || 'Wheat';
-  const stage = url.searchParams.get('stage') || 'Vegetative';
+  const stage = url.searchParams.get('stage') || 'Sowing';
 
   try {
     const weatherData = await fetchWeatherData('custom', location);

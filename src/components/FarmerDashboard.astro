@@ -127,26 +127,26 @@ const {
       <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
         <span>🔄</span> Phenological Growth Stage
       </span>
-      <span id="farmer-stage-progress-label" class="text-xs text-emerald-400 font-medium">Stage 2 of 4 • Vegetative Phase (Active Tillering)</span>
+      <span id="farmer-stage-progress-label" class="text-xs text-emerald-400 font-medium">Stage 1 of 4 • Sowing Phase (Seedbed & Emergence)</span>
     </div>
 
     <!-- Interactive 4-Step Stepper Line -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6" id="farmer-stage-stepper-container">
       
-      <button type="button" data-stage-val="Sowing" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
+      <button type="button" data-stage-val="Sowing" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-emerald-500/15 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
         <div class="flex items-center gap-2 mb-1">
-          <span class="w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num">1</span>
+          <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 text-xs flex items-center justify-center font-bold step-num">1</span>
           <span class="text-xs font-semibold text-white">Sowing</span>
         </div>
-        <p class="text-[11px] text-slate-400 pl-8">Seedbed & Emergence</p>
+        <p class="text-[11px] text-emerald-300 pl-8">Seedbed & Emergence</p>
       </button>
 
-      <button type="button" data-stage-val="Vegetative" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-emerald-500/15 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+      <button type="button" data-stage-val="Vegetative" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
         <div class="flex items-center gap-2 mb-1">
-          <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 text-xs flex items-center justify-center font-bold step-num">2</span>
+          <span class="w-6 h-6 rounded-full bg-slate-800 border border-white/20 text-xs flex items-center justify-center font-bold text-slate-300 step-num">2</span>
           <span class="text-xs font-semibold text-white">Vegetative</span>
         </div>
-        <p class="text-[11px] text-emerald-300 pl-8">Crown Root & Tillering</p>
+        <p class="text-[11px] text-slate-400 pl-8">Crown Root & Tillering</p>
       </button>
 
       <button type="button" data-stage-val="Flowering" class="stage-step-btn p-3 rounded-xl border text-left transition-all active-scale cursor-pointer bg-slate-900/40 border-white/10 hover:border-emerald-500/40 hover:bg-slate-800/50">
@@ -198,7 +198,7 @@ const {
           </button>
           
           <!-- Autocomplete Dropdown -->
-          <div id="farmer-search-dropdown" class="absolute left-0 top-full mt-2 w-full glass-panel rounded-xl shadow-2xl hidden max-h-60 overflow-y-auto z-50 border border-white/10"></div>
+          <div id="farmer-search-dropdown" class="absolute left-0 top-full mt-2 w-full rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] hidden max-h-60 overflow-y-auto z-[99999] border border-white/20 divide-y divide-white/10 backdrop-blur-2xl bg-[#090D18]/98"></div>
         </div>
 
         <!-- Quick Region Selector Pills -->
@@ -388,7 +388,7 @@ const {
             <span>✨</span> Gemini AI Agronomic Analysis
           </div>
           <span class="text-xs px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/10 font-medium" id="farmer-crop-stage-pill">
-            Wheat • Vegetative Stage
+            Wheat • Sowing Stage
           </span>
           <span class="text-xs text-slate-400 ml-auto" id="farmer-weather-timestamp">Updated just now</span>
         </div>
@@ -685,8 +685,12 @@ const {
 
 <!-- Client Script for Interactive Controls & Real-time Visual Updates -->
 <script>
-  let currentCrop = localStorage.getItem('mausam_farmer_crop') || 'Wheat';
-  let currentStage = localStorage.getItem('mausam_farmer_stage') || 'Vegetative';
+  import { StorageService } from '../services/storage.service';
+  import { NetworkService } from '../services/network.service';
+
+  const initialSettings = StorageService.getProfileCustomSettings('farmer');
+  let currentCrop = initialSettings.target_crop || localStorage.getItem('mausam_farmer_crop') || 'Wheat';
+  let currentStage = initialSettings.growth_stage || localStorage.getItem('mausam_farmer_stage') || 'Sowing';
   let currentLocation = localStorage.getItem('mausam_farmer_location') || 'Greater Noida';
   let farmerRequestId = 0;
   let searchDebounce: ReturnType<typeof setTimeout> | null = null;
@@ -771,9 +775,9 @@ const {
   });
 
   // 2. Interactive Crop Cards Switching
-  function updateCropSelection(crop: string) {
+  function updateCropSelection(crop: string, triggerFetch: boolean = true) {
     currentCrop = crop;
-    localStorage.setItem('mausam_farmer_crop', crop);
+    StorageService.setProfileCustomSetting('farmer', 'target_crop', crop);
 
     const cropCards = document.querySelectorAll('.crop-card');
     cropCards.forEach(card => {
@@ -787,20 +791,22 @@ const {
 
     if (calcCropLabel) calcCropLabel.textContent = `🌾 ${crop}`;
     recalculateFarmDosage();
-    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    if (triggerFetch) {
+      loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    }
   }
 
   document.querySelectorAll('.crop-card').forEach(card => {
     card.addEventListener('click', () => {
       const crop = card.getAttribute('data-crop-val');
-      if (crop) updateCropSelection(crop);
+      if (crop) updateCropSelection(crop, true);
     });
   });
 
   // 3. Interactive Growth Stage Stepper Switching
-  function updateStageSelection(stage: string) {
+  function updateStageSelection(stage: string, triggerFetch: boolean = true) {
     currentStage = stage;
-    localStorage.setItem('mausam_farmer_stage', stage);
+    StorageService.setProfileCustomSetting('farmer', 'growth_stage', stage);
 
     const stepBtns = document.querySelectorAll('.stage-step-btn');
     const stageNames = ['Sowing', 'Vegetative', 'Flowering', 'Harvesting'];
@@ -823,13 +829,15 @@ const {
       }
     });
 
-    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    if (triggerFetch) {
+      loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+    }
   }
 
   document.querySelectorAll('.stage-step-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const stage = btn.getAttribute('data-stage-val');
-      if (stage) updateStageSelection(stage);
+      if (stage) updateStageSelection(stage, true);
     });
   });
 
@@ -1306,7 +1314,55 @@ const {
     if (errorBox) errorBox.classList.add('hidden');
   }
 
+  // Listen to external state sync
+  window.addEventListener('mausam-profile-setting-changed', (e: any) => {
+    if (e.detail?.personaId === 'farmer') {
+      const settings = e.detail.allSettings || StorageService.getProfileCustomSettings('farmer');
+      let changed = false;
+      if (settings.target_crop && settings.target_crop !== currentCrop) {
+        updateCropSelection(settings.target_crop, false);
+        changed = true;
+      }
+      if (settings.growth_stage && settings.growth_stage !== currentStage) {
+        updateStageSelection(settings.growth_stage, false);
+        changed = true;
+      }
+      if (changed) {
+        loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+      }
+    }
+  });
+
+  window.addEventListener('mausam-state-synced', (e: any) => {
+    if (e.detail?.personaId === 'farmer') {
+      const settings = e.detail.allSettings || StorageService.getProfileCustomSettings('farmer');
+      let changed = false;
+      if (settings.target_crop && settings.target_crop !== currentCrop) {
+        updateCropSelection(settings.target_crop, false);
+        changed = true;
+      }
+      if (settings.growth_stage && settings.growth_stage !== currentStage) {
+        updateStageSelection(settings.growth_stage, false);
+        changed = true;
+      }
+      if (changed) {
+        loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+      }
+    }
+  });
+
+  // Network reactivity
+  window.addEventListener('online', () => {
+    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+  });
+  window.addEventListener('offline', () => {
+    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+  });
+  window.addEventListener('mausam-network-status-changed', () => {
+    loadFarmerAdvisory(currentCrop, currentStage, currentLocation);
+  });
+
   // Initial Boot
-  updateCropSelection(currentCrop);
-  updateStageSelection(currentStage);
+  updateCropSelection(currentCrop, false);
+  updateStageSelection(currentStage, true);
 </script>

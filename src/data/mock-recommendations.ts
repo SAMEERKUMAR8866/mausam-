@@ -1,55 +1,55 @@
 // src/data/mock-recommendations.ts
-// Mock AI recommendations for development (used when Gemini API key is not set)
+// Simple, clear AI recommendations for development (used when Gemini API key is not set)
 
 export const MOCK_RECS_DB: Record<string, Record<string, string>> = {
   mumbai: {
-    health: "PM2.5 levels are low (12.4 µg/m³), indicating excellent air quality (AQI 48). With moderate UV (6.0), consider a short outdoor walk but apply SPF 30+. Pollen levels are low, making it a safe day for asthma and allergy sufferers.",
-    fitness: "Warm weather (29.5°C) and high humidity (88%) will increase sweat rates. The best running hours are 6:30 AM - 7:30 AM or after 6:30 PM. Watch for slippery paths from passing showers.",
-    marine: "Moderate chop with 1.8m waves. Sea surface temperature is 27.5°C. High tides at 8:14 AM (3.8m) and 8:35 PM (4.1m). Surfers should catch the clean sets early; recreational swimmers should remain cautious during rising tides.",
-    travel: "Travelers heading to London should pack rainwear as drizzle is active (16°C). For flights leaving Mumbai, note minor delays due to monsoon wind shear; double check departure times before heading out.",
-    family: "Expect school commute delays due to wet roads. Light rain predicted near 3:00 PM, so pack raincoats and boots for school pickups.",
-    agriculture: "Paddy fields have optimal moisture (82.5%) after 18.4mm rainfall. Sowing okra or spinach is highly favorable. Suspend manual watering today to avoid root rot.",
-    commute: "Traffic congestion is slow on Western Express Highway due to lane narrowing. Visibility is normal (8km), but maintain extra braking distance on wet tarmac.",
-    event_planner: "Comfort index is high/sticky due to 88% humidity. If planning outdoor gatherings or weddings, ensure marquee shade and portable cooling fans are available. 40% probability of rain suggests a tent backup is wise."
+    health: "Air quality is clean and fresh (AQI 48). The sun is moderately bright, so wear a hat or apply sunscreen for walks. Low pollen makes it a safe, pleasant day for everyone.",
+    fitness: "Warm and humid weather (29.5°C). You will sweat quickly, so drink plenty of water. The best running hours are early morning (6:30–7:30 AM) or after sunset.",
+    marine: "Gentle sea breeze and moderate waves (1.8m). Safe for coastal fishing boats. Swimmers should stay close to designated safe beach areas during rising tides.",
+    travel: "Passing rain showers in Mumbai. Travelers heading out should keep an umbrella handy and check flight status before leaving for the airport.",
+    family: "Wet roads and passing rain showers near 3:00 PM. Give kids raincoats or umbrellas for school pickup.",
+    agriculture: "Recent rain (18 mm) has left paddy fields nice and moist. Great time for planting vegetables like okra or spinach. No need to water today to protect roots from rotting.",
+    commute: "Wet roads and slow traffic on Western Express Highway. Keep extra braking distance behind vehicles ahead.",
+    event_planner: "Warm and humid evening. If planning an outdoor gathering, set up shaded tents with cooling fans. Keep indoor backup options ready in case of rain."
   },
   new_delhi: {
-    health: "Air Quality is POOR (AQI 245, PM2.5 112.5 µg/m³). Health-sensitive individuals, asthmatics, and children should limit outdoor exposure and wear N95 masks. Very high UV Index (9.0) means sunburn can occur in 15 minutes.",
-    fitness: "High heat alerts active. Outdoor workouts are strongly discouraged during midday. The best running hours are 5:00 AM - 6:15 AM or after 7:30 PM. Hydrate intensely before and during activities.",
-    marine: "Inland location. Sea conditions are not applicable. Local lakes are calm, but high heat means rapid evaporation.",
-    travel: "For travelers visiting Sydney, pack warm winter gear as it's clear but cold (14.2°C). High UV warning in Delhi: carry a wide-brimmed hat, SPF 50+, and hydration packs.",
-    family: "School commute is normal, but smog conditions mean school recess should be held indoors. High UV Warning: apply sunscreen to children before they leave for school.",
-    agriculture: "Soil moisture is very low (31.2%). Manual irrigation is required for wheat crops and saplings this evening. Mulch around plants to reduce water loss.",
-    commute: "Dry roads, but visibility is reduced to 3km due to hazy smog. Use low beams in dusty zones and expect delays near Connaught Place.",
-    event_planner: "Extreme heat risk. Shaded tents, outdoor air-coolers, and mist fans are mandatory for guest safety. Rain probability is 0%, eliminating precipitation concerns."
+    health: "Air quality is poor (AQI 245). People with breathing difficulties, seniors, and children should stay indoors and wear a face mask when going outside.",
+    fitness: "Hot afternoon weather. Avoid heavy exercise in the middle of the day. Exercise early in the morning before 6:30 AM and drink plenty of water.",
+    marine: "Inland area. Sea tides do not apply here. Local lakes are calm, but water evaporates quickly in the afternoon heat.",
+    travel: "Hot and sunny in Delhi. Carry a water bottle, sunglasses, and wear sunscreen when heading out for sightseeing.",
+    family: "Smoggy air outdoors. Children should play inside today, and drink plenty of water throughout the day.",
+    agriculture: "Soil is very dry. Give wheat crops and garden plants a good watering this evening. Spread dry leaves or grass (mulch) around plants to keep moisture in the soil.",
+    commute: "Hazy roads with reduced visibility. Drive carefully with headlights on and expect mild traffic delays near city center.",
+    event_planner: "Hot day ahead. Provide plenty of shade, cool drinking water, and mist fans for your guests. No rain expected."
   },
   london: {
-    health: "AQI is excellent (28). However, high humidity (92%) and dampness may trigger joint sensitivity. Pollen counts are negligible, providing relief to hay fever sufferers.",
-    fitness: "Cool temperatures (16.0°C) and light drizzle make for refreshing runs. The best running hours are 10:00 AM - 12:00 PM and 4:00 PM - 6:00 PM. Wear reflective gear for low-light visibility.",
-    marine: "Rough swell with 2.4m waves. Water temperature is cold (14.5°C). High tide at 5:42 PM (5.6m). Surfers should wear a 4/3mm wetsuit; swimming not advised due to strong rip currents.",
-    travel: "Flights arriving at Heathrow are experiencing 10-15 minute delays due to low cloud cover. Ensure you pack a warm fleece and high-quality raincoat.",
-    family: "Carry umbrellas for walking school commutes. Intermittent drizzle all day with continuous rain during school pickup (3:30 PM). Dress children in waterproof jackets.",
-    agriculture: "High soil moisture (78.4%). Excellent window for planting autumn brassicas like cabbage and kale. Protect newly sown seeds from birds with netting.",
-    commute: "Slippery roads and mist. Congestion on M25 is high. Drive with fog lights on and double your standard stopping distance behind other vehicles.",
-    event_planner: "Outdoor gatherings will be cold and damp. Indoor options are highly recommended. Rain probability is 80%, so outdoor marquee setups must be fully waterproof."
+    health: "Air is clean and fresh (AQI 28). Cool and damp weather outside; dress warmly if sensitive to joint stiffness.",
+    fitness: "Cool weather (16°C) with light drizzle. Great for a refreshing jog. Wear bright or reflective clothing in low light.",
+    marine: "Rough waves (2.4m) and cold water. Swimming is not recommended today due to strong water currents.",
+    travel: "Low clouds and light rain around London airports. Pack a warm sweater and a waterproof raincoat for your trip.",
+    family: "Light drizzle throughout the day. Pack umbrellas for school travel and dress children in waterproof jackets.",
+    agriculture: "Soil is moist and ready for planting winter vegetables like cabbage and kale. Put light netting over fresh seeds to protect them from birds.",
+    commute: "Wet and slippery roads with morning mist. Drive with fog lights on and keep extra distance from other cars.",
+    event_planner: "Damp and cold weather with high chance of rain. Indoor halls or fully waterproof marquee tents are recommended."
   },
   sydney: {
-    health: "Excellent air quality (AQI 32) and clean ocean breeze. Low UV Index (1.0) and negligible pollen makes it a great day for allergy-prone individuals to spend time outdoors.",
-    fitness: "Crisp autumn weather (14.2°C). Ideal running conditions. Best running hours are 6:30 AM - 8:30 AM and 3:30 PM - 5:00 PM. Keep muscles warm with full-length running tights.",
-    marine: "Clean offshore swell with 1.5m waves and west winds. Water temp is 18.0°C. Best tide for surfing is rising tide between 8:00 AM and 11:30 AM. Standard 3/2mm wetsuit recommended.",
-    travel: "Flights are operating normally. Travelers visiting Mumbai or Delhi should pack light, breathable layers. Sydney evening is cold; pack a windproof jacket.",
-    family: "Clear roads and sunny skies. Ideal day for walking to school and outdoor sports. Kids will need sweaters for after-school outdoor play.",
-    agriculture: "Overnight frost alert active for low-lying valleys. Cover tender crops (tomatoes, herbs) tonight. Frost is highly beneficial for pruning stone fruit trees.",
-    commute: "Dry pavement and excellent visibility (10km+). Congestion reported crossing Harbour Bridge, but weather-related hazards are zero.",
-    event_planner: "Perfect conditions for outdoor events or weddings. Clear skies, but evening temperatures will drop. Providing patio heaters or fire pits will enhance guest comfort."
+    health: "Clean ocean breeze and fresh air (AQI 32). Great weather to spend time outdoors with family.",
+    fitness: "Crisp, pleasant weather (14°C). Ideal running conditions. Best running hours are morning (6:30–8:30 AM) or late afternoon.",
+    marine: "Clean, gentle waves (1.5m) and sunny skies. Great day for surfing, paddleboarding, and family beach walks.",
+    travel: "Flights and trains are running on schedule. Sydney evenings turn cool, so pack a light windproof jacket.",
+    family: "Clear sunny skies and dry paths. Perfect day for walking to school and outdoor playground games.",
+    agriculture: "Cold frost is expected tonight. Cover tender vegetables (like tomatoes and herbs) with cloths to protect them from frost damage.",
+    commute: "Dry roads and clear visibility across all main routes. Smooth transit conditions with no weather delays.",
+    event_planner: "Sunny skies and pleasant conditions for outdoor events. Keep outdoor patio heaters ready for when the temperature drops in the evening."
   },
   new_york: {
-    health: "AQI is moderate (62). Weed pollen is high today; sensitive allergy sufferers should take preventative medication and rinse off after spending time outdoors.",
-    fitness: "Warm and clear day (24.0°C). Best running hours are early morning (6:30 AM - 8:30 AM) or sunset (6:30 PM - 8:00 PM) to avoid peak midday sun.",
-    marine: "Gentle swell (0.8m wave height) with warm water temperature (22.0°C). Tides are low at 8:32 AM and high at 2:44 PM. Perfect conditions for family beach walks or paddleboarding.",
-    travel: "Local airports (JFK, LGA, EWR) report normal flight schedules. Packing suggestion: standard summer clothes, comfortable sneakers for walking, and a light jacket for air-conditioned rooms.",
-    family: "Ideal day for walking school commutes. Clear dry pavements. No rain gear needed. Great day for an after-school picnic in Central Park.",
-    agriculture: "Soil moisture is average (48.2%). Normal irrigation schedule. Ideal window for harvesting ripe tomatoes, eggplants, and summer squash.",
-    commute: "Dry, clear streets. Minor construction delays on Brooklyn Bridge, but overall commute conditions are excellent.",
-    event_planner: "Highly pleasant comfort index. Ideal conditions for outdoor garden parties or rooftop weddings. Rain risk is negligible (5%)."
+    health: "Moderate air quality (AQI 62) with some weed pollen. Keep allergy medicine handy if sensitive to outdoor dust or pollen.",
+    fitness: "Warm, clear day (24°C). Best workout hours are early morning (6:30–8:30 AM) or sunset to avoid the midday sun.",
+    marine: "Gentle waves and warm water. Great conditions for seaside strolls, paddleboarding, and family beach time.",
+    travel: "Clear skies and normal flight schedules across local airports. Wear comfortable walking shoes and pack sunglasses.",
+    family: "Sunny, dry pavements. Great day for walking kids to school or having an afternoon picnic in the park.",
+    agriculture: "Soil moisture is good. Great day for picking ripe tomatoes, eggplants, and squash from your garden.",
+    commute: "Dry streets and clear driving conditions. Smooth transit across highways and bridges.",
+    event_planner: "Pleasant, clear weather. Ideal conditions for outdoor garden parties and rooftop gatherings."
   }
 };

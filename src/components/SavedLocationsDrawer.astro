@@ -3,17 +3,17 @@
 // Drawer Modal for managing saved Indian & international locations
 ---
 
-<div id="saved-locations-drawer" class="hidden fixed inset-0 z-50 overflow-hidden bg-slate-950/80 backdrop-blur-md transition-opacity">
+<div id="saved-locations-drawer" class="hidden fixed inset-0 z-[99999] overflow-hidden bg-[#0B0F19]/80 backdrop-blur-md transition-opacity">
   <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
-    <div class="w-screen max-w-md bg-slate-900 border-l border-white/10 p-6 flex flex-col justify-between shadow-2xl">
+    <div class="w-screen max-w-md bg-[#0F172A] border-l border-white/[0.08] p-6 flex flex-col justify-between shadow-2xl">
       
       <div>
-        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+        <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-5">
           <div class="flex items-center gap-2">
             <span class="text-xl">📍</span>
-            <h3 class="text-base font-bold text-white tracking-apple-tight">Saved Locations</h3>
+            <h3 data-i18n="savedLocations" class="text-base font-bold text-white tracking-apple-tight">Saved Locations</h3>
           </div>
-          <button id="close-saved-drawer-btn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
+          <button id="close-saved-drawer-btn" class="w-8 h-8 rounded-full bg-[#1E293B] hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
             ✕
           </button>
         </div>
@@ -21,8 +21,8 @@
         <div id="saved-locations-list" class="space-y-2.5 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
       </div>
 
-      <div class="pt-4 border-t border-white/10">
-        <p class="text-xs text-slate-400 font-light text-center">
+      <div class="pt-4 border-t border-white/[0.08]">
+        <p data-i18n="savedLocationsCached" class="text-xs text-slate-400 font-light text-center">
           Locations automatically cached for zero-network offline access.
         </p>
       </div>
@@ -33,6 +33,8 @@
 
 <script>
   import { StorageService } from '../services/storage.service';
+  import { I18nService } from '../services/i18n.service';
+  import { saveSearchedLocation } from '../services/geocoding.service';
 
   const drawer = document.getElementById('saved-locations-drawer');
   const closeBtn = document.getElementById('close-saved-drawer-btn');
@@ -44,17 +46,20 @@
     listContainer.innerHTML = '';
 
     if (locations.length === 0) {
-      listContainer.innerHTML = `<p class="text-xs text-slate-400 p-4 text-center">No saved locations yet.</p>`;
+      const noLocText = I18nService.t('noSavedLocations', 'No saved locations yet.');
+      listContainer.innerHTML = `<p class="text-xs text-slate-400 p-4 text-center">${noLocText}</p>`;
       return;
     }
 
+    const cachedText = I18nService.t('cachedOffline', 'Cached Offline');
+
     locations.forEach(loc => {
       const item = document.createElement('div');
-      item.className = 'flex items-center justify-between p-3 rounded-xl bg-slate-950/60 hover:bg-slate-950 border border-white/10 transition-all';
+      item.className = 'flex items-center justify-between p-3 rounded-xl bg-[#1E293B]/80 hover:bg-[#1E293B] border border-white/[0.08] transition-all';
       item.innerHTML = `
         <button type="button" class="loc-select-btn text-left flex-1 min-w-0 mr-2 cursor-pointer">
           <div class="text-xs font-semibold text-white truncate">${loc}</div>
-          <span class="text-[10px] text-emerald-400 font-medium">Cached Offline</span>
+          <span class="text-[10px] text-emerald-400 font-medium">${cachedText}</span>
         </button>
         <button type="button" class="loc-delete-btn p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="Remove">
           🗑️
@@ -64,7 +69,18 @@
       item.querySelector('.loc-select-btn')?.addEventListener('click', () => {
         drawer?.classList.add('hidden');
         StorageService.setLastLocation(loc);
-        window.dispatchEvent(new CustomEvent('mausam-location-selected', { detail: { display: loc, key: loc.split(',')[0].trim().toLowerCase() } }));
+        const parts = loc.split(',');
+        const cityName = parts[0].trim();
+        saveSearchedLocation({
+          id: `saved-${cityName.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`,
+          name: cityName,
+          region: parts[1]?.trim() || '',
+          country: parts[parts.length - 1]?.trim() || 'India',
+          lat: 28.61,
+          lon: 77.20,
+          display: loc
+        });
+        window.dispatchEvent(new CustomEvent('mausam-location-selected', { detail: { display: loc, key: cityName.toLowerCase().replace(/ /g, '_') } }));
       });
 
       item.querySelector('.loc-delete-btn')?.addEventListener('click', () => {
@@ -82,8 +98,13 @@
 
   window.addEventListener('mausam-open-saved-locations', () => {
     renderSavedList();
+    if (drawer) I18nService.translateDocument(drawer);
     drawer?.classList.remove('hidden');
   });
 
   window.addEventListener('mausam-saved-locations-changed', renderSavedList);
+  window.addEventListener('mausam-language-changed', () => {
+    if (drawer) I18nService.translateDocument(drawer);
+    renderSavedList();
+  });
 </script>

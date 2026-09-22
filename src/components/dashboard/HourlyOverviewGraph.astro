@@ -3,26 +3,26 @@
 // High-Precision Continuous Spline Curve Graph & Solar Events Telemetry
 ---
 
-<div class="w-full bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-950/90 border border-white/10 rounded-2xl p-4 sm:p-6 mb-8 shadow-product relative overflow-hidden" id="hourly-overview-graph-card">
+<div class="w-full glass-panel spotlight-card shimmer-beam-container rounded-2xl p-4 sm:p-6 mb-8 shadow-product relative overflow-hidden" id="hourly-overview-graph-card">
   
   <!-- Top Bar: Title, Solar Events, Moon Phase, & Temp Toggle -->
   <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5 pb-4 border-b border-white/10">
     
     <!-- Title & Description -->
     <div class="flex items-start gap-3">
-      <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 flex items-center justify-center text-lg shrink-0 shadow-glow-cyan">
+      <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 flex items-center justify-center text-lg shrink-0 shadow-glow-cyan framer-spring-hover">
         📈
       </div>
       <div>
         <div class="flex items-center gap-2">
-          <h3 class="text-sm sm:text-base font-bold text-white tracking-apple-tight">
+          <h3 data-i18n="hourlyOverview" class="text-sm sm:text-base font-bold text-white tracking-apple-tight">
             24-Hour Meteorological Overview & Temperature Curve
           </h3>
-          <span id="graph-day-label" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+          <span id="graph-day-label" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shadow-sm">
             Today
           </span>
         </div>
-        <p class="text-xs text-slate-400 font-light mt-0.5">
+        <p data-i18n="hourlyOverviewSub" class="text-xs text-slate-400 font-light mt-0.5">
           Continuous spline curve with solar events, precipitation probability, and thermal variance
         </p>
       </div>
@@ -31,7 +31,7 @@
     <!-- Right Controls: Moon Phase & Actual/Feels Toggle -->
     <div class="flex flex-wrap items-center gap-3">
       <!-- Moon Phase Badge -->
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 border border-white/10 text-xs text-slate-300 shadow-sm">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 border border-white/10 text-xs text-slate-300 shadow-sm backdrop-blur-md framer-spring-hover cursor-default">
         <span id="graph-moon-icon" class="text-sm">🌒</span>
         <div class="flex flex-col text-left">
           <span id="graph-moon-phase" class="text-[11px] font-semibold text-white leading-tight">Waxing Crescent</span>
@@ -40,18 +40,20 @@
       </div>
 
       <!-- Actual vs Feels Like Toggle Pill -->
-      <div class="inline-flex items-center p-0.5 rounded-full bg-slate-950/90 border border-white/10 text-xs">
+      <div class="inline-flex items-center p-0.5 rounded-full bg-slate-950/90 border border-white/10 text-xs backdrop-blur-md">
         <button
           type="button"
           id="btn-mode-actual"
-          class="px-3.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer bg-cyan-500 text-slate-950 shadow-sm"
+          data-i18n="actualTemp"
+          class="px-3.5 py-1 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer bg-cyan-500 text-slate-950 shadow-sm active-scale"
         >
           Actual Temp
         </button>
         <button
           type="button"
           id="btn-mode-feels"
-          class="px-3.5 py-1 rounded-full text-xs font-medium text-slate-300 hover:text-white transition-all cursor-pointer"
+          data-i18n="feelsLike"
+          class="px-3.5 py-1 rounded-full text-xs font-medium text-slate-300 hover:text-white transition-all duration-200 cursor-pointer active-scale"
         >
           Feels Like
         </button>
@@ -65,26 +67,26 @@
     
     <!-- Legend -->
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/60 border border-white/5 framer-spring-hover">
         <span class="w-3.5 h-0.5 bg-cyan-400 rounded-full"></span>
-        <span class="text-slate-300 font-medium">Temperature Curve (°C)</span>
+        <span data-i18n="tempCurveLegend" class="text-slate-300 font-medium text-[11px]">Temperature Curve (°C)</span>
       </div>
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/60 border border-white/5 framer-spring-hover">
         <span class="w-2.5 h-2.5 bg-blue-500/60 rounded-sm"></span>
-        <span class="text-slate-300 font-medium">Rain Probability (%)</span>
+        <span data-i18n="rainProbLegend" class="text-slate-300 font-medium text-[11px]">Rain Probability (%)</span>
       </div>
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/60 border border-white/5 text-[11px] framer-spring-hover">
         <span class="text-xs">🌅</span>
-        <span>Sunrise ( <span id="graph-legend-sunrise" class="text-amber-300 font-medium">6:07 AM</span> )</span>
+        <span><span data-i18n="sunrise">Sunrise</span> ( <span id="graph-legend-sunrise" class="text-amber-300 font-medium">6:07 AM</span> )</span>
       </div>
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/60 border border-white/5 text-[11px] framer-spring-hover">
         <span class="text-xs">🌇</span>
-        <span>Sunset ( <span id="graph-legend-sunset" class="text-rose-300 font-medium">6:24 PM</span> )</span>
+        <span><span data-i18n="sunset">Sunset</span> ( <span id="graph-legend-sunset" class="text-rose-300 font-medium">6:24 PM</span> )</span>
       </div>
     </div>
 
     <!-- Live Dynamic Inspection Tooltip Banner -->
-    <div id="graph-hover-info" class="text-xs font-semibold text-cyan-300 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-white/10 shadow-inner truncate">
+    <div id="graph-hover-info" class="text-xs font-semibold text-cyan-300 bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-white/10 shadow-inner truncate backdrop-blur-md transition-all duration-300">
       Hover or tap any hour below to inspect detailed micro-climate metrics
     </div>
 
@@ -127,9 +129,15 @@
 </div>
 
 <script>
+  import { I18nService } from '../../services/i18n.service';
+  import { parseTimeToMinutes, parseTimeToDecimalHours, isDaytimeHour } from '../../services/weather.service';
+
   let currentMode: 'actual' | 'feels' = 'actual';
   let hourlyData: any[] = [];
   let isToday = true;
+  let activeSunrise = '06:07 AM';
+  let activeSunset = '06:24 PM';
+  let lastAstronomyData: any = null;
 
   const btnActual = document.getElementById('btn-mode-actual');
   const btnFeels = document.getElementById('btn-mode-feels');
@@ -140,6 +148,7 @@
   const graphMoonIllum = document.getElementById('graph-moon-illum');
   const legendSunrise = document.getElementById('graph-legend-sunrise');
   const legendSunset = document.getElementById('graph-legend-sunset');
+
   const columnsContainer = document.getElementById('graph-columns-container');
   const markersLayer = document.getElementById('graph-markers-layer');
   const splineLinePath = document.getElementById('spline-line-path') as SVGPathElement | null;
@@ -147,6 +156,15 @@
 
   function renderSplineGraph() {
     if (!hourlyData || hourlyData.length === 0 || !columnsContainer) return;
+
+    // Resolve active sunrise and sunset dynamically from hourly solar flags, astronomy data, or legend
+    const dynamicSunrise = hourlyData.find(h => h.isSunrise && h.sunriseLabel)?.sunriseLabel || (lastAstronomyData?.sunrise) || activeSunrise || '06:07 AM';
+    const dynamicSunset = hourlyData.find(h => h.isSunset && h.sunsetLabel)?.sunsetLabel || (lastAstronomyData?.sunset) || activeSunset || '06:24 PM';
+    activeSunrise = dynamicSunrise;
+    activeSunset = dynamicSunset;
+
+    if (legendSunrise) legendSunrise.textContent = activeSunrise;
+    if (legendSunset) legendSunset.textContent = activeSunset;
 
     columnsContainer.innerHTML = '';
     if (markersLayer) markersLayer.innerHTML = '';
@@ -191,35 +209,38 @@
       splineAreaPath.setAttribute('d', areaD);
     }
 
-    // Solar Event Markers (Sunrise ~6 AM, Sunset ~6 PM)
+    // Solar Event Markers (Dynamic Sunrise & Sunset computed from location data)
     if (markersLayer) {
-      // Sunrise marker
-      const sunriseIdx = 6;
-      if (points[sunriseIdx]) {
-        const srP = points[sunriseIdx];
+      const srDec = parseTimeToDecimalHours(activeSunrise);
+      const ssDec = parseTimeToDecimalHours(activeSunset);
+      const srIdx = Math.min(count - 1, Math.max(0, Math.round(srDec)));
+      const ssIdx = Math.min(count - 1, Math.max(0, Math.round(ssDec)));
+
+      // Dynamic Sunrise marker
+      if (points[srIdx]) {
+        const srP = points[srIdx];
         const srBadge = document.createElement('div');
         srBadge.className = 'absolute -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-[9px] font-bold shadow-sm';
-        srBadge.style.left = `${(sunriseIdx / (count - 1)) * 100}%`;
+        srBadge.style.left = `${(srDec / (count - 1)) * 100}%`;
         srBadge.style.top = `${srP.y - 26}px`;
-        srBadge.innerHTML = `<span>🌅</span> ${hourlyData[sunriseIdx]?.sunriseLabel || '6:07 AM'}`;
+        srBadge.innerHTML = `<span>🌅</span> ${activeSunrise}`;
         markersLayer.appendChild(srBadge);
       }
 
-      // Sunset marker
-      const sunsetIdx = 18;
-      if (points[sunsetIdx]) {
-        const ssP = points[sunsetIdx];
+      // Dynamic Sunset marker
+      if (points[ssIdx]) {
+        const ssP = points[ssIdx];
         const ssBadge = document.createElement('div');
         ssBadge.className = 'absolute -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40 text-[9px] font-bold shadow-sm';
-        ssBadge.style.left = `${(sunsetIdx / (count - 1)) * 100}%`;
+        ssBadge.style.left = `${(ssDec / (count - 1)) * 100}%`;
         ssBadge.style.top = `${ssP.y - 26}px`;
-        ssBadge.innerHTML = `<span>🌇</span> ${hourlyData[sunsetIdx]?.sunsetLabel || '6:24 PM'}`;
+        ssBadge.innerHTML = `<span>🌇</span> ${activeSunset}`;
         markersLayer.appendChild(ssBadge);
       }
     }
 
-    // Render interactive columns
-    hourlyData.forEach((item, i) => {
+    // Render interactive columns with dynamic Day/Night Solar comparison
+    hourlyData.forEach((item) => {
       const col = document.createElement('div');
       col.className = 'hourly-col group flex flex-col items-center justify-between h-full relative cursor-pointer z-20 flex-1 px-0.5';
 
@@ -227,23 +248,69 @@
       const tempVal = currentMode === 'actual' ? item.temp_c : item.feels_like_c;
       const rainPct = item.rain_chance_pct || 0;
 
+      // 1. Parse timeline slot hour value (e.g. "7 PM", 19, "19:00", 0)
+      const slotTimeValue = item.hour !== undefined ? item.hour : item.time;
+      const slotMinutes = parseTimeToMinutes(slotTimeValue);
+
+      // 2. Parse dynamic sunrise (e.g., 5:50 AM) and sunset (e.g., 5:54 PM)
+      const sunriseMinutes = parseTimeToMinutes(activeSunrise);
+      const sunsetMinutes = parseTimeToMinutes(activeSunset);
+
+      // 3. If slot time is >= sunset or < sunrise, it is NIGHT
+      const isNight = sunriseMinutes < sunsetMinutes
+        ? (slotMinutes >= sunsetMinutes || slotMinutes < sunriseMinutes)
+        : (slotMinutes >= sunsetMinutes && slotMinutes < sunriseMinutes);
+      const isDay = !isNight;
+
+      // 4. Force icon property and render moon/night icon during nighttime
       let condEmoji = '☀️';
-      if (item.icon === 'rainy') condEmoji = '🌧️';
-      else if (item.icon === 'cloudy') condEmoji = '⛅';
-      else if (item.icon === 'stormy') condEmoji = '⛈️';
-      else if (item.icon === 'moon') condEmoji = '🌙';
+      if (isNight) {
+        if (item.icon === 'sunny' || item.icon === 'clear' || item.icon === 'sun' || !item.icon) {
+          item.icon = 'moon';
+        }
+        if (item.icon === 'rainy' || item.icon === 'rain') {
+          condEmoji = '🌧️';
+        } else if (item.icon === 'stormy' || item.icon === 'thunderstorm') {
+          condEmoji = '⛈️';
+        } else if (item.icon === 'foggy' || item.icon === 'fog') {
+          condEmoji = '🌫️';
+        } else if (item.icon === 'snow' || item.icon === 'snowy') {
+          condEmoji = '🌨️';
+        } else if (item.icon === 'cloudy' || item.icon === 'partly-cloudy') {
+          condEmoji = '☁️';
+        } else {
+          condEmoji = '🌙';
+        }
+      } else {
+        if (item.icon === 'moon') {
+          item.icon = 'sunny';
+        }
+        if (item.icon === 'rainy' || item.icon === 'rain') {
+          condEmoji = '🌧️';
+        } else if (item.icon === 'stormy' || item.icon === 'thunderstorm') {
+          condEmoji = '⛈️';
+        } else if (item.icon === 'foggy' || item.icon === 'fog') {
+          condEmoji = '🌫️';
+        } else if (item.icon === 'snow' || item.icon === 'snowy') {
+          condEmoji = '🌨️';
+        } else if (item.icon === 'cloudy' || item.icon === 'partly-cloudy') {
+          condEmoji = '⛅';
+        } else {
+          condEmoji = '☀️';
+        }
+      }
 
       col.innerHTML = `
         <!-- Top Temp & Weather Emoji -->
         <div class="flex flex-col items-center pt-2">
           <span class="text-[11px] font-bold ${isCurrent ? 'text-cyan-300' : 'text-slate-200'}">${Math.round(tempVal)}°</span>
-          <span class="text-xs my-0.5">${condEmoji}</span>
+          <span class="text-xs my-0.5" title="${item.condition || (isDay ? 'Sunny' : 'Clear Night')}">${condEmoji}</span>
         </div>
 
         <!-- Live Current Hour Pillar Indicator -->
         ${isCurrent ? `
           <div class="absolute inset-y-0 w-8 -translate-x-1/2 left-1/2 bg-cyan-400/10 rounded-xl border border-cyan-400/30 pointer-events-none flex flex-col items-center justify-start pt-6 shadow-glow-cyan">
-            <span class="px-1.5 py-0.5 rounded bg-cyan-400 text-slate-950 font-black text-[9px] shadow">LIVE ${Math.round(tempVal)}°</span>
+            <span class="px-1.5 py-0.5 rounded bg-cyan-400 text-slate-950 font-black text-[9px] shadow">${I18nService.t('live', 'LIVE')} ${Math.round(tempVal)}°</span>
           </div>
         ` : ''}
 
@@ -260,7 +327,12 @@
       // Hover and click tooltip binding
       const showTooltip = () => {
         if (graphHoverInfo) {
-          graphHoverInfo.textContent = `${isCurrent ? '⚡ NOW • ' : ''}${item.time}: ${item.temp_c}°C (Feels like ${item.feels_like_c}°C) • ${item.condition} • Rain: ${item.rain_chance_pct}% • Wind: ${item.wind_kph} kph`;
+          const cond = I18nService.translateWeather(item.condition);
+          const feelsWord = I18nService.t('feelsLike', 'Feels like');
+          const rainWord = I18nService.t('precipitation', 'Rain');
+          const windWord = I18nService.t('windSpeed', 'Wind');
+          const nowWord = isCurrent ? `⚡ ${I18nService.t('live', 'LIVE')} • ` : '';
+          graphHoverInfo.textContent = `${nowWord}${item.time}: ${item.temp_c}°C (${feelsWord} ${item.feels_like_c}°C) • ${cond} • ${rainWord}: ${item.rain_chance_pct}% • ${windWord}: ${item.wind_kph} kph`;
         }
       };
 
@@ -273,7 +345,12 @@
     // Set initial tooltip to current or first hour
     const liveItem = hourlyData.find(h => isToday && h.isCurrentHour) || hourlyData[0];
     if (graphHoverInfo && liveItem) {
-      graphHoverInfo.textContent = `⚡ Live (${liveItem.time}): ${liveItem.temp_c}°C (Feels like ${liveItem.feels_like_c}°C) • ${liveItem.condition} • Rain: ${liveItem.rain_chance_pct}% • Wind: ${liveItem.wind_kph} kph`;
+      const cond = I18nService.translateWeather(liveItem.condition);
+      const feelsWord = I18nService.t('feelsLike', 'Feels like');
+      const rainWord = I18nService.t('precipitation', 'Rain');
+      const windWord = I18nService.t('windSpeed', 'Wind');
+      const liveWord = I18nService.t('live', 'LIVE');
+      graphHoverInfo.textContent = `⚡ ${liveWord} (${liveItem.time}): ${liveItem.temp_c}°C (${feelsWord} ${liveItem.feels_like_c}°C) • ${cond} • ${rainWord}: ${liveItem.rain_chance_pct}% • ${windWord}: ${liveItem.wind_kph} kph`;
     }
   }
 
@@ -298,9 +375,11 @@
     const dayIdx = e.detail?.dayIndex ?? 0;
     if (dayData) {
       isToday = dayIdx === 0 || dayData.isToday === true;
+      if (dayData.sunrise) activeSunrise = dayData.sunrise;
+      if (dayData.sunset) activeSunset = dayData.sunset;
       hourlyData = (dayData.hourly || []).map((h: any) => ({ ...h }));
       if (graphDayLabel) {
-        graphDayLabel.textContent = dayData.label;
+        graphDayLabel.textContent = isToday ? I18nService.t('today', dayData.label) : I18nService.t(dayData.label, dayData.label);
         graphDayLabel.className = isToday
           ? 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30'
           : 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10';
@@ -314,18 +393,35 @@
     const data = e.detail;
     if (!data) return;
 
+    if (data.astronomy) {
+      lastAstronomyData = data.astronomy;
+      if (data.astronomy.sunrise) activeSunrise = data.astronomy.sunrise;
+      if (data.astronomy.sunset) activeSunset = data.astronomy.sunset;
+      if (legendSunrise) legendSunrise.textContent = activeSunrise;
+      if (legendSunset) legendSunset.textContent = activeSunset;
+      if (graphMoonIcon) graphMoonIcon.textContent = data.astronomy.moon_icon || '🌒';
+      if (graphMoonPhase) graphMoonPhase.textContent = I18nService.t(data.astronomy.moon_phase, data.astronomy.moon_phase || 'Waxing Crescent');
+      if (graphMoonIllum) graphMoonIllum.textContent = `${data.astronomy.moon_illumination || 23}% ${I18nService.t('Illumination', 'Illumination')}`;
+    }
+
     if (data.hourlyForecast && Array.isArray(data.hourlyForecast)) {
       hourlyData = data.hourlyForecast.map((h: any) => ({ ...h }));
     }
 
-    if (data.astronomy) {
-      if (legendSunrise) legendSunrise.textContent = data.astronomy.sunrise || '6:07 AM';
-      if (legendSunset) legendSunset.textContent = data.astronomy.sunset || '6:24 PM';
-      if (graphMoonIcon) graphMoonIcon.textContent = data.astronomy.moon_icon || '🌒';
-      if (graphMoonPhase) graphMoonPhase.textContent = data.astronomy.moon_phase || 'Waxing Crescent';
-      if (graphMoonIllum) graphMoonIllum.textContent = `${data.astronomy.moon_illumination || 23}% Illumination`;
-    }
+    renderSplineGraph();
+  });
 
+  // Language change listener
+  window.addEventListener('mausam-language-changed', () => {
+    const root = document.getElementById('hourly-overview-graph-card');
+    if (root) I18nService.translateDocument(root);
+    if (graphDayLabel && isToday) {
+      graphDayLabel.textContent = I18nService.t('today', 'Today');
+    }
+    if (lastAstronomyData) {
+      if (graphMoonPhase) graphMoonPhase.textContent = I18nService.t(lastAstronomyData.moon_phase, lastAstronomyData.moon_phase || 'Waxing Crescent');
+      if (graphMoonIllum) graphMoonIllum.textContent = `${lastAstronomyData.moon_illumination || 23}% ${I18nService.t('Illumination', 'Illumination')}`;
+    }
     renderSplineGraph();
   });
 

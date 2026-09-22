@@ -88,7 +88,16 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     hazardsAlerts: "Meteorological Hazards & Alerts",
     savedLocations: "Saved Locations",
     disasterAlert: "CRITICAL WEATHER DISASTER ALERT",
-    openSOSHub: "Open Disaster Response Hub"
+    openSOSHub: "Open Disaster Response Hub",
+    "Clear Night": "Clear Night",
+    "Clear Sky": "Clear Sky",
+    "Mainly Clear": "Mainly Clear",
+    "Mainly Clear Night": "Mainly Clear Night",
+    "Night Showers": "Night Showers",
+    "Night Drizzle": "Night Drizzle",
+    "Partly Cloudy Night": "Partly Cloudy Night",
+    "Sunny": "Sunny",
+    "Partly Cloudy": "Partly Cloudy"
   },
   hi: {
     appName: "मौसम",
@@ -140,7 +149,16 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     hazardsAlerts: "मौसम संबंधी खतरे और चेतावनियां",
     savedLocations: "सहेजे गए स्थान",
     disasterAlert: "गंभीर मौसम आपदा चेतावनी",
-    openSOSHub: "आपदा प्रतिक्रिया हब खोलें"
+    openSOSHub: "आपदा प्रतिक्रिया हब खोलें",
+    "Clear Night": "साफ रात",
+    "Clear Sky": "साफ आसमान",
+    "Mainly Clear": "मुख्यतः साफ",
+    "Mainly Clear Night": "मुख्यतः साफ रात",
+    "Night Showers": "रात की बौछारें",
+    "Night Drizzle": "रात में बूंदाबांदी",
+    "Partly Cloudy Night": "रात में आंशिक बादल",
+    "Sunny": "धूप",
+    "Partly Cloudy": "आंशिक बादल"
   },
   bn: {
     appName: "মৌসুম",

@@ -1,41 +1,41 @@
 ---
 // src/components/profile/DynamicProfileSelectors.astro
-// Dynamic Multi-Persona Profile Header, Quick Switcher, & Custom Selectors
+// Dynamic Multi-Persona Profile Header, Quick Switcher, Custom Selectors & Targeted AI Suggestion Trigger
 ---
 
-<div class="w-full mb-8" id="dynamic-profile-selectors-root">
+<div class="w-full mb-5" id="dynamic-profile-selectors-root">
   
   <!-- 1. Persona Header Banner (Aesthetic Gradient Border & Badges) -->
-  <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/15 relative overflow-hidden shadow-product mb-6">
+  <div class="glass-panel spotlight-card shimmer-beam-container rounded-2xl p-4 sm:p-5 border border-white/15 relative overflow-hidden shadow-product mb-3.5">
     <!-- Top Accent Gradient Line -->
     <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
 
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
       
       <!-- Icon + Title + Badges -->
-      <div class="flex items-start gap-4">
-        <div id="profile-banner-icon" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 flex items-center justify-center text-2xl shrink-0 shadow-glow-emerald">
+      <div class="flex items-start gap-3 sm:gap-4">
+        <div id="profile-banner-icon" class="w-11 h-11 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 flex items-center justify-center text-xl shrink-0 shadow-glow-emerald framer-spring-hover">
           🌾
         </div>
         <div>
           <!-- Badges Row -->
-          <div class="flex flex-wrap items-center gap-2 mb-1.5" id="profile-banner-badges">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10 uppercase tracking-wider">
+          <div class="flex flex-wrap items-center gap-1.5 mb-1" id="profile-banner-badges">
+            <span data-i18n="personalizedView" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10 uppercase tracking-wider">
               PERSONALIZED VIEW
             </span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
+            <span data-i18n="kisanIntel" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
               KISAN INTEL
             </span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
               Agronomy
             </span>
-            <span id="profile-banner-lang-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <span id="profile-banner-lang-badge" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
               🌐 English
             </span>
           </div>
 
           <!-- Title & Subtitle -->
-          <h2 id="profile-banner-title" class="text-lg sm:text-2xl font-bold text-white tracking-apple-tight">
+          <h2 id="profile-banner-title" class="text-base sm:text-xl font-bold text-white tracking-apple-tight">
             Farmer / Precision Agriculture
           </h2>
           <p id="profile-banner-subtitle" class="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
@@ -45,19 +45,19 @@
       </div>
 
       <!-- Right Action Buttons -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2 shrink-0">
         <button
           type="button"
           id="btn-switch-profile-modal"
-          class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all active-scale cursor-pointer flex items-center gap-1.5 shadow-sm"
+          class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/20 transition-all framer-spring-hover framer-spring-press cursor-pointer flex items-center gap-1.5 shadow-sm"
         >
           <span>⚡</span>
-          <span>Switch Profile</span>
+          <span data-i18n="switchProfile">Switch Profile</span>
         </button>
         <button
           type="button"
           id="btn-profile-settings-tune"
-          class="w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all active-scale cursor-pointer shadow-sm"
+          class="w-8 h-8 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all framer-spring-hover framer-spring-press cursor-pointer shadow-sm"
           title="Fine-tune parameters"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -69,8 +69,8 @@
     </div>
 
     <!-- Quick Switch Pill Strip (12 Personas) -->
-    <div class="flex items-center gap-2 mt-5 pt-4 border-t border-white/10 overflow-x-auto pb-1 no-scrollbar">
-      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1">
+    <div class="flex items-center gap-2 mt-3.5 pt-3 border-t border-white/10 overflow-x-auto pb-1 no-scrollbar">
+      <span data-i18n="quickSwitch" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1">
         QUICK SWITCH:
       </span>
       <div class="flex items-center gap-2" id="quick-switch-pills-container"></div>
@@ -78,13 +78,52 @@
 
   </div>
 
-  <!-- 2. Dynamic Control Groups (e.g. Target Crop & Growth Stage) -->
-  <div id="dynamic-controls-container" class="space-y-4"></div>
+  <!-- 2. Dynamic Control Groups (Rendered dynamically for all 12 personas) -->
+  <div id="dynamic-controls-container" class="space-y-3"></div>
+
+  <!-- 3. Dynamic "Generate AI Suggestion" Bar (Positioned directly below selection options across ALL personas) -->
+  <div
+    id="persona-ai-suggestion-cta-bar"
+    class="mt-3 p-3 sm:p-3.5 rounded-2xl glass-panel spotlight-card shimmer-beam-container border border-emerald-400/30 bg-gradient-to-r from-slate-950/95 via-slate-900/95 to-slate-950/95 shadow-product flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition-all relative overflow-hidden"
+  >
+    <!-- Glowing Top Line -->
+    <div class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-400"></div>
+
+    <!-- Left: Parameter Focus Summary -->
+    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-emerald-500/20 to-cyan-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-sm sm:text-base shrink-0 shadow-glow-emerald framer-spring-hover">
+        🎯
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400" data-i18n="activeTargetFocus">Active Parameter Focus</span>
+          <span id="ai-suggestion-target-badge" class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase">READY</span>
+        </div>
+        <p id="ai-suggestion-target-summary" class="text-xs sm:text-sm font-semibold text-white truncate mt-0.5">
+          Wheat • Sowing Phase
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: High-Impact Generate AI Suggestion CTA Button -->
+    <button
+      type="button"
+      id="btn-generate-persona-ai-suggestion"
+      class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:via-teal-400 hover:to-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(16,185,129,0.35)] hover:shadow-[0_0_35px_rgba(6,182,212,0.5)] transition-all framer-spring-hover framer-spring-press cursor-pointer flex items-center justify-center gap-2 shrink-0 self-stretch sm:self-center"
+      title="Generate targeted AI suggestion for selected parameters"
+    >
+      <span class="text-sm">✨</span>
+      <span id="btn-generate-persona-ai-label" data-i18n="generateAiSuggestion">Generate AI Suggestion</span>
+      <span class="text-xs opacity-75">➔</span>
+    </button>
+  </div>
 
 </div>
 
 <script>
   import { StorageService } from '../../services/storage.service';
+  import { I18nService } from '../../services/i18n.service';
+  import { NetworkService } from '../../services/network.service';
   import { PERSONAS, PERSONA_LIST } from '../../data/personas';
   import { PROFILE_CONFIGS } from '../../data/profileControls';
 
@@ -95,6 +134,10 @@
   const controlsContainer = document.getElementById('dynamic-controls-container');
   const btnSwitchModal = document.getElementById('btn-switch-profile-modal');
   const btnSettingsTune = document.getElementById('btn-profile-settings-tune');
+  const btnGenPersonaAi = document.getElementById('btn-generate-persona-ai-suggestion');
+  const btnGenPersonaAiLabel = document.getElementById('btn-generate-persona-ai-label');
+  const summaryEl = document.getElementById('ai-suggestion-target-summary');
+  const targetBadge = document.getElementById('ai-suggestion-target-badge');
 
   btnSwitchModal?.addEventListener('click', () => {
     window.dispatchEvent(new CustomEvent('mausam-open-profile-settings'));
@@ -104,20 +147,54 @@
     window.dispatchEvent(new CustomEvent('mausam-open-profile-settings'));
   });
 
+  function updateSelectionSummary(personaId: string) {
+    const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
+    const customSettings = StorageService.getProfileCustomSettings(personaId);
+    const isOnline = NetworkService.isOnline();
+
+    if (!config.controls || config.controls.length === 0) {
+      if (summaryEl) summaryEl.textContent = I18nService.t(config.title, config.title);
+      if (targetBadge) targetBadge.textContent = isOnline ? 'READY' : 'OFFLINE';
+      return;
+    }
+
+    const summaryParts: string[] = [];
+    config.controls.forEach(grp => {
+      const selId = customSettings[grp.groupId] || grp.options[0]?.id;
+      const opt = grp.options.find(o => o.id === selId) || grp.options[0];
+      if (opt) {
+        let label = I18nService.t(opt.label, opt.label);
+        if (grp.groupId === 'target_crop') label = I18nService.translateCrop(opt.id);
+        if (grp.groupId === 'growth_stage') label = `${I18nService.translateStage(opt.id)} ${I18nService.t('Phase', 'Phase')}`;
+        summaryParts.push(label);
+      }
+    });
+
+    if (summaryEl) {
+      summaryEl.textContent = summaryParts.join(' • ');
+    }
+    if (targetBadge) {
+      targetBadge.textContent = isOnline ? I18nService.t('READY', 'READY') : I18nService.t('OFFLINE', 'OFFLINE');
+    }
+  }
+
   function renderQuickSwitchPills(activeId: string) {
     if (!quickSwitchContainer) return;
     quickSwitchContainer.innerHTML = '';
 
     PERSONA_LIST.forEach(p => {
       const isSelected = p.id === activeId;
+      const rawName = p.name.split('/')[0].trim();
+      const translatedName = I18nService.t(rawName, rawName);
+
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `px-3 py-1 rounded-full text-xs font-medium transition-all active-scale cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+      btn.className = `px-3.5 py-1.5 rounded-full text-xs transition-all framer-spring-hover framer-spring-press cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
         isSelected
-          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 font-bold shadow-glow-emerald'
-          : 'bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-white border border-white/10'
+          ? 'bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 text-slate-950 font-black shadow-[0_0_20px_rgba(16,185,129,0.5)] border border-emerald-200 ring-2 ring-emerald-400/40 scale-[1.03]'
+          : 'bg-slate-900/70 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 font-medium'
       }`;
-      btn.innerHTML = `<span>${p.icon}</span> <span>${p.name.split('/')[0].trim()}</span>`;
+      btn.innerHTML = `<span>${p.icon}</span> <span>${translatedName}</span>${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span>' : ''}`;
       btn.addEventListener('click', () => {
         StorageService.setActivePersona(p.id);
         renderProfileView(p.id);
@@ -132,33 +209,42 @@
     controlsContainer.innerHTML = '';
 
     const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
-    if (!config.controls || config.controls.length === 0) return;
+    if (!config.controls || config.controls.length === 0) {
+      updateSelectionSummary(personaId);
+      return;
+    }
 
     config.controls.forEach(grp => {
       const groupEl = document.createElement('div');
-      groupEl.className = 'glass-panel rounded-2xl p-4 sm:p-5 border border-white/10';
+      groupEl.className = 'glass-panel spotlight-card rounded-2xl p-3.5 sm:p-4 border border-white/10';
 
       const selectedOptId = StorageService.getProfileCustomSettings(personaId)[grp.groupId] || grp.options[0]?.id;
+      const translatedGrpTitle = I18nService.t(grp.title, grp.title);
+      const translatedGrpSub = I18nService.t(grp.subTitle, grp.subTitle);
 
       let optionsHtml = '';
       if (grp.groupId === 'target_crop') {
         // Grid cards for crops
         optionsHtml = `
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-3">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-2.5">
             ${grp.options.map(opt => {
               const isSel = opt.id === selectedOptId;
+              const label = I18nService.translateCrop(opt.id) || I18nService.t(opt.label, opt.label);
+              const subLabel = opt.subLabel ? I18nService.t(opt.subLabel, opt.subLabel) : '';
+              const badge = opt.badge ? I18nService.t(opt.badge, opt.badge) : '';
+
               return `
-                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn active-scale p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${
+                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn spotlight-card framer-spring-hover framer-spring-press p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border relative overflow-hidden ${
                   isSel
                     ? 'bg-slate-900/90 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)] ring-1 ring-emerald-400/50'
                     : 'bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60'
                 }">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-2xl">${opt.icon || '🌱'}</span>
-                    ${opt.badge ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">${opt.badge}</span>` : ''}
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xl sm:text-2xl">${opt.icon || '🌱'}</span>
+                    ${badge ? `<span class="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">${badge}</span>` : ''}
                   </div>
-                  <div class="font-bold text-sm text-white">${opt.label}</div>
-                  <div class="text-xs text-slate-400 font-normal">${opt.subLabel || ''}</div>
+                  <div class="font-bold text-xs sm:text-sm text-white">${label}</div>
+                  <div class="text-[11px] text-slate-400 font-normal truncate">${subLabel}</div>
                 </button>
               `;
             }).join('')}
@@ -167,17 +253,23 @@
       } else {
         // Horizontal stage pills / selectors
         optionsHtml = `
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2.5">
             ${grp.options.map(opt => {
               const isSel = opt.id === selectedOptId;
+              let label = I18nService.t(opt.label, opt.label);
+              if (grp.groupId === 'growth_stage') {
+                label = `${I18nService.translateStage(opt.id)} ${I18nService.t('Phase', 'Phase')}`;
+              }
+              const subLabel = opt.subLabel ? I18nService.t(opt.subLabel, opt.subLabel) : '';
+
               return `
-                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn active-scale p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border flex flex-col justify-between ${
+                <button type="button" data-group="${grp.groupId}" data-opt="${opt.id}" class="control-opt-btn spotlight-card framer-spring-hover framer-spring-press p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 cursor-pointer border flex flex-col justify-between ${
                   isSel
                     ? 'bg-slate-900/90 border-emerald-400 shadow-glow-emerald ring-1 ring-emerald-400/50'
                     : 'bg-slate-900/40 border-white/10 hover:border-white/20 hover:bg-slate-900/60'
                 }">
-                  <span class="font-bold text-xs ${isSel ? 'text-emerald-300' : 'text-slate-200'}">${opt.label}</span>
-                  <span class="text-[11px] text-slate-400 font-light mt-0.5">${opt.subLabel || ''}</span>
+                  <span class="font-bold text-xs ${isSel ? 'text-emerald-300 font-extrabold' : 'text-slate-200'}">${label}</span>
+                  <span class="text-[10px] text-slate-400 font-light mt-0.5 truncate">${subLabel}</span>
                 </button>
               `;
             }).join('')}
@@ -188,9 +280,9 @@
       groupEl.innerHTML = `
         <div class="flex items-center justify-between px-1">
           <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-            <span>${grp.icon}</span> ${grp.title}
+            <span>${grp.icon}</span> ${translatedGrpTitle}
           </span>
-          <span class="text-xs text-slate-400 font-light">${grp.subTitle}</span>
+          <span class="text-[11px] text-slate-400 font-light">${translatedGrpSub}</span>
         </div>
         ${optionsHtml}
       `;
@@ -202,14 +294,14 @@
           const oId = btn.getAttribute('data-opt') || '';
           StorageService.setProfileCustomSetting(personaId, gId, oId);
           renderControlGroups(personaId);
-          window.dispatchEvent(new CustomEvent('mausam-profile-option-selected', {
-            detail: { personaId, groupId: gId, optionId: oId }
-          }));
+          updateSelectionSummary(personaId);
         });
       });
 
       controlsContainer.appendChild(groupEl);
     });
+
+    updateSelectionSummary(personaId);
   }
 
   function renderProfileView(personaId: string) {
@@ -217,17 +309,113 @@
     const config = PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
 
     if (bannerIcon) bannerIcon.textContent = p.icon;
-    if (bannerTitle) bannerTitle.textContent = config.title;
-    if (bannerSubtitle) bannerSubtitle.textContent = config.subtitle;
+    if (bannerTitle) bannerTitle.textContent = I18nService.t(config.title, config.title);
+    if (bannerSubtitle) bannerSubtitle.textContent = I18nService.t(config.subtitle, config.subtitle);
+
+    // Dynamic Badges
+    const badgesContainer = document.getElementById('profile-banner-badges');
+    if (badgesContainer) {
+      const meta = I18nService.getLanguageMeta();
+      const pView = I18nService.t('personalizedView', 'PERSONALIZED VIEW');
+      const kIntel = I18nService.t('kisanIntel', 'KISAN INTEL');
+      
+      const badgeList = (config.badges || ['Agronomy']).map(b => {
+        const trans = I18nService.t(b, b);
+        return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">${trans}</span>`;
+      }).join(' ');
+
+      badgesContainer.innerHTML = `
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10 uppercase tracking-wider">
+          ${pView}
+        </span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
+          ${kIntel}
+        </span>
+        ${badgeList}
+        <span id="profile-banner-lang-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+          🌐 ${meta.nativeName || meta.name}
+        </span>
+      `;
+    }
 
     renderQuickSwitchPills(personaId);
     renderControlGroups(personaId);
+    updateSelectionSummary(personaId);
   }
+
+  // Handle "Generate AI Suggestion" click
+  btnGenPersonaAi?.addEventListener('click', () => {
+    const personaId = StorageService.getActivePersona();
+    const isOnline = NetworkService.isOnline();
+    const customSettings = StorageService.getProfileCustomSettings(personaId);
+
+    if (btnGenPersonaAiLabel) {
+      btnGenPersonaAiLabel.textContent = isOnline
+        ? I18nService.t('Analyzing parameters...', 'Analyzing parameters...')
+        : I18nService.t('Applying local rules...', 'Applying local rules...');
+    }
+
+    // Broadcast targeted AI suggestion generation request
+    window.dispatchEvent(new CustomEvent('mausam-request-ai-generation', {
+      detail: { personaId, customSettings }
+    }));
+
+    // Scroll smoothly to AI Advisory Panel & highlight
+    const advisoryCard = document.getElementById('ai-advisory-container');
+    if (advisoryCard) {
+      advisoryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      advisoryCard.classList.add('ring-2', 'ring-emerald-400', 'shadow-glow-emerald');
+      setTimeout(() => {
+        advisoryCard.classList.remove('ring-2', 'ring-emerald-400', 'shadow-glow-emerald');
+      }, 1600);
+    }
+
+    setTimeout(() => {
+      if (btnGenPersonaAiLabel) {
+        btnGenPersonaAiLabel.textContent = I18nService.t('✓ AI Suggestion Generated', '✓ AI Suggestion Generated');
+      }
+      setTimeout(() => {
+        if (btnGenPersonaAiLabel) {
+          btnGenPersonaAiLabel.textContent = I18nService.t('generateAiSuggestion', 'Generate AI Suggestion');
+        }
+      }, 1800);
+    }, 450);
+  });
 
   // Listeners
   window.addEventListener('mausam-persona-changed', (e: any) => {
     const pId = e.detail?.personaId || StorageService.getActivePersona();
     renderProfileView(pId);
+  });
+
+  window.addEventListener('mausam-profile-setting-changed', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    const activePersona = StorageService.getActivePersona();
+    if (pId === activePersona) {
+      renderControlGroups(activePersona);
+      updateSelectionSummary(activePersona);
+    }
+  });
+
+  window.addEventListener('mausam-state-synced', (e: any) => {
+    const pId = e.detail?.personaId || StorageService.getActivePersona();
+    const activePersona = StorageService.getActivePersona();
+    if (pId === activePersona) {
+      renderControlGroups(activePersona);
+      updateSelectionSummary(activePersona);
+    }
+  });
+
+  window.addEventListener('mausam-network-status-changed', () => {
+    const activePersona = StorageService.getActivePersona();
+    updateSelectionSummary(activePersona);
+  });
+
+  window.addEventListener('mausam-language-changed', () => {
+    const root = document.getElementById('dynamic-profile-selectors-root');
+    if (root) I18nService.translateDocument(root);
+    const activePersona = StorageService.getActivePersona();
+    renderProfileView(activePersona);
   });
 
   // Init

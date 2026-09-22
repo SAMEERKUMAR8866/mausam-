@@ -1,6 +1,6 @@
 ---
 // src/components/ChatBot.astro
-// Floating Aesthetic Glassmorphism AI Weather & Agronomic Chatbot
+// Floating Aesthetic Glassmorphism AI Weather & Agronomic Chatbot with Offline Intelligence Engine
 ---
 
 <!-- Floating AI Chatbot Container -->
@@ -9,27 +9,28 @@
   <!-- Chat Window Panel (Hidden by default) -->
   <div 
     id="chat-window" 
-    class="pointer-events-auto hidden w-[90vw] sm:w-[400px] h-[540px] max-h-[85vh] bg-slate-950/95 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 mb-4"
+    class="pointer-events-auto hidden w-[90vw] sm:w-[400px] h-[540px] max-h-[85vh] bg-[#0B0F19]/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 mb-4"
   >
     <!-- Top Glowing Gradient Line -->
-    <div class="h-1 w-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
+    <div id="chat-top-glow" class="h-1 w-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500"></div>
 
     <!-- Chat Header -->
-    <div class="px-4 py-3.5 bg-slate-900/80 border-b border-white/10 flex items-center justify-between">
+    <div class="px-4 py-3.5 bg-[#0F172A]/90 border-b border-white/[0.08] flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 p-[1.5px] flex items-center justify-center shadow-glow-emerald">
-          <div class="w-full h-full bg-slate-950 rounded-full flex items-center justify-center text-xs">
+        <div id="chat-header-avatar" class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 p-[1.5px] flex items-center justify-center shadow-glow-emerald">
+          <div class="w-full h-full bg-[#0B0F19] rounded-full flex items-center justify-center text-xs">
             ✨
           </div>
-          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-950 rounded-full animate-pulse"></span>
+          <span id="chat-status-dot" class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#0B0F19] rounded-full animate-pulse"></span>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
             <h3 class="text-xs font-bold text-white tracking-tight">Mausam AI Assistant</h3>
-            <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">Gemini 2.5</span>
+            <span id="chat-model-badge" class="text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">Gemini 2.5</span>
           </div>
           <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1" id="chat-header-location">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Live Micro-Climate Advisor
+            <span id="chat-sub-dot" class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> 
+            <span id="chat-sub-text">Live Micro-Climate Advisor</span>
           </p>
         </div>
       </div>
@@ -38,7 +39,7 @@
         <!-- Clear chat -->
         <button 
           id="chat-clear-btn" 
-          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center text-xs" 
+          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-[#1E293B] transition-colors flex items-center justify-center text-xs cursor-pointer" 
           title="Clear Conversation"
         >
           🗑️
@@ -46,7 +47,7 @@
         <!-- Close / Minimize -->
         <button 
           id="chat-close-btn" 
-          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center justify-center text-xs" 
+          class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-[#1E293B] transition-colors flex items-center justify-center text-xs cursor-pointer" 
           title="Minimize Chat"
         >
           ✕
@@ -54,21 +55,30 @@
       </div>
     </div>
 
+    <!-- Offline Warning Banner Inside Chat (Shown when offline) -->
+    <div id="chat-offline-banner" class="hidden px-3.5 py-2 bg-amber-950/80 border-b border-amber-500/30 flex items-center justify-between text-[11px] text-amber-200">
+      <div class="flex items-center gap-2 truncate">
+        <span class="text-xs shrink-0">📡</span>
+        <span class="truncate">Offline Mode: Live LLM paused. Responding with local rules & survival guides.</span>
+      </div>
+      <span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-amber-900/60 text-amber-300 shrink-0">CACHED</span>
+    </div>
+
     <!-- Quick Prompts Scrollbar -->
-    <div class="px-3 py-2 bg-slate-900/40 border-b border-white/5 overflow-x-auto scrollbar-none flex items-center gap-1.5">
-      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 text-[10px] font-medium border border-white/10 hover:border-emerald-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Wheat fertilizer and urea dosage today?">
+    <div class="px-3 py-2 bg-[#0F172A]/50 border-b border-white/[0.06] overflow-x-auto scrollbar-none flex items-center gap-1.5">
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-[#1E293B]/80 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 text-[10px] font-medium border border-white/[0.08] hover:border-emerald-400/40 transition-all whitespace-nowrap active-scale cursor-pointer" data-prompt="Wheat fertilizer and urea dosage today?">
         🌾 Wheat Fertilizer
       </button>
-      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 text-[10px] font-medium border border-white/10 hover:border-cyan-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Check aviation cloud ceiling and crosswinds">
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-[#1E293B]/80 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 text-[10px] font-medium border border-white/[0.08] hover:border-cyan-400/40 transition-all whitespace-nowrap active-scale cursor-pointer" data-prompt="Check aviation cloud ceiling and crosswinds">
         ✈️ Flight Ceiling
       </button>
-      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 text-[10px] font-medium border border-white/10 hover:border-blue-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Marine swell height and tide status?">
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-[#1E293B]/80 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 text-[10px] font-medium border border-white/[0.08] hover:border-blue-400/40 transition-all whitespace-nowrap active-scale cursor-pointer" data-prompt="Marine swell height and tide status?">
         🚢 Swell & Tides
       </button>
-      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 text-[10px] font-medium border border-white/10 hover:border-amber-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Highway transit and rain nowcasting status?">
-        🚚 Fleet Transit
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-[#1E293B]/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 text-[10px] font-medium border border-white/[0.08] hover:border-amber-400/40 transition-all whitespace-nowrap active-scale cursor-pointer" data-prompt="Cyclone, flood, or heavy rain survival advice?">
+        🛡️ Disaster Manuals
       </button>
-      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-yellow-500/20 text-slate-300 hover:text-yellow-300 text-[10px] font-medium border border-white/10 hover:border-yellow-400/40 transition-all whitespace-nowrap active-scale" data-prompt="Solar GHI irradiance & wind power output?">
+      <button class="quick-prompt-btn px-2.5 py-1 rounded-full bg-[#1E293B]/80 hover:bg-yellow-500/20 text-slate-300 hover:text-yellow-300 text-[10px] font-medium border border-white/[0.08] hover:border-yellow-400/40 transition-all whitespace-nowrap active-scale cursor-pointer" data-prompt="Solar GHI irradiance & wind power output?">
         ⚡ Solar & Grid
       </button>
     </div>
@@ -81,10 +91,10 @@
         <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5">
           ✨
         </div>
-        <div class="bg-slate-900 border border-white/10 rounded-2xl rounded-tl-sm p-3 text-slate-200 leading-relaxed shadow-sm">
+        <div class="bg-[#1E293B]/90 border border-white/[0.08] rounded-2xl rounded-tl-sm p-3 text-slate-200 leading-relaxed shadow-sm">
           <p class="font-semibold text-emerald-400 mb-1">Namaste! I am Mausam AI.</p>
           <p class="text-slate-300">
-            Ask me anything about real-time weather, crop disease prevention, irrigation cycles, aviation ceiling, maritime swells, or highway logistics!
+            Ask me anything about real-time weather, crop disease prevention, irrigation cycles, aviation ceiling, maritime swells, or offline survival manuals!
           </p>
         </div>
       </div>
@@ -92,7 +102,7 @@
     </div>
 
     <!-- Typing Indicator (Hidden by default) -->
-    <div id="chat-typing" class="hidden px-4 py-2 bg-slate-900/50 flex items-center gap-2 text-[11px] text-slate-400">
+    <div id="chat-typing" class="hidden px-4 py-2 bg-[#0F172A]/50 flex items-center gap-2 text-[11px] text-slate-400">
       <div class="flex items-center gap-1">
         <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></span>
@@ -102,13 +112,13 @@
     </div>
 
     <!-- Chat Input Area -->
-    <form id="chat-form" class="p-3 bg-slate-900/90 border-t border-white/10 flex items-center gap-2">
+    <form id="chat-form" class="p-3 bg-[#0F172A]/90 border-t border-white/[0.08] flex items-center gap-2">
       <input 
         type="text" 
         id="chat-input" 
-        placeholder="Ask about crops, flights, winds, or weather..." 
+        placeholder="Ask about crops, flights, survival, or weather..." 
         autocomplete="off"
-        class="flex-1 bg-slate-950/90 text-white placeholder:text-slate-400 text-xs px-3.5 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/40 transition-all"
+        class="flex-1 bg-[#0B0F19]/90 text-white placeholder:text-slate-400 text-xs px-3.5 py-2.5 rounded-xl border border-white/[0.08] focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/40 transition-all"
       />
       <button 
         type="submit" 
@@ -130,18 +140,22 @@
     title="Open Mausam AI Assistant"
   >
     <!-- Background Glass Disc -->
-    <div class="w-full h-full rounded-full bg-slate-950 group-hover:bg-slate-900 transition-colors flex items-center justify-center text-white relative">
+    <div id="chat-fab-disc" class="w-full h-full rounded-full bg-[#0B0F19] group-hover:bg-[#1E293B] transition-colors flex items-center justify-center text-white relative">
       <span class="text-xl group-hover:scale-110 transition-transform">✨</span>
       <!-- Pulsing Dot -->
-      <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping"></span>
-      <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950"></span>
+      <span id="chat-fab-ping" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0B0F19] animate-ping"></span>
+      <span id="chat-fab-dot" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0B0F19]"></span>
     </div>
   </button>
 
 </div>
 
 <script>
-  // Chatbot Client Logic
+  import { NetworkService } from '../services/network.service';
+  import { StorageService } from '../services/storage.service';
+  import { I18nService } from '../services/i18n.service';
+  import { SURVIVAL_GUIDES } from '../services/survival-guides.service';
+
   const fabTrigger = document.getElementById('chat-fab-trigger');
   const chatWindow = document.getElementById('chat-window');
   const chatCloseBtn = document.getElementById('chat-close-btn');
@@ -151,9 +165,40 @@
   const chatMessages = document.getElementById('chat-messages');
   const chatTyping = document.getElementById('chat-typing');
   const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+  const chatOfflineBanner = document.getElementById('chat-offline-banner');
+  const chatModelBadge = document.getElementById('chat-model-badge');
+  const chatSubText = document.getElementById('chat-sub-text');
+  const chatFabPing = document.getElementById('chat-fab-ping');
+  const chatFabDot = document.getElementById('chat-fab-dot');
+  const chatStatusDot = document.getElementById('chat-status-dot');
 
   let isOpen = false;
   let conversationHistory: Array<{ role: 'user' | 'model'; content: string }> = [];
+
+  function updateChatOnlineState() {
+    const isOnline = NetworkService.isOnline();
+    if (isOnline) {
+      chatOfflineBanner?.classList.add('hidden');
+      if (chatModelBadge) {
+        chatModelBadge.textContent = 'Gemini 2.5';
+        chatModelBadge.className = 'text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30';
+      }
+      if (chatSubText) chatSubText.textContent = I18nService.t('Live Micro-Climate Advisor', 'Live Micro-Climate Advisor');
+      if (chatFabPing) chatFabPing.className = 'absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping';
+      if (chatFabDot) chatFabDot.className = 'absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950';
+      if (chatStatusDot) chatStatusDot.className = 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-950 rounded-full animate-pulse';
+    } else {
+      chatOfflineBanner?.classList.remove('hidden');
+      if (chatModelBadge) {
+        chatModelBadge.textContent = I18nService.t('OFFLINE RULES', 'OFFLINE RULES');
+        chatModelBadge.className = 'text-[9px] font-semibold px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+      }
+      if (chatSubText) chatSubText.textContent = I18nService.t('Offline Rules & Survival Advisor', 'Offline Rules & Survival Advisor');
+      if (chatFabPing) chatFabPing.className = 'absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950 animate-ping';
+      if (chatFabDot) chatFabDot.className = 'absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950';
+      if (chatStatusDot) chatStatusDot.className = 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-amber-400 border-2 border-slate-950 rounded-full';
+    }
+  }
 
   // Toggle Chat Window
   function toggleChat(open?: boolean) {
@@ -221,6 +266,42 @@
       .replace(/\n/g, '<br/>');
   }
 
+  function generateOfflineResponse(text: string): string {
+    const t = text.toLowerCase();
+    const cachedWeather = StorageService.getLastWeatherData();
+    const tempStr = cachedWeather?.current?.temp_c ? `${cachedWeather.current.temp_c}°C` : '29.6°C';
+    const condStr = cachedWeather?.current?.condition?.text || 'Partly Cloudy';
+    const locStr = cachedWeather?.location?.name || 'Your area';
+
+    if (t.includes('cyclone') || t.includes('wind') || t.includes('gale')) {
+      const guide = SURVIVAL_GUIDES.find(g => g.id === 'cyclone') || SURVIVAL_GUIDES[0];
+      return `**${guide.title} (Offline Protocol)**\n\n- **Do:** ${guide.dos.join('\n- ')}\n\n- **Avoid:** ${guide.donts.join('\n- ')}\n\n*(Cached telemetry: ${locStr} is currently ${tempStr}, ${condStr})*`;
+    }
+
+    if (t.includes('flood') || t.includes('rain') || t.includes('water')) {
+      const guide = SURVIVAL_GUIDES.find(g => g.id === 'flood') || SURVIVAL_GUIDES[1];
+      return `**${guide.title} (Offline Protocol)**\n\n- **Do:** ${guide.dos.join('\n- ')}\n\n- **Avoid:** ${guide.donts.join('\n- ')}\n\n*Emergency SOS speed dial is ready via the SOS Hub.*`;
+    }
+
+    if (t.includes('wheat') || t.includes('crop') || t.includes('fertilizer') || t.includes('urea') || t.includes('spray')) {
+      return `**Agricultural Advisory (Offline Cached Rules)**\n\n- Current cached temperature: **${tempStr}** (${condStr}).\n- **Recommendation:** Maintain optimal soil moisture. In case of forecasted rainfall, postpone foliar urea spraying to prevent nutrient wash-off. Inspect drainage ditches.`;
+    }
+
+    if (t.includes('flight') || t.includes('ceiling') || t.includes('aviation') || t.includes('crosswind')) {
+      return `**Aviation Operations (Offline Cached Telemetry)**\n\n- Location: **${locStr}**\n- Temperature: **${tempStr}** | Sky: **${condStr}**\n- Visibility is nominal based on last cached telemetry reading. Confirm runway visual range with local ATC once reconnected.`;
+    }
+
+    if (t.includes('marine') || t.includes('swell') || t.includes('tide') || t.includes('boat')) {
+      return `**Maritime Safety Advisory (Offline Rules)**\n\n- Small craft advisories recommend staying within coastal harbor limits if barometric pressure drops rapidly.\n- Ensure VHF marine radio Channel 16 is monitored and emergency life jackets are equipped.`;
+    }
+
+    if (t.includes('solar') || t.includes('irradiance') || t.includes('grid')) {
+      return `**Renewable Energy Intel (Offline Data)**\n\n- Expected daytime irradiance based on nominal seasonal spline curves.\n- Temperature: **${tempStr}**.\n- Maintain panel cleaning cycles during dry spells.`;
+    }
+
+    return `**Offline Meteorological Intel (0 KB Data Usage)**\n\n- **Location:** ${locStr}\n- **Cached Reading:** ${tempStr}, ${condStr}\n- **Network Status:** Offline (Live Gemini AI paused).\n- Offline survival manuals, SOS BLE mesh beacons, and saved locations remain 100% active.`;
+  }
+
   async function sendMessage(text: string) {
     if (!text) return;
     if (chatInput) chatInput.value = '';
@@ -233,11 +314,25 @@
     if (chatTyping) chatTyping.classList.remove('hidden');
     scrollToBottom();
 
-    // Context metadata
-    const activeLoc = localStorage.getItem('mausam_location_display') || 'Greater Noida';
-    const activePersona = localStorage.getItem('mausam_persona') || 'agriculture';
-    const activeCrop = localStorage.getItem('mausam_farmer_crop') || 'Wheat';
-    const activeStage = localStorage.getItem('mausam_farmer_stage') || 'Vegetative';
+    // Check offline state
+    const isOnline = NetworkService.isOnline();
+    if (!isOnline) {
+      setTimeout(() => {
+        if (chatTyping) chatTyping.classList.add('hidden');
+        const offlineReply = generateOfflineResponse(text);
+        conversationHistory.push({ role: 'model', content: offlineReply });
+        appendMessageBubble('model', offlineReply);
+        scrollToBottom();
+      }, 400);
+      return;
+    }
+
+    // Context metadata for live mode
+    const activePersona = StorageService.getActivePersona();
+    const activeLoc = StorageService.getLastLocation() || 'Greater Noida';
+    const customSettings = StorageService.getProfileCustomSettings(activePersona);
+    const activeCrop = customSettings.target_crop || customSettings.crop || 'Wheat';
+    const activeStage = customSettings.growth_stage || customSettings.stage || 'Sowing';
 
     try {
       const res = await fetch('/api/chat', {
@@ -262,7 +357,8 @@
     } catch (err) {
       console.error('Chat error:', err);
       if (chatTyping) chatTyping.classList.add('hidden');
-      appendMessageBubble('model', 'I am currently responding with cached weather telemetry. Conditions are nominal.');
+      const fallbackReply = generateOfflineResponse(text);
+      appendMessageBubble('model', fallbackReply);
     }
 
     scrollToBottom();
@@ -306,4 +402,19 @@
       toggleChat(false);
     }
   });
+
+  window.addEventListener('mausam-open-chatbot', () => {
+    toggleChat(true);
+  });
+
+  window.addEventListener('online', updateChatOnlineState);
+  window.addEventListener('offline', updateChatOnlineState);
+  window.addEventListener('mausam-network-status-changed', updateChatOnlineState);
+  window.addEventListener('mausam-language-changed', () => {
+    const chat = document.getElementById('chat-window');
+    if (chat) I18nService.translateDocument(chat);
+    updateChatOnlineState();
+  });
+
+  updateChatOnlineState();
 </script>

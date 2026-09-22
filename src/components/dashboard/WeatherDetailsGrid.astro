@@ -9,15 +9,15 @@
     <div class="flex items-center gap-2">
       <span class="text-lg">🔬</span>
       <div>
-        <h3 class="text-sm sm:text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
+        <h3 data-i18n="diagnostics" class="text-sm sm:text-base font-bold text-white tracking-apple-tight flex items-center gap-2">
           Comprehensive Meteorological Diagnostics
         </h3>
-        <p class="text-xs text-slate-400 font-light mt-0.5">
+        <p data-i18n="diagnosticsSub" class="text-xs text-slate-400 font-light mt-0.5">
           Real-time high-fidelity telemetry, gauges, vector compasses, and atmospheric indices
         </p>
       </div>
     </div>
-    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-900/80 border border-white/10 text-slate-300 hidden sm:inline">
+    <span data-i18n="eightSensors" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-900/80 border border-white/10 text-slate-300 hidden sm:inline">
       8 Sensor Metrics
     </span>
   </div>
@@ -26,12 +26,12 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     
     <!-- 1. Temperature Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-temp spotlight-card framer-spring-hover framer-spring-press animate-enter-1 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>🌡️</span> TEMPERATURE
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">🌡️</span> <span data-i18n="tempUpper">TEMPERATURE</span>
         </span>
-        <span id="diag-temp-trend-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+        <span id="diag-temp-trend-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 shadow-sm transition-all duration-300">
           Steady
         </span>
       </div>
@@ -39,19 +39,23 @@
         <div id="diag-temp-val" class="text-3xl sm:text-4xl font-extrabold text-white tracking-apple-tight">
           30°C
         </div>
-        <p id="diag-temp-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Micro-visual thermal gradient range -->
+        <div class="w-full bg-slate-950/70 rounded-full h-1.5 overflow-hidden my-2.5 relative border border-white/5">
+          <div class="spectrum-bar-thermal h-full rounded-full w-3/5"></div>
+        </div>
+        <p id="diag-temp-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           Temperatures holding steady around seasonal averages
         </p>
       </div>
     </div>
 
     <!-- 2. Feels Like Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-feels spotlight-card framer-spring-hover framer-spring-press animate-enter-2 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>🔥</span> FEELS LIKE
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">🔥</span> <span data-i18n="feelsLikeUpper">FEELS LIKE</span>
         </span>
-        <span id="diag-feels-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
+        <span id="diag-feels-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 shadow-sm transition-all duration-300">
           Slightly Warm
         </span>
       </div>
@@ -59,19 +63,23 @@
         <div id="diag-feels-val" class="text-3xl sm:text-4xl font-extrabold text-white tracking-apple-tight">
           34°C
         </div>
-        <p id="diag-feels-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Micro-visual sensation bar -->
+        <div class="w-full bg-slate-950/70 rounded-full h-1.5 overflow-hidden my-2.5 relative border border-white/5">
+          <div class="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 h-full rounded-full w-2/3"></div>
+        </div>
+        <p id="diag-feels-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           Feels like 34° | Temp 30° — Slightly Warm
         </p>
       </div>
     </div>
 
     <!-- 3. Cloud Cover & Ceiling Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-cloud spotlight-card framer-spring-hover framer-spring-press animate-enter-3 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>☁️</span> CLOUD COVER
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">☁️</span> <span data-i18n="cloudCoverUpper">CLOUD COVER</span>
         </span>
-        <span id="diag-ceiling-badge" class="text-[10px] text-slate-400 font-medium">
+        <span id="diag-ceiling-badge" class="text-[10px] font-semibold text-slate-300 px-2.5 py-0.5 rounded-full bg-slate-900/80 border border-white/10">
           Ceiling: 5,400 ft
         </span>
       </div>
@@ -79,16 +87,16 @@
         <!-- Circular Mini Gauge -->
         <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
           <svg class="w-12 h-12 -rotate-90">
-            <circle cx="24" cy="24" r="20" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent"/>
-            <circle id="diag-cloud-circle" cx="24" cy="24" r="20" stroke="#38bdf8" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="81.6" stroke-linecap="round" fill="transparent"/>
+            <circle cx="24" cy="24" r="20" stroke="rgba(255,255,255,0.08)" stroke-width="4" fill="transparent"/>
+            <circle id="diag-cloud-circle" cx="24" cy="24" r="20" stroke="#38bdf8" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="81.6" stroke-linecap="round" fill="transparent" class="transition-all duration-700"/>
           </svg>
           <span class="text-xs">☁️</span>
         </div>
-        <div>
-          <div id="diag-cloud-val" class="text-2xl sm:text-3xl font-bold text-white tracking-apple-tight">
+        <div class="min-w-0">
+          <div id="diag-cloud-val" class="text-2xl sm:text-3xl font-extrabold text-white tracking-apple-tight">
             35%
           </div>
-          <div id="diag-cloud-desc" class="text-xs text-slate-300">
+          <div id="diag-cloud-desc" class="text-xs text-slate-300 truncate">
             Scattered Clouds (35%)
           </div>
         </div>
@@ -96,12 +104,12 @@
     </div>
 
     <!-- 4. Precipitation Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-precip spotlight-card framer-spring-hover framer-spring-press animate-enter-4 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>💧</span> PRECIPITATION
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">💧</span> <span data-i18n="precipitationUpper">PRECIPITATION</span>
         </span>
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+        <span data-i18n="forecast24h" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 shadow-sm transition-all duration-300">
           24h Forecast
         </span>
       </div>
@@ -111,45 +119,52 @@
             0.09 cm
           </div>
         </div>
-        <p id="diag-precip-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Micro-visual precipitation volume bar -->
+        <div class="w-full bg-slate-950/70 rounded-full h-1.5 overflow-hidden my-2.5 relative border border-white/5">
+          <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full w-1/4"></div>
+        </div>
+        <p id="diag-precip-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           (0.9 mm expected)
         </p>
       </div>
     </div>
 
     <!-- 5. Wind & Gusts Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-wind spotlight-card framer-spring-hover framer-spring-press animate-enter-5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>💨</span> WIND & GUSTS
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">💨</span> <span data-i18n="windGustsUpper">WIND & GUSTS</span>
         </span>
-        <span id="diag-beaufort-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-white/10">
+        <span id="diag-beaufort-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-400/30 shadow-sm transition-all duration-300">
           Force 1 - Light Air
         </span>
       </div>
       <div>
-        <div class="flex items-center gap-2">
-          <!-- Wind Direction Compass Needle -->
-          <div id="diag-wind-compass" class="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 text-xs transition-transform duration-500">
-            ➤
+        <div class="flex items-center gap-3">
+          <!-- Compass Bezel with Rotating Needle -->
+          <div class="relative w-9 h-9 rounded-full bg-slate-950/90 border border-teal-400/30 flex items-center justify-center shrink-0 shadow-inner">
+            <span class="absolute text-[7px] text-slate-400 font-bold top-0.5">N</span>
+            <div id="diag-wind-compass" class="w-5 h-5 flex items-center justify-center text-teal-300 text-xs font-bold transition-transform duration-700">
+              ➤
+            </div>
           </div>
-          <div id="diag-wind-speed" class="text-2xl sm:text-3xl font-extrabold text-white tracking-apple-tight">
+          <div id="diag-wind-speed" class="text-2xl sm:text-3xl font-extrabold text-white tracking-apple-tight truncate">
             2.6 kph ESE
           </div>
         </div>
-        <p id="diag-wind-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <p id="diag-wind-desc" class="text-xs text-slate-300 mt-2.5 border-t border-white/10 pt-2 font-normal leading-relaxed">
           Gusts up to 3.8 kph • Minimal turbulence
         </p>
       </div>
     </div>
 
     <!-- 6. UV Index Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-uv spotlight-card framer-spring-hover framer-spring-press animate-enter-6 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>☀️</span> UV INDEX
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">☀️</span> <span data-i18n="uvIndexUpper">UV INDEX</span>
         </span>
-        <span id="diag-uv-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
+        <span id="diag-uv-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 shadow-sm transition-all duration-300">
           0 Moderate
         </span>
       </div>
@@ -157,19 +172,23 @@
         <div id="diag-uv-val" class="text-3xl sm:text-4xl font-extrabold text-white tracking-apple-tight">
           0 UVI
         </div>
-        <p id="diag-uv-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Apple Weather UV Spectrum Bar -->
+        <div class="w-full spectrum-bar-uv rounded-full h-1.5 my-2.5 relative border border-white/5">
+          <div class="absolute -top-1 left-[15%] w-3.5 h-3.5 rounded-full bg-white spectrum-pin-dot border border-slate-900"></div>
+        </div>
+        <p id="diag-uv-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           Peak hazard window: 11:30 AM - 3:00 PM
         </p>
       </div>
     </div>
 
     <!-- 7. Atmospheric Pressure Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-pressure spotlight-card framer-spring-hover framer-spring-press animate-enter-7 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>⏱️</span> ATMOSPHERIC PRESSURE
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">⏱️</span> <span data-i18n="pressureUpper">ATMOSPHERIC PRESSURE</span>
         </span>
-        <span id="diag-pressure-trend" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+        <span id="diag-pressure-trend" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shadow-sm transition-all duration-300">
           Stable
         </span>
       </div>
@@ -177,19 +196,23 @@
         <div id="diag-pressure-val" class="text-3xl sm:text-4xl font-extrabold text-white tracking-apple-tight">
           1012 hPa
         </div>
-        <p id="diag-pressure-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Micro-visual Barometric Spectrum -->
+        <div class="w-full spectrum-bar-pressure rounded-full h-1.5 my-2.5 relative border border-white/5">
+          <div class="absolute -top-1 left-[55%] w-3.5 h-3.5 rounded-full bg-white spectrum-pin-dot border border-slate-900"></div>
+        </div>
+        <p id="diag-pressure-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           Barometric trend stable • No cyclone drop detected
         </p>
       </div>
     </div>
 
     <!-- 8. Air Quality (AQI) Card -->
-    <div class="glass-card-interactive rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 shadow-glass">
+    <div class="glass-card-interactive card-tint-aqi spotlight-card framer-spring-hover framer-spring-press animate-enter-8 rounded-2xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
       <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>🍃</span> AIR QUALITY (AQI)
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+          <span class="text-sm">🍃</span> <span data-i18n="aqiUpper">AIR QUALITY (AQI)</span>
         </span>
-        <span id="diag-aqi-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+        <span id="diag-aqi-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shadow-sm transition-all duration-300">
           Good
         </span>
       </div>
@@ -197,7 +220,11 @@
         <div id="diag-aqi-val" class="text-3xl sm:text-4xl font-extrabold text-white tracking-apple-tight">
           48 AQI
         </div>
-        <p id="diag-aqi-desc" class="text-xs text-slate-300 mt-2 border-t border-white/10 pt-2 font-normal leading-relaxed">
+        <!-- Apple Weather AQI Spectrum Bar -->
+        <div class="w-full spectrum-bar-aqi rounded-full h-1.5 my-2.5 relative border border-white/5">
+          <div class="absolute -top-1 left-[25%] w-3.5 h-3.5 rounded-full bg-white spectrum-pin-dot border border-slate-900"></div>
+        </div>
+        <p id="diag-aqi-desc" class="text-xs text-slate-300 border-t border-white/10 pt-2 font-normal leading-relaxed">
           PM2.5: 12.4 µg/m³ • PM10: 22.8 µg/m³
         </p>
       </div>
@@ -207,9 +234,13 @@
 </div>
 
 <script>
-  window.addEventListener('mausam-weather-updated', (e: any) => {
-    const data = e.detail;
+  import { I18nService } from '../../services/i18n.service';
+
+  let lastWeatherDetailData: any = null;
+
+  function renderDiagnostics(data: any) {
     if (!data) return;
+    lastWeatherDetailData = data;
 
     const diag = data.details;
     if (diag) {
@@ -218,19 +249,38 @@
       const tempTrend = document.getElementById('diag-temp-trend-badge');
 
       if (tempVal) tempVal.textContent = `${diag.temp_current_c}°C`;
-      if (tempDesc) tempDesc.textContent = diag.temp_trend_desc;
-      if (tempTrend) tempTrend.textContent = diag.temp_trend;
+      if (tempDesc) tempDesc.textContent = I18nService.t(diag.temp_trend_desc, diag.temp_trend_desc);
+      if (tempTrend) tempTrend.textContent = I18nService.t(diag.temp_trend, diag.temp_trend);
 
       const feelsVal = document.getElementById('diag-feels-val');
       const feelsDesc = document.getElementById('diag-feels-desc');
+      const feelsBadge = document.getElementById('diag-feels-badge');
       if (feelsVal) feelsVal.textContent = `${Math.round(diag.feels_like_c)}°C`;
-      if (feelsDesc) feelsDesc.textContent = diag.feels_like_desc;
+      
+      const feelsCategory = diag.feels_like_category || (diag.feels_like_c > 32 ? 'Slightly Warm' : 'Comfortable');
+      const transFeelsCat = I18nService.t(feelsCategory, feelsCategory);
+      if (feelsBadge) feelsBadge.textContent = transFeelsCat;
+
+      if (feelsDesc) {
+        const feelsWord = I18nService.t('feelsLike', 'Feels like');
+        const tempWord = I18nService.t('temperature', 'Temp');
+        feelsDesc.textContent = `${feelsWord} ${Math.round(diag.feels_like_c)}° | ${tempWord} ${diag.temp_current_c}° — ${transFeelsCat}`;
+      }
 
       const cloudVal = document.getElementById('diag-cloud-val');
       const cloudDesc = document.getElementById('diag-cloud-desc');
       const cloudCircle = document.getElementById('diag-cloud-circle');
+      const ceilingBadge = document.getElementById('diag-ceiling-badge');
+
       if (cloudVal) cloudVal.textContent = `${diag.cloud_cover_pct}%`;
-      if (cloudDesc) cloudDesc.textContent = diag.cloud_cover_desc;
+      if (cloudDesc) {
+        const rawCover = diag.cloud_cover_pct > 60 ? 'Overcast' : diag.cloud_cover_pct > 20 ? 'Scattered Clouds' : 'Clear Sky';
+        const transCover = I18nService.t(rawCover, rawCover);
+        cloudDesc.textContent = `${transCover} (${diag.cloud_cover_pct}%)`;
+      }
+      if (ceilingBadge) {
+        ceilingBadge.textContent = `${I18nService.t('Ceiling', 'Ceiling')}: 5,400 ft`;
+      }
       if (cloudCircle) {
         const offset = 125.6 - (125.6 * (diag.cloud_cover_pct / 100));
         cloudCircle.setAttribute('stroke-dashoffset', String(offset));
@@ -239,31 +289,64 @@
       const precipCm = document.getElementById('diag-precip-cm');
       const precipDesc = document.getElementById('diag-precip-desc');
       if (precipCm) precipCm.textContent = diag.precip_24h_cm;
-      if (precipDesc) precipDesc.textContent = `(${diag.precip_24h_mm} mm expected)`;
+      if (precipDesc) {
+        const expWord = I18nService.t('expected', 'expected');
+        precipDesc.textContent = `(${diag.precip_24h_mm} mm ${expWord})`;
+      }
 
       const windSpeed = document.getElementById('diag-wind-speed');
       const windDesc = document.getElementById('diag-wind-desc');
       const windCompass = document.getElementById('diag-wind-compass');
       const beaufortBadge = document.getElementById('diag-beaufort-badge');
-      if (windSpeed) windSpeed.textContent = `${diag.wind_kph} kph ${diag.wind_dir}`;
-      if (windDesc) windDesc.textContent = `Gusts up to ${diag.wind_gust_kph} kph • ${diag.beaufort_scale}`;
+      const transWindDir = I18nService.translateWindDir(diag.wind_dir);
+      const transBeaufort = I18nService.t(diag.beaufort_scale, diag.beaufort_scale);
+
+      if (windSpeed) windSpeed.textContent = `${diag.wind_kph} kph ${transWindDir}`;
+      if (windDesc) {
+        const gustsWord = I18nService.t('Gusts up to', 'Gusts up to');
+        const turbWord = I18nService.t('Minimal turbulence', 'Minimal turbulence');
+        windDesc.textContent = `${gustsWord} ${diag.wind_gust_kph} kph • ${turbWord}`;
+      }
       if (windCompass) windCompass.style.transform = `rotate(${diag.wind_deg}deg)`;
-      if (beaufortBadge) beaufortBadge.textContent = diag.beaufort_scale;
+      if (beaufortBadge) beaufortBadge.textContent = transBeaufort;
 
       const uvVal = document.getElementById('diag-uv-val');
       const uvBadge = document.getElementById('diag-uv-badge');
+      const uvDesc = document.getElementById('diag-uv-desc');
+      const transUvCat = I18nService.t(diag.uv_category, diag.uv_category);
+
       if (uvVal) uvVal.textContent = `${diag.uv_index} UVI`;
-      if (uvBadge) uvBadge.textContent = diag.uv_category;
+      if (uvBadge) uvBadge.textContent = `${diag.uv_index} ${transUvCat}`;
+      if (uvDesc) uvDesc.textContent = I18nService.t('Peak hazard window: 11:30 AM - 3:00 PM', 'Peak hazard window: 11:30 AM - 3:00 PM');
 
       const pressureVal = document.getElementById('diag-pressure-val');
-      if (pressureVal) pressureVal.textContent = `${data.current.pressure_mb || 1012} hPa`;
+      const pressureTrend = document.getElementById('diag-pressure-trend');
+      const pressureDesc = document.getElementById('diag-pressure-desc');
+
+      if (pressureVal) pressureVal.textContent = `${data.current?.pressure_mb || 1012} hPa`;
+      if (pressureTrend) pressureTrend.textContent = I18nService.t('Stable', 'Stable');
+      if (pressureDesc) pressureDesc.textContent = I18nService.t('Barometric trend stable • No cyclone drop detected');
 
       const aqiVal = document.getElementById('diag-aqi-val');
       const aqiDesc = document.getElementById('diag-aqi-desc');
       const aqiBadge = document.getElementById('diag-aqi-badge');
+      const transAqi = I18nService.t(diag.aqi_status, diag.aqi_status);
+
       if (aqiVal) aqiVal.textContent = `${diag.aqi_index} AQI`;
       if (aqiDesc) aqiDesc.textContent = `PM2.5: ${diag.aqi_pm25} µg/m³ • PM10: ${diag.aqi_pm10} µg/m³`;
-      if (aqiBadge) aqiBadge.textContent = diag.aqi_status;
+      if (aqiBadge) aqiBadge.textContent = transAqi;
+    }
+  }
+
+  window.addEventListener('mausam-weather-updated', (e: any) => {
+    renderDiagnostics(e.detail);
+  });
+
+  window.addEventListener('mausam-language-changed', () => {
+    const root = document.getElementById('weather-diagnostics-section');
+    if (root) I18nService.translateDocument(root);
+    if (lastWeatherDetailData) {
+      renderDiagnostics(lastWeatherDetailData);
     }
   });
 </script>

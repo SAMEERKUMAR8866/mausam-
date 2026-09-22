@@ -386,3 +386,297 @@ export const PROFILE_CONFIGS: Record<string, PersonaProfileConfig> = {
 export function getProfileConfig(personaId: string): PersonaProfileConfig {
   return PROFILE_CONFIGS[personaId] || PROFILE_CONFIGS.farmer;
 }
+
+export interface OperationItem {
+  id: string;
+  task: string;
+  status: 'urgent' | 'recommended' | 'safe';
+  category: string;
+}
+
+export function getDynamicOperationsForPersona(
+  personaId: string,
+  customSettings: Record<string, any> = {},
+  weatherData?: any
+): OperationItem[] {
+  const normPersona = (personaId === 'agriculture' ? 'farmer' : personaId).toLowerCase();
+  const config = PROFILE_CONFIGS[normPersona] || PROFILE_CONFIGS.farmer;
+
+  // 1. Farmer: Filter by Crop & Growth Stage
+  if (normPersona === 'farmer') {
+    const crop = (customSettings.target_crop || customSettings.crop || 'Wheat').toLowerCase();
+    const stage = (customSettings.growth_stage || customSettings.stage || 'Sowing').toLowerCase();
+
+    // RICE / PADDY
+    if (crop.includes('rice') || crop.includes('paddy') || crop.includes('dhan')) {
+      if (stage.includes('sow') || stage.includes('nursery')) {
+        return [
+          { id: 'rice-sow-1', task: 'Keep 1 inch (2–3 cm) shallow standing water over nursery beds', status: 'urgent', category: 'Nursery Care' },
+          { id: 'rice-sow-2', task: 'Treat paddy seeds in saltwater solution to select heavy seeds', status: 'recommended', category: 'Seed Treatment' },
+          { id: 'rice-sow-3', task: 'Clear drainage channels around nursery to prevent seed washing', status: 'safe', category: 'Field Drainage' }
+        ];
+      }
+      if (stage.includes('veg') || stage.includes('till')) {
+        return [
+          { id: 'rice-veg-1', task: 'Maintain 1 to 2 inches water layer while tillers branch out', status: 'urgent', category: 'Water Layer' },
+          { id: 'rice-veg-2', task: 'Top-dress with 30 kg Urea per acre 20–25 days after transplanting', status: 'recommended', category: 'Fertilizer' },
+          { id: 'rice-veg-3', task: 'Inspect stem base for stem borer holes or leaf rolls', status: 'safe', category: 'Pest Scouting' }
+        ];
+      }
+      if (stage.includes('flow') || stage.includes('head')) {
+        return [
+          { id: 'rice-flow-1', task: 'Maintain continuous 2-inch standing water during flowering', status: 'urgent', category: 'Moisture Shield' },
+          { id: 'rice-flow-2', task: 'Withhold chemical sprays during morning pollination (9 AM–11 AM)', status: 'recommended', category: 'Pollination' },
+          { id: 'rice-flow-3', task: 'Check lower stems near water level for brown planthopper bugs', status: 'safe', category: 'Pest Watch' }
+        ];
+      }
+      if (stage.includes('harv') || stage.includes('matur') || stage.includes('cut')) {
+        return [
+          { id: 'rice-harv-1', task: 'Drain field water completely 10 to 12 days before cutting', status: 'urgent', category: 'Field Drainage' },
+          { id: 'rice-harv-2', task: 'Harvest when 85% of earheads turn dry golden yellow', status: 'recommended', category: 'Harvest Cut' },
+          { id: 'rice-harv-3', task: 'Sun-dry harvested grains on clean tarpaulins to 12% moisture', status: 'safe', category: 'Grain Storage' }
+        ];
+      }
+    }
+
+    // WHEAT
+    if (crop.includes('wheat') || crop.includes('gehun')) {
+      if (stage.includes('sow')) {
+        return [
+          { id: 'wheat-sow-1', task: 'Sow seeds in rows 8 inches apart and 2 inches deep in moist soil', status: 'urgent', category: 'Sowing Depth' },
+          { id: 'wheat-sow-2', task: 'Treat wheat seeds with bio-fertilizer before sowing', status: 'recommended', category: 'Seed Treatment' },
+          { id: 'wheat-sow-3', task: 'Clear field furrows to prevent water stagnation in seed rows', status: 'safe', category: 'Field Drainage' }
+        ];
+      }
+      if (stage.includes('veg') || stage.includes('till')) {
+        return [
+          { id: 'wheat-veg-1', task: 'Apply first light irrigation 20–25 days after sowing at crown root stage', status: 'urgent', category: 'First Irrigation' },
+          { id: 'wheat-veg-2', task: 'Top-dress with 30 kg Urea per acre immediately following first watering', status: 'recommended', category: 'Nutrient Boost' },
+          { id: 'wheat-veg-3', task: 'Inspect leaf undersides for orange or yellow rust fungal powder', status: 'safe', category: 'Rust Inspection' }
+        ];
+      }
+      if (stage.includes('flow') || stage.includes('head')) {
+        return [
+          { id: 'wheat-flow-1', task: 'Maintain steady root-zone moisture; avoid irrigation during gusty winds', status: 'urgent', category: 'Water Balance' },
+          { id: 'wheat-flow-2', task: 'Spray light potassium solution if afternoon temperatures cross 30°C', status: 'recommended', category: 'Heat Defense' },
+          { id: 'wheat-flow-3', task: 'Inspect earheads for aphid clusters or loose smut black heads', status: 'safe', category: 'Pest Scouting' }
+        ];
+      }
+      if (stage.includes('harv') || stage.includes('matur') || stage.includes('cut')) {
+        return [
+          { id: 'wheat-harv-1', task: 'Check grain dryness: harvest when grains snap crisply between teeth', status: 'urgent', category: 'Maturity Check' },
+          { id: 'wheat-harv-2', task: 'Arrange combine harvester or clean sickles and dry threshing area', status: 'recommended', category: 'Equipment Prep' },
+          { id: 'wheat-harv-3', task: 'Store wheat in cool, dry, rodent-proof bins with neem leaves', status: 'safe', category: 'Safe Storage' }
+        ];
+      }
+    }
+
+    // MAIZE / CORN
+    if (crop.includes('maize') || crop.includes('corn') || crop.includes('makka')) {
+      if (stage.includes('sow')) {
+        return [
+          { id: 'maize-sow-1', task: 'Sow single seeds at 2 feet row spacing in well-drained moist soil', status: 'urgent', category: 'Seed Spacing' },
+          { id: 'maize-sow-2', task: 'Apply basal DAP fertilizer in furrows below seed level', status: 'recommended', category: 'Basal Dressing' },
+          { id: 'maize-sow-3', task: 'Ensure field drainage lines are open to prevent standing water', status: 'safe', category: 'Drainage' }
+        ];
+      }
+      if (stage.includes('veg') || stage.includes('till')) {
+        return [
+          { id: 'maize-veg-1', task: 'Check whorl leaves and central funnels for fall armyworm caterpillars', status: 'urgent', category: 'Pest Scouting' },
+          { id: 'maize-veg-2', task: 'Mound soil around plant base (earthing up) at knee-high stage', status: 'recommended', category: 'Earthing Up' },
+          { id: 'maize-veg-3', task: 'Top-dress with 25 kg Urea per acre before intercultural weeding', status: 'safe', category: 'Fertilizer' }
+        ];
+      }
+      if (stage.includes('flow') || stage.includes('head')) {
+        return [
+          { id: 'maize-flow-1', task: 'Keep soil well-watered during tasseling and silking (critical stage)', status: 'urgent', category: 'Tasseling Water' },
+          { id: 'maize-flow-2', task: 'Scout silk emergence on young cobs for caterpillar damage', status: 'recommended', category: 'Cob Protection' },
+          { id: 'maize-flow-3', task: 'Ensure furrows drain excess water after heavy rain', status: 'safe', category: 'Drainage' }
+        ];
+      }
+      if (stage.includes('harv') || stage.includes('matur') || stage.includes('cut')) {
+        return [
+          { id: 'maize-harv-1', task: 'Harvest when outer cob husks turn papery dry and light brown', status: 'urgent', category: 'Cob Harvest' },
+          { id: 'maize-harv-2', task: 'De-husk and sun-dry cobs until kernels are hard and glossy', status: 'recommended', category: 'Sun Drying' },
+          { id: 'maize-harv-3', task: 'Shell dried kernels and pack in moisture-tight bags', status: 'safe', category: 'Safe Storage' }
+        ];
+      }
+    }
+
+    // COTTON
+    if (crop.includes('cotton') || crop.includes('kapas')) {
+      if (stage.includes('sow')) {
+        return [
+          { id: 'cotton-sow-1', task: 'Sow cotton seeds on ridges 3 feet apart for good root aeration', status: 'urgent', category: 'Ridge Sowing' },
+          { id: 'cotton-sow-2', task: 'Treat seeds with imidacloprid to protect early seedlings', status: 'recommended', category: 'Seed Coat' },
+          { id: 'cotton-sow-3', task: 'Avoid sowing in sticky wet mud; ensure light moist seedbed', status: 'safe', category: 'Seedbed Moisture' }
+        ];
+      }
+      if (stage.includes('veg') || stage.includes('till')) {
+        return [
+          { id: 'cotton-veg-1', task: 'Scout leaf undersides for whiteflies, jassids, and aphids', status: 'urgent', category: 'Pest Watch' },
+          { id: 'cotton-veg-2', task: 'Hoe and weed between rows to keep soil loose and aerated', status: 'recommended', category: 'Intercultural' },
+          { id: 'cotton-veg-3', task: 'Apply split dose of nitrogen fertilizer along crop rows', status: 'safe', category: 'Nutrient Boost' }
+        ];
+      }
+      if (stage.includes('flow') || stage.includes('head')) {
+        return [
+          { id: 'cotton-flow-1', task: 'Inspect squares and young bolls for pink bollworm entry holes', status: 'urgent', category: 'Bollworm Check' },
+          { id: 'cotton-flow-2', task: 'Maintain light furrow irrigation; avoid waterlogging in plots', status: 'recommended', category: 'Furrow Water' },
+          { id: 'cotton-flow-3', task: 'Foliar spray 1% potassium nitrate to prevent flower drop', status: 'safe', category: 'Boll Nutrition' }
+        ];
+      }
+      if (stage.includes('harv') || stage.includes('matur') || stage.includes('cut')) {
+        return [
+          { id: 'cotton-harv-1', task: 'Pick fully burst, clean white cotton bolls in dry morning sunlight', status: 'urgent', category: 'Boll Picking' },
+          { id: 'cotton-harv-2', task: 'Do not pick wet or dew-covered cotton to preserve fiber grade', status: 'recommended', category: 'Quality Care' },
+          { id: 'cotton-harv-3', task: 'Store clean picked cotton in dry rooms free from dust and moisture', status: 'safe', category: 'Storage' }
+        ];
+      }
+    }
+
+    // SUGARCANE
+    if (crop.includes('sugarcane') || crop.includes('ganna')) {
+      if (stage.includes('sow')) {
+        return [
+          { id: 'cane-sow-1', task: 'Plant 3-bud cane setts in 3-foot furrows with organic compost', status: 'urgent', category: 'Sett Planting' },
+          { id: 'cane-sow-2', task: 'Treat cane setts with carbendazim solution to prevent red rot', status: 'recommended', category: 'Sett Treatment' },
+          { id: 'cane-sow-3', task: 'Give immediate light irrigation to settle soil around cane setts', status: 'safe', category: 'First Watering' }
+        ];
+      }
+      if (stage.includes('veg') || stage.includes('till')) {
+        return [
+          { id: 'cane-veg-1', task: 'Mound soil firmly around cane clumps (earthing up) to stop lodging', status: 'urgent', category: 'Earthing Up' },
+          { id: 'cane-veg-2', task: 'Check shoots for early shoot borer dead hearts', status: 'recommended', category: 'Borer Scouting' },
+          { id: 'cane-veg-3', task: 'Apply 50 kg Urea per acre before second intercultural weeding', status: 'safe', category: 'Cane Nutrition' }
+        ];
+      }
+      if (stage.includes('flow') || stage.includes('head')) {
+        return [
+          { id: 'cane-flow-1', task: 'Tie cane clumps together in bundles to resist strong winds', status: 'urgent', category: 'Propping & Tying' },
+          { id: 'cane-flow-2', task: 'Remove dry lower cane leaves to improve air circulation and sunlight', status: 'recommended', category: 'De-trashing' },
+          { id: 'cane-flow-3', task: 'Maintain 10–12 day furrow irrigation schedule during grand growth', status: 'safe', category: 'Irrigation' }
+        ];
+      }
+      if (stage.includes('harv') || stage.includes('matur') || stage.includes('cut')) {
+        return [
+          { id: 'cane-harv-1', task: 'Test sweetness: cut cane flush at ground level for maximum sugar yield', status: 'urgent', category: 'Ground Cut' },
+          { id: 'cane-harv-2', task: 'Stop irrigation 15 days before harvest to concentrate sucrose', status: 'recommended', category: 'Pre-Harvest Dry' },
+          { id: 'cane-harv-3', task: 'Transport harvested cane to sugar mill within 24 hours of cutting', status: 'safe', category: 'Mill Transport' }
+        ];
+      }
+    }
+  }
+
+  // 2. Health Persona: Filter by Health Profile
+  if (normPersona === 'health') {
+    const profile = (customSettings.health_profile || 'Standard').toLowerCase();
+    if (profile.includes('asthma') || profile.includes('respirat')) {
+      return [
+        { id: 'h-asthma-1', task: 'Carry rescue inhaler on all outdoor transit and commutes', status: 'urgent', category: 'Respiratory Care' },
+        { id: 'h-asthma-2', task: 'Avoid intense outdoor exercise if AQI crosses 100', status: 'recommended', category: 'Air Quality Limit' },
+        { id: 'h-asthma-3', task: 'Keep room windows closed during dusty or windy hours', status: 'safe', category: 'Indoor Environment' }
+      ];
+    }
+    if (profile.includes('senior')) {
+      return [
+        { id: 'h-senior-1', task: 'Avoid walking in peak afternoon heat (12 PM - 3 PM)', status: 'urgent', category: 'Heat Shield' },
+        { id: 'h-senior-2', task: 'Drink warm water with electrolytes throughout the day', status: 'recommended', category: 'Hydration' },
+        { id: 'h-senior-3', task: 'Wear slip-resistant footwear on damp walkways and stairs', status: 'safe', category: 'Fall Prevention' }
+      ];
+    }
+    if (profile.includes('child') || profile.includes('infant')) {
+      return [
+        { id: 'h-child-1', task: 'Ensure adequate water and fruit juice intake during playground time', status: 'urgent', category: 'Child Hydration' },
+        { id: 'h-child-2', task: 'Apply broad-spectrum infant sunscreen before outdoor activities', status: 'recommended', category: 'UV Protection' },
+        { id: 'h-child-3', task: 'Avoid heavy traffic roadside exposure during morning peak hours', status: 'safe', category: 'Clean Air' }
+      ];
+    }
+    return [
+      { id: 'h-std-1', task: 'Maintain daily hydration target of 2.5 to 3 liters of water', status: 'recommended', category: 'Hydration' },
+      { id: 'h-std-2', task: 'Apply SPF 30+ sunscreen if outdoors between 11 AM and 3 PM', status: 'recommended', category: 'UV Defense' },
+      { id: 'h-std-3', task: 'Air quality and weather conditions are safe for outdoor workouts', status: 'safe', category: 'Daily Routine' }
+    ];
+  }
+
+  // 3. Fitness Persona: Filter by Activity Type
+  if (normPersona === 'fitness') {
+    const sport = (customSettings.activity_type || 'Running').toLowerCase();
+    if (sport.includes('cycl')) {
+      return [
+        { id: 'fit-cyc-1', task: 'Check tire pressure and wet cornering traction before riding', status: 'urgent', category: 'Bike Safety' },
+        { id: 'fit-cyc-2', task: 'Plan route along sheltered roads to minimize headwinds', status: 'recommended', category: 'Route Planning' },
+        { id: 'fit-cyc-3', task: 'Carry electrolyte hydration bottles for rides over 45 minutes', status: 'safe', category: 'Hydration' }
+      ];
+    }
+    if (sport.includes('crossfit') || sport.includes('hiit')) {
+      return [
+        { id: 'fit-hiit-1', task: 'Monitor heat stress index before high-intensity outdoor sets', status: 'urgent', category: 'Heat Stress' },
+        { id: 'fit-hiit-2', task: 'Take 3-minute shade rests between high-intensity circuit intervals', status: 'recommended', category: 'Rest Windows' },
+        { id: 'fit-hiit-3', task: 'Keep cold water and sweat towels accessible near workout station', status: 'safe', category: 'Workout Prep' }
+      ];
+    }
+    return [
+      { id: 'fit-run-1', task: 'Schedule outdoor run during cool morning window (6 AM - 7:30 AM)', status: 'recommended', category: 'Pacing Window' },
+      { id: 'fit-run-2', task: 'Hydrate with 200ml water every 20 minutes of steady running', status: 'urgent', category: 'Hydration' },
+      { id: 'fit-run-3', task: 'Wear light reflective running apparel for road safety', status: 'safe', category: 'Running Gear' }
+    ];
+  }
+
+  // 4. Aviation Persona: Filter by Flight Rule
+  if (normPersona === 'aviation') {
+    const rule = (customSettings.flight_rule || 'VFR').toUpperCase();
+    if (rule === 'IFR') {
+      return [
+        { id: 'av-ifr-1', task: 'Verify runway visual range (RVR) and instrument minimums', status: 'urgent', category: 'Approach Minima' },
+        { id: 'av-ifr-2', task: 'Review icing and turbulence SIGMETs along cruising levels', status: 'recommended', category: 'SIGMET Review' },
+        { id: 'av-ifr-3', task: 'Confirm alternate airport weather and holding fuel reserves', status: 'safe', category: 'Fuel Reserves' }
+      ];
+    }
+    if (rule === 'UAV' || rule === 'DRONE') {
+      return [
+        { id: 'av-uav-1', task: 'Keep drone flight within 400 ft AGL visual line-of-sight limit', status: 'urgent', category: 'Airspace Rules' },
+        { id: 'av-uav-2', task: 'Check micro-gust velocities before takeoff (keep under 25 kph)', status: 'recommended', category: 'Gust Limit' },
+        { id: 'av-uav-3', task: 'Monitor battery temperature in cold or hot ambient air', status: 'safe', category: 'Battery Health' }
+      ];
+    }
+    return [
+      { id: 'av-vfr-1', task: 'Verify cloud ceiling exceeds 3,000 ft AGL along visual route', status: 'urgent', category: 'Visual Flight' },
+      { id: 'av-vfr-2', task: 'Check crosswind component against aircraft maximum limit', status: 'recommended', category: 'Crosswind Check' },
+      { id: 'av-vfr-3', task: 'Inspect destination METAR for sudden fog or rain bands', status: 'safe', category: 'METAR Tracking' }
+    ];
+  }
+
+  // 5. Maritime Persona: Filter by Vessel Type
+  if (normPersona === 'maritime' || normPersona === 'marine') {
+    const vessel = (customSettings.vessel_type || 'Surf').toLowerCase();
+    if (vessel.includes('trawl') || vessel.includes('fish')) {
+      return [
+        { id: 'mar-trawl-1', task: 'Verify coastal squall bulletins before venturing past 12 NM', status: 'urgent', category: 'Squall Bulletin' },
+        { id: 'mar-trawl-2', task: 'Inspect VHF marine radio and life jackets before cast-off', status: 'recommended', category: 'Vessel Safety' },
+        { id: 'mar-trawl-3', task: 'Track tidal cycles for safe shallow harbor return', status: 'safe', category: 'Tidal Planning' }
+      ];
+    }
+    if (vessel.includes('cargo') || vessel.includes('ship')) {
+      return [
+        { id: 'mar-cargo-1', task: 'Secure deck cargo against rolling swell and pitching', status: 'urgent', category: 'Deck Lashing' },
+        { id: 'mar-cargo-2', task: 'Review significant wave height and swell period along sea lane', status: 'recommended', category: 'Route Forecast' },
+        { id: 'mar-cargo-3', task: 'Monitor coastal harbor channel entry draft clearances', status: 'safe', category: 'Draft Clearance' }
+      ];
+    }
+    return [
+      { id: 'mar-surf-1', task: 'Identify rip current channels before entering the surf zone', status: 'urgent', category: 'Water Safety' },
+      { id: 'mar-surf-2', task: 'Check breaking wave face height and offshore wind direction', status: 'recommended', category: 'Swell Analysis' },
+      { id: 'mar-surf-3', task: 'Apply reef-safe water-resistant sunscreen SPF 50+', status: 'safe', category: 'Skin Protection' }
+    ];
+  }
+
+  // Fallback to default operations defined on config
+  return config.defaultOperations && config.defaultOperations.length > 0
+    ? config.defaultOperations
+    : [
+        { id: 'gen-1', task: 'Standard environmental and operational parameters nominal', status: 'safe', category: 'General' },
+        { id: 'gen-2', task: 'Weather conditions favorable for scheduled operations', status: 'recommended', category: 'Monitoring' }
+      ];
+}
+

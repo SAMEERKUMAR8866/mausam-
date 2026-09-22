@@ -1,27 +1,150 @@
 ---
 // src/components/OfflineBanner.astro
-// Floating Offline Sync & Telemetry Cache Alert Bar
+// Dedicated Offline Intelligence & Telemetry Cache Control Bar
 ---
 
-<div id="global-offline-banner" class="hidden fixed top-11 inset-x-0 z-40 bg-amber-600/90 backdrop-blur-md text-slate-950 px-4 py-2 text-xs font-semibold shadow-lg transition-all flex items-center justify-between">
-  <div class="flex items-center gap-2 max-w-[1440px] mx-auto w-full">
-    <span class="text-base">📡</span>
-    <span>You are currently offline. Displaying cached meteorological telemetry and rule-based advisories.</span>
+<div
+  id="global-offline-banner"
+  class="hidden relative w-full bg-gradient-to-r from-amber-950/95 via-slate-900/95 to-amber-950/95 text-slate-100 px-3 sm:px-6 py-2.5 text-xs shadow-2xl transition-all border-b border-amber-500/30 z-30 backdrop-blur-xl"
+>
+  <!-- Amber Glowing Accent Line -->
+  <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 animate-pulse"></div>
+
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between max-w-[1440px] mx-auto w-full gap-2.5 sm:gap-4">
+    
+    <!-- Left: Distinct Offline Beacon & Status Description -->
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-sm shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+        📡
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span id="offline-mode-badge" class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/40">
+            OFFLINE MODE ACTIVE
+          </span>
+          <span id="offline-cache-freshness" class="text-[11px] text-amber-200/90 font-mono">
+            Loaded from Local IndexedDB Cache
+          </span>
+        </div>
+        <p id="offline-banner-desc" data-i18n="offlineBannerText" class="text-xs text-slate-300 truncate mt-0.5">
+          Live AI generation and online sync are paused. Running entirely on local cached weather metrics and emergency protocols.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: Quick Offline Access Pills -->
+    <div class="flex items-center gap-2 shrink-0 self-end md:self-center flex-wrap">
+      <!-- Saved Destinations -->
+      <button
+        type="button"
+        id="btn-offline-saved-cities"
+        class="px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-white/15 text-slate-200 hover:text-white text-[11px] font-semibold transition-all active-scale cursor-pointer flex items-center gap-1.5 shadow-sm"
+      >
+        <span>📍</span> <span data-i18n="savedLocations">Saved Cities</span>
+      </button>
+
+      <!-- Offline SOS Hub -->
+      <button
+        type="button"
+        id="btn-offline-sos-hub"
+        class="sos-hub-trigger px-3 py-1 rounded-full bg-red-600/90 hover:bg-red-500 text-white text-[11px] font-bold transition-all active-scale cursor-pointer flex items-center gap-1.5 shadow-md"
+      >
+        <span>🛡️</span> <span data-i18n="emergencySos">Offline SOS Hub</span>
+      </button>
+
+      <!-- Reconnect / Simulation Toggle -->
+      <button
+        type="button"
+        id="btn-offline-reconnect-toggle"
+        class="px-2.5 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 text-[11px] font-bold transition-all active-scale cursor-pointer flex items-center gap-1"
+        title="Check internet or toggle simulated offline"
+      >
+        <span>🔄</span> <span id="offline-toggle-btn-label">Check Connection</span>
+      </button>
+    </div>
+
   </div>
 </div>
 
 <script>
-  const banner = document.getElementById('global-offline-banner');
+  import { NetworkService } from '../services/network.service';
+  import { WeatherCacheService } from '../services/weather-cache.service';
+  import { StorageService } from '../services/storage.service';
+  import { I18nService } from '../services/i18n.service';
 
-  function updateStatus() {
-    if (navigator.onLine) {
+  const banner = document.getElementById('global-offline-banner');
+  const cacheFreshnessEl = document.getElementById('offline-cache-freshness');
+  const toggleBtn = document.getElementById('btn-offline-reconnect-toggle');
+  const toggleLabel = document.getElementById('offline-toggle-btn-label');
+  const btnSavedCities = document.getElementById('btn-offline-saved-cities');
+  const btnSosHub = document.getElementById('btn-offline-sos-hub');
+
+  async function updateOfflineBanner() {
+    const isOnline = NetworkService.isOnline();
+    if (isOnline) {
       banner?.classList.add('hidden');
     } else {
       banner?.classList.remove('hidden');
+
+      // Update cache freshness info
+      const activeLoc = StorageService.getLastLocation();
+      const cityKey = activeLoc.split(',')[0].trim().toLowerCase().replace(/ /g, '_');
+      const cached = await WeatherCacheService.getWeather(cityKey) || await WeatherCacheService.getLastCachedEntry();
+
+      if (cacheFreshnessEl) {
+        if (cached && cached.cachedAt) {
+          const timeAgo = WeatherCacheService.formatTimeAgo(cached.cachedAt);
+          const timeAgoTrans = I18nService.t(timeAgo, timeAgo);
+          cacheFreshnessEl.textContent = `Cached ${timeAgoTrans} • 0 KB Data`;
+        } else {
+          cacheFreshnessEl.textContent = I18nService.t('Local IndexedDB Cache', 'Local IndexedDB Cache');
+        }
+      }
+
+      if (toggleLabel) {
+        if (NetworkService.isSimulatedOffline()) {
+          toggleLabel.textContent = I18nService.t('Exit Offline Simulation', 'Exit Offline Simulation');
+        } else {
+          toggleLabel.textContent = I18nService.t('Check Connection', 'Check Connection');
+        }
+      }
     }
   }
 
-  window.addEventListener('online', updateStatus);
-  window.addEventListener('offline', updateStatus);
-  updateStatus();
+  // Bind Buttons
+  btnSavedCities?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-saved-locations'));
+  });
+
+  btnSosHub?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('mausam-open-sos-hub'));
+  });
+
+  toggleBtn?.addEventListener('click', () => {
+    if (NetworkService.isSimulatedOffline()) {
+      NetworkService.setSimulatedOffline(false);
+    } else if (!navigator.onLine) {
+      // Flash checking animation
+      if (toggleLabel) toggleLabel.textContent = 'Connecting...';
+      setTimeout(() => {
+        updateOfflineBanner();
+      }, 500);
+    } else {
+      // Toggle simulation
+      NetworkService.toggleOfflineSimulation();
+    }
+  });
+
+  // Global event listeners
+  NetworkService.init();
+  window.addEventListener('online', updateOfflineBanner);
+  window.addEventListener('offline', updateOfflineBanner);
+  window.addEventListener('mausam-network-status-changed', updateOfflineBanner);
+  window.addEventListener('mausam-weather-updated', updateOfflineBanner);
+  window.addEventListener('mausam-language-changed', () => {
+    if (banner) I18nService.translateDocument(banner);
+    updateOfflineBanner();
+  });
+
+  updateOfflineBanner();
 </script>

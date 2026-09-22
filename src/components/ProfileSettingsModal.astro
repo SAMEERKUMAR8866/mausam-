@@ -3,25 +3,25 @@
 // Profile Switcher & 12 Indian Languages Modal
 ---
 
-<div id="profile-settings-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-2xl p-4 sm:p-6 flex items-center justify-center">
-  <div class="w-full max-w-2xl bg-slate-900 border border-white/15 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden my-8">
+<div id="profile-settings-modal" class="hidden fixed inset-0 z-[99999] overflow-y-auto bg-[#0B0F19]/85 backdrop-blur-2xl p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[#0F172A] border border-white/[0.08] rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden my-8">
     
     <!-- Modal Header -->
-    <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+    <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center justify-center text-xl shadow-glow-emerald">
           ⚙️
         </div>
         <div>
-          <h2 class="text-base sm:text-lg font-bold text-white tracking-apple-tight">
+          <h2 data-i18n="personalizationHub" class="text-base sm:text-lg font-bold text-white tracking-apple-tight">
             Personalization & Language Hub
           </h2>
-          <p class="text-xs text-slate-400 font-light">
+          <p data-i18n="personalizationHubSub" class="text-xs text-slate-400 font-light">
             Select specialized meteorological persona & regional Indian language
           </p>
         </div>
       </div>
-      <button id="close-profile-settings-btn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
+      <button id="close-profile-settings-btn" class="w-8 h-8 rounded-full bg-[#1E293B] hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all cursor-pointer">
         ✕
       </button>
     </div>
@@ -29,7 +29,7 @@
     <!-- 1. Persona Profile Grid (12 Personas) -->
     <div class="mb-6">
       <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-        <span>👤</span> Select Persona Profile
+        <span>👤</span> <span data-i18n="selectPersonaProfile">Select Persona Profile</span>
       </h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[260px] overflow-y-auto pr-1" id="modal-personas-grid"></div>
     </div>
@@ -37,7 +37,7 @@
     <!-- 2. Regional Languages Grid (12 Languages) -->
     <div>
       <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-        <span>🌐</span> Select Interface Language
+        <span>🌐</span> <span data-i18n="selectInterfaceLanguage">Select Interface Language</span>
       </h3>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[220px] overflow-y-auto pr-1" id="modal-languages-grid"></div>
     </div>
@@ -47,6 +47,7 @@
 
 <script>
   import { StorageService } from '../services/storage.service';
+  import { I18nService } from '../services/i18n.service';
   import { PERSONA_LIST } from '../data/personas';
   import { SUPPORTED_LANGUAGES } from '../data/translations';
 
@@ -59,19 +60,26 @@
     const activePersona = StorageService.getActivePersona();
     const activeLang = StorageService.getLanguage();
 
+    if (modal) {
+      I18nService.translateDocument(modal);
+    }
+
     if (personasGrid) {
       personasGrid.innerHTML = PERSONA_LIST.map(p => {
         const isSel = p.id === activePersona;
+        const rawName = p.name.split('/')[0].trim();
+        const transName = I18nService.t(rawName, rawName);
+        const transCat = I18nService.t(p.category, p.category);
         return `
           <button type="button" data-modal-persona="${p.id}" class="modal-persona-opt p-3 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center gap-2.5 ${
             isSel
               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/60 font-bold shadow-glow-emerald'
-              : 'bg-slate-950/60 hover:bg-slate-950 text-slate-300 border-white/10'
+              : 'bg-[#1E293B]/70 hover:bg-[#1E293B] text-slate-300 border-white/[0.08]'
           }">
             <span class="text-xl">${p.icon}</span>
             <div class="truncate">
-              <span class="text-xs block font-bold text-white truncate">${p.name.split('/')[0].trim()}</span>
-              <span class="text-[10px] text-slate-400 block truncate">${p.category}</span>
+              <span class="text-xs block font-bold text-white truncate">${transName}</span>
+              <span class="text-[10px] text-slate-400 block truncate">${transCat}</span>
             </div>
           </button>
         `;
@@ -95,7 +103,7 @@
           <button type="button" data-modal-lang="${lang.code}" class="modal-lang-opt p-2.5 rounded-xl border text-left transition-all active-scale cursor-pointer flex items-center justify-between ${
             isSel
               ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/60 font-bold shadow-glow-cyan'
-              : 'bg-slate-950/60 hover:bg-slate-950 text-slate-300 border-white/10'
+              : 'bg-[#1E293B]/70 hover:bg-[#1E293B] text-slate-300 border-white/[0.08]'
           }">
             <div class="truncate">
               <span class="text-xs font-bold text-white block">${lang.name}</span>
@@ -125,5 +133,11 @@
   window.addEventListener('mausam-open-profile-settings', () => {
     renderModalContent();
     modal?.classList.remove('hidden');
+  });
+
+  window.addEventListener('mausam-language-changed', () => {
+    if (modal && !modal.classList.contains('hidden')) {
+      renderModalContent();
+    }
   });
 </script>

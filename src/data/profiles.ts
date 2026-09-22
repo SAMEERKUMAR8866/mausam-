@@ -1,8 +1,8 @@
 // src/data/profiles.ts
 // Profiles registry and profile helpers
 
-import { PERSONAS, type PersonaDefinition } from './personas';
-import { PROFILE_CONFIGS, type PersonaProfileConfig } from './profileControls';
+import { PERSONAS } from './personas';
+import { PROFILE_CONFIGS } from './profileControls';
 
 export interface UserPreferences {
   activePersona: string;
@@ -16,10 +16,10 @@ export interface UserPreferences {
 export const DEFAULT_PREFERENCES: UserPreferences = {
   activePersona: 'farmer',
   language: 'en',
-  savedLocations: ['New Delhi, Delhi, India', 'Mumbai, Maharashtra, India', 'Greater Noida, Uttar Pradesh, India'],
-  lastLocation: 'New Delhi, Delhi, India',
+  savedLocations: ['Sasarām, Bihar, India', 'Mumbai, Maharashtra, India', 'London, UK', 'New Delhi, Delhi, India'],
+  lastLocation: 'Sasarām, Bihar, India',
   customProfileSettings: {
-    farmer: { crop: 'Wheat', stage: 'Vegetative' }
+    farmer: { target_crop: 'Wheat', growth_stage: 'Sowing', crop: 'Wheat', stage: 'Sowing' }
   }
 };
 

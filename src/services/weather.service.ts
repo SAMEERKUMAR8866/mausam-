@@ -1,10 +1,12 @@
 // src/services/weather.service.ts
 // Multi-Source Live Meteorological Engine (Open-Meteo, wttr.in, WeatherAPI, and Localized Fallback)
 
-import { MOCK_WEATHER_DB } from '../data/mock-weather';
-import { getFallbackCoordinates, getReverseGeocodeOffline, getCityMatches, isCoastalLocation } from './geocoding.service';
+import { getReverseGeocodeOffline, getCityMatches, isCoastalLocation } from './geocoding.service';
 import { BarometerService } from './barometer.service';
 import { OfflineEngineService, type DisasterEvaluation } from './offline-engine.service';
+import { WeatherCacheService } from './weather-cache.service';
+import { StorageService } from './storage.service';
+import { NetworkService } from './network.service';
 
 export interface HourlyForecastItem {
   time: string;
@@ -15,6 +17,7 @@ export interface HourlyForecastItem {
   condition: string;
   conditionCode: number;
   icon: string;
+  isDay?: boolean;
   rain_chance_pct: number;
   humidity: number;
   wind_kph: number;
@@ -40,6 +43,8 @@ export interface DayForecastItem {
   icon: string;
   rain_chance_pct: number;
   uv_max: number;
+  sunrise?: string;
+  sunset?: string;
   hourly: HourlyForecastItem[];
 }
 
@@ -100,6 +105,8 @@ export interface WeatherResponse {
     wind_dir: string;
     visibility_km: number;
     pressure_mb: number;
+    is_day?: boolean;
+    isDay?: boolean;
   };
   aqi: {
     index: number;
@@ -207,6 +214,11 @@ export interface WeatherResponse {
   details: WeatherDetailsDiagnostics;
   isDisasterActive: boolean;
   disasterDetails: DisasterEvaluation;
+  isCached?: boolean;
+  cachedAt?: number;
+  cachedAgo?: string;
+  notCached?: boolean;
+  notCachedMessage?: string;
 }
 
 // Dew point calculation (Magnus-Tetens formula)
@@ -270,6 +282,83 @@ function calculateMoonPhase(date = new Date()): { phase: string; icon: string; i
   return { phase: 'New Moon', icon: '🌑', illumination };
 }
 
+// Time & Solar Event Evaluation Utilities
+export function parseTimeToMinutes(timeInput: string | number | Date | null | undefined): number {
+  if (timeInput === null || timeInput === undefined) return 12 * 60;
+
+  if (typeof timeInput === 'number') {
+    if (timeInput > 100000) {
+      const d = new Date(timeInput);
+      return d.getHours() * 60 + d.getMinutes();
+    }
+    return Math.round(timeInput * 60);
+  }
+
+  if (timeInput instanceof Date) {
+    return timeInput.getHours() * 60 + timeInput.getMinutes();
+  }
+
+  const str = String(timeInput).trim();
+  if (!str) return 12 * 60;
+
+  // ISO date string containing time: "2026-09-21T17:54" or "2026-09-21T17:54:00"
+  if (str.includes('T')) {
+    const timePart = str.split('T')[1];
+    const match = timePart.match(/^(\d{1,2}):(\d{2})/);
+    if (match) {
+      const h = parseInt(match[1], 10);
+      const m = parseInt(match[2], 10);
+      return h * 60 + m;
+    }
+  }
+
+  // 12-hour format: "5:54 PM", "05:54 PM", "6:07 AM", "5:50 AM", "7 PM", "12 AM", "12:30 PM"
+  const match12 = str.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
+  if (match12) {
+    let h = parseInt(match12[1], 10);
+    const m = match12[2] ? parseInt(match12[2], 10) : 0;
+    const meridiem = match12[3].toUpperCase();
+    if (meridiem === 'PM' && h < 12) h += 12;
+    if (meridiem === 'AM' && h === 12) h = 0;
+    return h * 60 + m;
+  }
+
+  // 24-hour format: "17:54", "06:07", "17:54:00"
+  const match24 = str.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (match24) {
+    const h = parseInt(match24[1], 10);
+    const m = parseInt(match24[2], 10);
+    return h * 60 + m;
+  }
+
+  const num = parseFloat(str);
+  if (!isNaN(num) && num >= 0 && num <= 24) {
+    return Math.round(num * 60);
+  }
+
+  return 12 * 60;
+}
+
+export function parseTimeToDecimalHours(timeInput: string | number | Date | null | undefined): number {
+  return parseTimeToMinutes(timeInput) / 60;
+}
+
+export function isDaytimeHour(
+  timeInput: string | number | Date,
+  sunriseInput: string | number | Date = '06:00 AM',
+  sunsetInput: string | number | Date = '06:00 PM'
+): boolean {
+  const slotMinutes = parseTimeToMinutes(timeInput);
+  const sunriseMinutes = parseTimeToMinutes(sunriseInput);
+  const sunsetMinutes = parseTimeToMinutes(sunsetInput);
+
+  if (sunriseMinutes < sunsetMinutes) {
+    return slotMinutes >= sunriseMinutes && slotMinutes < sunsetMinutes;
+  } else {
+    return slotMinutes >= sunriseMinutes || slotMinutes < sunsetMinutes;
+  }
+}
+
 // 24-Hour Spline Curve Generator
 function generate24HourSplineData(
   temp_c: number,
@@ -285,6 +374,11 @@ function generate24HourSplineData(
 
   const formatHour = (h: number) => h === 0 ? '12 AM' : h === 12 ? '12 PM' : h < 12 ? `${h} AM` : `${h - 12} PM`;
   const formatTimeFull = (h: number) => `${h.toString().padStart(2, '0')}:00`;
+
+  const sunriseDec = parseTimeToDecimalHours(sunriseStr);
+  const sunsetDec = parseTimeToDecimalHours(sunsetStr);
+  const sunriseSlot = Math.round(sunriseDec);
+  const sunsetSlot = Math.round(sunsetDec);
 
   for (let h = 0; h < 24; h++) {
     let tFactor: number;
@@ -309,14 +403,22 @@ function generate24HourSplineData(
       else hRainChance = 5;
     }
 
-    let hCond = 'Clear';
-    let hIcon = 'sunny';
+    const isDay = isDaytimeHour(h, sunriseStr, sunsetStr);
+
+    let hCond = 'Clear Sky';
+    let hIcon = isDay ? 'sunny' : 'moon';
     let hCode = 1000;
 
-    if (h < 6 || h >= 19) {
-      hCond = isRainy ? 'Night Showers' : 'Clear Night';
-      hIcon = isRainy ? 'rainy' : 'moon';
-      hCode = isRainy ? 1063 : 1000;
+    if (!isDay) {
+      if (isRainy) {
+        hCond = hRainChance > 70 ? 'Heavy Showers' : 'Night Showers';
+        hIcon = 'rainy';
+        hCode = 1063;
+      } else {
+        hCond = 'Clear Night';
+        hIcon = 'moon';
+        hCode = 1000;
+      }
     } else if (isRainy) {
       hCond = hRainChance > 70 ? 'Heavy Showers' : 'Passing Showers';
       hIcon = 'rainy';
@@ -331,7 +433,7 @@ function generate24HourSplineData(
       hCode = 1003;
     }
 
-    const hUv = (h >= 8 && h <= 17) ? Math.round(Math.sin((h - 8) / 9 * Math.PI) * 9 * 10) / 10 : 0;
+    const hUv = (isDay && h >= 8 && h <= 17) ? Math.round(Math.sin((h - 8) / 9 * Math.PI) * 9 * 10) / 10 : 0;
 
     hourly.push({
       time: formatHour(h),
@@ -342,14 +444,15 @@ function generate24HourSplineData(
       condition: hCond,
       conditionCode: hCode,
       icon: hIcon,
+      isDay,
       rain_chance_pct: hRainChance,
       humidity: hHumidity,
       wind_kph: hWind,
       uv: hUv,
-      isSunrise: h === 6,
-      sunriseLabel: h === 6 ? sunriseStr : undefined,
-      isSunset: h === 18,
-      sunsetLabel: h === 18 ? sunsetStr : undefined,
+      isSunrise: h === sunriseSlot,
+      sunriseLabel: h === sunriseSlot ? sunriseStr : undefined,
+      isSunset: h === sunsetSlot,
+      sunsetLabel: h === sunsetSlot ? sunsetStr : undefined,
       isCurrentHour: h === currentHour
     });
   }
@@ -426,6 +529,8 @@ function generate7DayForecast(
       icon,
       rain_chance_pct: rainChance,
       uv_max: Math.round((6.5 + Math.sin(i) * 2) * 10) / 10,
+      sunrise: sunriseStr,
+      sunset: sunsetStr,
       hourly
     });
   }
@@ -580,7 +685,7 @@ function evaluateMaritimeTelemetry(
 }
 
 // Localized Mock Generator
-function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherResponse {
+export function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherResponse {
   let name = cityKey.charAt(0).toUpperCase() + cityKey.slice(1).replace(/_/g, ' ');
   let country = 'India';
 
@@ -618,12 +723,21 @@ function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherRe
   const pressure_mb = 1008 + (absHash % 14);
   const wind_dir = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'WSW', 'NW'][absHash % 8];
 
-  const conditions = ['Sunny', 'Hazy Sunshine', 'Partly Cloudy', 'Passing Showers', 'Light Drizzle', 'Clear', 'Overcast'];
-  const conditionText = conditions[absHash % conditions.length];
-  const isRainy = conditionText.toLowerCase().includes('shower') || conditionText.toLowerCase().includes('drizzle') || conditionText.toLowerCase().includes('rain');
-
   const sunrise = '06:03 AM';
   const sunset = '06:28 PM';
+  const now = new Date();
+  const currentHour = now.getHours();
+  const isDay = isDaytimeHour(currentHour, sunrise, sunset);
+
+  let conditionText = '';
+  if (isDay) {
+    const dayConditions = ['Sunny', 'Hazy Sunshine', 'Partly Cloudy', 'Passing Showers', 'Light Drizzle', 'Clear', 'Overcast'];
+    conditionText = dayConditions[absHash % dayConditions.length];
+  } else {
+    const nightConditions = ['Partly Cloudy Night', 'Clear Night', 'Night Showers', 'Night Drizzle', 'Mainly Clear Night', 'Overcast'];
+    conditionText = nightConditions[absHash % nightConditions.length];
+  }
+  const isRainy = conditionText.toLowerCase().includes('shower') || conditionText.toLowerCase().includes('drizzle') || conditionText.toLowerCase().includes('rain');
 
   const forecast7Day = generate7DayForecast(temp_c, humidity, isRainy, sunrise, sunset);
   const hourlyForecast = forecast7Day[0].hourly;
@@ -637,6 +751,9 @@ function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherRe
     wind_gust_kph: wind_kph * 1.25,
     pressure_mb,
     precip_mm_24h: isRainy ? 14 : 0,
+    precip_mm_hourly: isRainy ? 2.5 : 0,
+    visibility_km,
+    visibility_m: visibility_km * 1000,
     aqi_index: pm25,
     conditionText,
     conditionCode: isRainy ? 1063 : 1000,
@@ -655,14 +772,16 @@ function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherRe
       condition: {
         text: conditionText,
         code: isRainy ? 1063 : 1000,
-        icon: isRainy ? 'rainy' : 'sunny'
+        icon: isRainy ? 'rainy' : (isDay ? 'sunny' : 'moon')
       },
       humidity,
-      uv,
+      uv: isDay ? uv : 0,
       wind_kph,
       wind_dir,
       visibility_km,
-      pressure_mb
+      pressure_mb,
+      is_day: isDay,
+      isDay: isDay
     },
     aqi: {
       index: pm25,
@@ -769,25 +888,56 @@ function generateLocalMockWeather(cityKey: string, queryStr?: string): WeatherRe
 }
 
 // Weather Code mapping for Open-Meteo
-function mapWmoCode(code: number): { text: string; icon: string; isRainy: boolean } {
+function mapWmoCode(code: number, isDay = true): { text: string; icon: string; isRainy: boolean } {
   switch (code) {
-    case 0: return { text: 'Clear Sky', icon: 'sunny', isRainy: false };
-    case 1: return { text: 'Mainly Clear', icon: 'sunny', isRainy: false };
-    case 2: return { text: 'Partly Cloudy', icon: 'cloudy', isRainy: false };
-    case 3: return { text: 'Overcast', icon: 'cloudy', isRainy: false };
-    case 45: case 48: return { text: 'Foggy Haze', icon: 'foggy', isRainy: false };
-    case 51: case 53: case 55: return { text: 'Light Drizzle', icon: 'rainy', isRainy: true };
-    case 56: case 57: return { text: 'Freezing Drizzle', icon: 'rainy', isRainy: true };
-    case 61: return { text: 'Light Rain', icon: 'rainy', isRainy: true };
-    case 63: return { text: 'Moderate Rain', icon: 'rainy', isRainy: true };
-    case 65: return { text: 'Heavy Rain', icon: 'rainy', isRainy: true };
-    case 71: case 73: case 75: case 77: return { text: 'Snow Showers', icon: 'cloudy', isRainy: false };
-    case 80: case 81: return { text: 'Passing Showers', icon: 'rainy', isRainy: true };
-    case 82: return { text: 'Torrential Showers', icon: 'rainy', isRainy: true };
-    case 95: return { text: 'Thunderstorm', icon: 'stormy', isRainy: true };
-    case 96: case 99: return { text: 'Severe Thunderstorm & Hail', icon: 'stormy', isRainy: true };
-    default: return { text: 'Partly Cloudy', icon: 'cloudy', isRainy: false };
+    case 0:
+      return isDay
+        ? { text: 'Clear Sky', icon: 'sunny', isRainy: false }
+        : { text: 'Clear Night', icon: 'moon', isRainy: false };
+    case 1:
+      return isDay
+        ? { text: 'Mainly Clear', icon: 'sunny', isRainy: false }
+        : { text: 'Mainly Clear Night', icon: 'moon', isRainy: false };
+    case 2:
+      return isDay
+        ? { text: 'Partly Cloudy', icon: 'cloudy', isRainy: false }
+        : { text: 'Partly Cloudy Night', icon: 'cloudy', isRainy: false };
+    case 3:
+      return { text: 'Overcast', icon: 'cloudy', isRainy: false };
+    case 45: case 48:
+      return { text: 'Foggy Haze', icon: 'foggy', isRainy: false };
+    case 51: case 53: case 55:
+      return { text: isDay ? 'Light Drizzle' : 'Night Drizzle', icon: 'rainy', isRainy: true };
+    case 56: case 57:
+      return { text: 'Freezing Drizzle', icon: 'rainy', isRainy: true };
+    case 61:
+      return { text: isDay ? 'Light Rain' : 'Night Showers', icon: 'rainy', isRainy: true };
+    case 63:
+      return { text: isDay ? 'Moderate Rain' : 'Passing Showers', icon: 'rainy', isRainy: true };
+    case 65:
+      return { text: 'Heavy Rain', icon: 'rainy', isRainy: true };
+    case 71: case 73: case 75: case 77:
+      return { text: 'Snow Showers', icon: 'cloudy', isRainy: false };
+    case 80: case 81:
+      return { text: isDay ? 'Passing Showers' : 'Night Showers', icon: 'rainy', isRainy: true };
+    case 82:
+      return { text: 'Torrential Showers', icon: 'rainy', isRainy: true };
+    case 95:
+      return { text: 'Thunderstorm', icon: 'stormy', isRainy: true };
+    case 96: case 99:
+      return { text: 'Severe Thunderstorm & Hail', icon: 'stormy', isRainy: true };
+    default:
+      return isDay
+        ? { text: 'Partly Cloudy', icon: 'cloudy', isRainy: false }
+        : { text: 'Partly Cloudy Night', icon: 'cloudy', isRainy: false };
   }
+}
+
+// Fast-failing fetch helper with abort timeout
+function fetchWithTimeout(url: string, timeoutMs = 3000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeoutId));
 }
 
 // Open-Meteo Live Fetcher
@@ -817,7 +967,7 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
       locCountry = offlineMatches[0].country;
     } else {
       try {
-        const geoResp = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`);
+        const geoResp = await fetchWithTimeout(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`, 2500);
         if (geoResp.ok) {
           const geoData = await geoResp.json();
           if (geoData.results && geoData.results.length > 0) {
@@ -834,9 +984,9 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
     }
   }
 
-  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,uv_index&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,precipitation_sum&timezone=auto`;
+  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,visibility,is_day&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,visibility,uv_index,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,wind_gusts_10m_max&timezone=auto`;
 
-  const weatherResp = await fetch(weatherUrl);
+  const weatherResp = await fetchWithTimeout(weatherUrl, 3000);
   if (!weatherResp.ok) throw new Error(`Open-Meteo HTTP error: ${weatherResp.status}`);
   const weatherData = await weatherResp.json();
 
@@ -847,7 +997,7 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
   let o3 = 18;
 
   try {
-    const aqiResp = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,nitrogen_dioxide,ozone,us_aqi`);
+    const aqiResp = await fetchWithTimeout(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,nitrogen_dioxide,ozone,us_aqi`, 2500);
     if (aqiResp.ok) {
       const aqiData = await aqiResp.json();
       if (aqiData.current) {
@@ -864,12 +1014,14 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
   const temp_c = Math.round((current.temperature_2m ?? 29.5) * 10) / 10;
   const humidity = Math.round(current.relative_humidity_2m ?? 65);
   const wind_kph = Math.round((current.wind_speed_10m ?? 2.6) * 10) / 10;
+  const wind_gust_kph = Math.round((current.wind_gusts_10m ?? (wind_kph * 1.3)) * 10) / 10;
   const wind_deg = current.wind_direction_10m ?? 112;
   const pressure_mb = Math.round(current.pressure_msl ?? current.surface_pressure ?? 1012);
   const uv = Math.round((current.uv_index ?? 0) * 10) / 10;
-  const precip = current.precipitation ?? 0;
-  const condMapped = mapWmoCode(current.weather_code ?? 0);
-  const isRainy = condMapped.isRainy || precip > 0;
+  const precip_mm_hourly = Math.round((current.precipitation ?? 0) * 10) / 10;
+  const precip_mm_24h = Math.round((weatherData.daily?.precipitation_sum?.[0] ?? (precip_mm_hourly > 0 ? 15 : 0)) * 10) / 10;
+  const visibility_m = Math.round(current.visibility ?? 10000);
+  const visibility_km = Math.round((visibility_m / 1000) * 10) / 10;
 
   const windDirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
   const wind_dir = windDirs[Math.round(wind_deg / 22.5) % 16] || 'ESE';
@@ -890,12 +1042,16 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
     sunsetStr = `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
   }
 
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentIsDay = typeof current.is_day === 'number' ? current.is_day === 1 : isDaytimeHour(currentHour, sunriseStr, sunsetStr);
+  const condMapped = mapWmoCode(current.weather_code ?? 0, currentIsDay);
+  const isRainy = condMapped.isRainy || precip_mm_hourly > 0 || precip_mm_24h > 0;
+
   // Generate 7-day and 24-hour hourly
   const forecast7Day: DayForecastItem[] = [];
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayShorts = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const now = new Date();
-  const currentHour = now.getHours();
 
   const numDays = Math.min(7, weatherData.daily?.time?.length || 7);
   for (let dIdx = 0; dIdx < numDays; dIdx++) {
@@ -907,9 +1063,29 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
     const dateNum = dateObj.getDate();
     const label = isToday ? `${dateNum} Today` : `${dateNum} ${dayShort}`;
 
+    let daySunriseStr = sunriseStr;
+    let daySunsetStr = sunsetStr;
+    if (weatherData.daily?.sunrise?.[dIdx]) {
+      const s = weatherData.daily.sunrise[dIdx];
+      const timePart = s.includes('T') ? s.split('T')[1] : s;
+      const [h, m] = timePart.split(':').map(Number);
+      daySunriseStr = `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+    }
+    if (weatherData.daily?.sunset?.[dIdx]) {
+      const s = weatherData.daily.sunset[dIdx];
+      const timePart = s.includes('T') ? s.split('T')[1] : s;
+      const [h, m] = timePart.split(':').map(Number);
+      daySunsetStr = `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+    }
+
+    const daySunriseDec = parseTimeToDecimalHours(daySunriseStr);
+    const daySunsetDec = parseTimeToDecimalHours(daySunsetStr);
+    const sunriseSlot = Math.round(daySunriseDec);
+    const sunsetSlot = Math.round(daySunsetDec);
+
     const maxT = weatherData.daily?.temperature_2m_max?.[dIdx] ?? Math.round(temp_c + 3);
     const minT = weatherData.daily?.temperature_2m_min?.[dIdx] ?? Math.round(temp_c - 4);
-    const dayWmo = mapWmoCode(weatherData.daily?.weather_code?.[dIdx] ?? current.weather_code ?? 0);
+    const dayWmo = mapWmoCode(weatherData.daily?.weather_code?.[dIdx] ?? current.weather_code ?? 0, true);
     const rainChance = weatherData.daily?.precipitation_probability_max?.[dIdx] ?? (isRainy ? 70 : 10);
     const uvMax = weatherData.daily?.uv_index_max?.[dIdx] ?? uv;
 
@@ -920,8 +1096,12 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
       const hHum = weatherData.hourly?.relative_humidity_2m?.[idx] ?? humidity;
       const hWind = Math.round((weatherData.hourly?.wind_speed_10m?.[idx] ?? wind_kph) * 10) / 10;
       const hRain = weatherData.hourly?.precipitation_probability?.[idx] ?? (isRainy ? 60 : 5);
-      const hUv = weatherData.hourly?.uv_index?.[idx] ?? (h >= 8 && h <= 17 ? Math.round(Math.sin((h - 8) / 9 * Math.PI) * 9 * 10) / 10 : 0);
-      const hCond = mapWmoCode(weatherData.hourly?.weather_code?.[idx] ?? (isRainy ? 61 : 0));
+
+      const apiIsDay = weatherData.hourly?.is_day?.[idx];
+      const isDay = typeof apiIsDay === 'number' ? apiIsDay === 1 : isDaytimeHour(h, daySunriseStr, daySunsetStr);
+
+      const hUv = isDay ? (weatherData.hourly?.uv_index?.[idx] ?? (h >= 8 && h <= 17 ? Math.round(Math.sin((h - 8) / 9 * Math.PI) * 9 * 10) / 10 : 0)) : 0;
+      const hCond = mapWmoCode(weatherData.hourly?.weather_code?.[idx] ?? (isRainy ? 61 : 0), isDay);
       const hFeels = calculateFeelsLike(hT, hHum, hWind);
 
       const formatH = (hour: number) => hour === 0 ? '12 AM' : hour === 12 ? '12 PM' : hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
@@ -935,14 +1115,15 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
         condition: hCond.text,
         conditionCode: weatherData.hourly?.weather_code?.[idx] ?? 1000,
         icon: hCond.icon,
+        isDay,
         rain_chance_pct: hRain,
         humidity: hHum,
         wind_kph: hWind,
         uv: hUv,
-        isSunrise: h === 6,
-        sunriseLabel: h === 6 ? sunriseStr : undefined,
-        isSunset: h === 18,
-        sunsetLabel: h === 18 ? sunsetStr : undefined,
+        isSunrise: h === sunriseSlot,
+        sunriseLabel: h === sunriseSlot ? daySunriseStr : undefined,
+        isSunset: h === sunsetSlot,
+        sunsetLabel: h === sunsetSlot ? daySunsetStr : undefined,
         isCurrentHour: isToday && h === currentHour
       });
     }
@@ -961,6 +1142,8 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
       icon: dayWmo.icon,
       rain_chance_pct: rainChance,
       uv_max: uvMax,
+      sunrise: daySunriseStr,
+      sunset: daySunsetStr,
       hourly: hourlyList
     });
   }
@@ -969,25 +1152,28 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
   const details = generateDiagnosticDetails(temp_c, humidity, wind_kph, wind_dir, uv, aqi, isRainy, sunriseStr, sunsetStr);
   const moon = calculateMoonPhase();
 
-  // Record barometer reading for pressure trend tracking
-  BarometerService.recordPressure(pressure_mb);
-  const pressureTrend = BarometerService.getPressureTrend(pressure_mb);
+  // Record barometer reading for pressure trend tracking (scoped by cityKey)
+  BarometerService.recordPressure(pressure_mb, cityKey);
+  const pressureTrend = BarometerService.getPressureTrend(pressure_mb, cityKey);
 
   const disasterDetails = OfflineEngineService.evaluateDisaster({
     temp_c,
     humidity,
     wind_kph,
-    wind_gust_kph: wind_kph * 1.3,
+    wind_gust_kph,
     pressure_mb,
     pressure_delta_3h: pressureTrend.delta3h,
-    precip_mm_24h: weatherData.daily?.precipitation_sum?.[0] ?? (isRainy ? 15 : 0),
+    precip_mm_24h,
+    precip_mm_hourly,
+    visibility_km,
+    visibility_m,
     aqi_index: aqi,
     conditionText: condMapped.text,
     conditionCode: current.weather_code ?? 1000,
     locationName: locName
   });
 
-  return {
+  const weatherResponse: WeatherResponse = {
     location: {
       name: locName,
       country: locRegion ? `${locRegion}, ${locCountry}` : locCountry,
@@ -1005,8 +1191,10 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
       uv,
       wind_kph,
       wind_dir,
-      visibility_km: 10,
-      pressure_mb
+      visibility_km,
+      pressure_mb,
+      is_day: currentIsDay,
+      isDay: currentIsDay
     },
     aqi: {
       index: aqi,
@@ -1107,15 +1295,73 @@ export async function fetchFromOpenMeteo(cityKey: string, queryStr?: string): Pr
     isDisasterActive: disasterDetails.isDisasterActive,
     disasterDetails
   };
+
+  // Cache dynamically for multi-city offline support
+  if (typeof window !== 'undefined') {
+    const displayName = `${locName}${locRegion ? `, ${locRegion}` : ''}, ${locCountry}`;
+    WeatherCacheService.saveWeather(cityKey, weatherResponse, displayName, { lat, lon }).catch(() => {});
+    if (query && query !== cityKey) {
+      WeatherCacheService.saveWeather(query, weatherResponse, displayName, { lat, lon }).catch(() => {});
+    }
+  }
+
+  return weatherResponse;
 }
 
-// Main Weather Fetcher Entrypoint
+// Main Weather Fetcher Entrypoint with Dynamic Multi-City Offline Cache & Immediate Fallback
 export async function fetchWeatherData(cityKey: string, queryStr?: string): Promise<WeatherResponse> {
   const query = queryStr || cityKey;
-  try {
-    return await fetchFromOpenMeteo(cityKey, query);
-  } catch (error) {
-    console.warn(`[WeatherService] Open-Meteo live API error for "${query}", generating localized fallback:`, error);
-    return generateLocalMockWeather(cityKey, query);
+
+  // 1. Explicitly check if device is online
+  const isOnline = typeof navigator !== 'undefined' ? (navigator.onLine && NetworkService.isOnline()) : true;
+
+  if (isOnline) {
+    try {
+      const liveData = await fetchFromOpenMeteo(cityKey, query);
+      return liveData;
+    } catch (error) {
+      console.warn(`[WeatherService] Live API fetch failed for "${query}", immediately switching to offline cache:`, error);
+    }
   }
+
+  // 2. Multi-City Dynamic Offline Fallback (from IndexedDB / Cache)
+  try {
+    const cachedEntry = (await WeatherCacheService.getWeather(query)) || 
+                        (await WeatherCacheService.getWeather(cityKey)) ||
+                        (await WeatherCacheService.getLastCachedEntry());
+    if (cachedEntry && cachedEntry.data) {
+      return {
+        ...cachedEntry.data,
+        isCached: true,
+        cachedAt: cachedEntry.cachedAt,
+        cachedAgo: WeatherCacheService.formatTimeAgo(cachedEntry.cachedAt)
+      };
+    }
+  } catch (cacheErr) {
+    console.warn('[WeatherService] Error reading from dynamic cache:', cacheErr);
+  }
+
+  // 3. Fallback to localStorage last weather data
+  if (typeof window !== 'undefined') {
+    try {
+      const lastStorageData = StorageService.getLastWeatherData();
+      if (lastStorageData) {
+        return {
+          ...lastStorageData,
+          isCached: true,
+          cachedAt: Date.now() - 1800000,
+          cachedAgo: 'Saved Local Data'
+        };
+      }
+    } catch {}
+  }
+
+  // 4. Guaranteed deterministic offline telemetry generator (Never hangs or fails)
+  const localMock = generateLocalMockWeather(cityKey, query);
+  return {
+    ...localMock,
+    isCached: true,
+    cachedAt: Date.now(),
+    cachedAgo: 'Offline Intelligence Engine'
+  };
 }
